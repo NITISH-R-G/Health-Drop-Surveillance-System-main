@@ -80,7 +80,7 @@ const IndexPageContent: React.FC<IndexPageProps> = ({
   // Common wrapper for non-dashboard screens
   const renderScreenShell = (content: React.ReactNode) => (
     <View style={styles.container}>
-      <StatusBar barStyle={theme === 'dark' ? 'light-content' : 'dark-content'} backgroundColor={colors.surface} />
+      <StatusBar style={theme === 'dark' ? 'light' : 'dark'} backgroundColor={colors.surface} />
       <Navbar onMenuPress={() => setSidebarVisible(true)} userName={userName} />
       <Sidebar isVisible={isSidebarVisible} onClose={() => setSidebarVisible(false)} onNavigate={handleNavigation} isGuest={isGuest} />
       {content}
@@ -187,7 +187,7 @@ const IndexPageContent: React.FC<IndexPageProps> = ({
   // === Main Dashboard ===
   return (
     <View style={styles.container}>
-      <StatusBar barStyle={theme === 'dark' ? 'light-content' : 'dark-content'} backgroundColor={colors.surface} />
+      <StatusBar style={theme === 'dark' ? 'light' : 'dark'} backgroundColor={colors.surface} />
       <Navbar onMenuPress={() => setSidebarVisible(true)} userName={userName} />
       <Sidebar isVisible={isSidebarVisible} onClose={() => setSidebarVisible(false)} onNavigate={handleNavigation} isGuest={isGuest} />
 
