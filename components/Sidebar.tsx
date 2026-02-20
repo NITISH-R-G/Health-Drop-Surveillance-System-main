@@ -1,7 +1,10 @@
 import React, { useEffect, useRef, useMemo } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Animated, Image } from 'react-native';
+import { BlurView } from 'expo-blur';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme, Theme, typography, spacing, radius } from '../lib/ThemeContext';
+
+const AnimatedBlurView = Animated.createAnimatedComponent(BlurView);
 
 interface SidebarProps {
   isVisible: boolean;
@@ -64,7 +67,9 @@ const Sidebar: React.FC<SidebarProps> = ({ isVisible, onClose, onNavigate, isGue
           />
         </Animated.View>
       )}
-      <Animated.View
+      <AnimatedBlurView
+        intensity={95}
+        tint={colors.background === '#000000' ? 'dark' : 'light'}
         style={[
           styles.sidebar,
           { transform: [{ translateX }] },
@@ -126,7 +131,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isVisible, onClose, onNavigate, isGue
             </TouchableOpacity>
           ))}
         </View>
-      </Animated.View>
+      </AnimatedBlurView>
     </>
   );
 };
@@ -143,10 +148,10 @@ const createStyles = (colors: Theme) => StyleSheet.create({
     left: 0,
     bottom: 0,
     width: 280,
-    backgroundColor: colors.surface,
+    backgroundColor: colors.glass,
     zIndex: 11,
     borderRightWidth: StyleSheet.hairlineWidth,
-    borderRightColor: colors.border,
+    borderRightColor: colors.glassBorder,
     paddingTop: 48,
   },
   header: {

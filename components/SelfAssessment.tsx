@@ -250,7 +250,7 @@ const SelfAssessment: React.FC<SelfAssessmentProps> = ({ onComplete, onClose }) 
 
 const createStyles = (colors: Theme) =>
     StyleSheet.create({
-        container: { flex: 1, backgroundColor: colors.background },
+        container: { flex: 1, backgroundColor: 'transparent' },
         header: {
             flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',
             paddingHorizontal: spacing.xl, paddingVertical: spacing.lg, paddingTop: spacing.xxl,
@@ -269,10 +269,10 @@ const createStyles = (colors: Theme) =>
         optionsContainer: { gap: spacing.md },
         optionButton: {
             paddingVertical: spacing.lg, paddingHorizontal: spacing.xl,
-            borderRadius: radius.xl, backgroundColor: colors.surface,
-            borderWidth: 2, borderColor: colors.border,
+            borderRadius: radius.xl, backgroundColor: colors.glass,
+            borderWidth: 1, borderColor: colors.glassBorder,
         },
-        optionButtonSelected: { borderColor: colors.primary, backgroundColor: colors.primaryLight },
+        optionButtonSelected: { borderColor: colors.primary, backgroundColor: colors.primary + '20' },
         optionText: { ...typography.callout, color: colors.text },
         optionTextSelected: { color: colors.primary, fontWeight: '600' },
         resultContainer: { alignItems: 'center', paddingHorizontal: spacing.xl, paddingTop: spacing.xxl },
@@ -281,8 +281,8 @@ const createStyles = (colors: Theme) =>
         resultTitle: { ...typography.title1, marginBottom: spacing.sm },
         resultScore: { ...typography.subhead, color: colors.textSecondary, marginBottom: spacing.xxl },
         adviceCard: {
-            backgroundColor: colors.surface, borderRadius: radius.xl, padding: spacing.xl,
-            borderWidth: 1, borderColor: colors.border, width: '100%',
+            backgroundColor: colors.glass, borderRadius: radius.xl, padding: spacing.xl,
+            borderWidth: 1, borderColor: colors.glassBorder, width: '100%',
         },
         adviceTitle: { ...typography.headline, color: colors.text, marginBottom: spacing.sm },
         adviceText: { ...typography.body, color: colors.textSecondary, lineHeight: 24 },

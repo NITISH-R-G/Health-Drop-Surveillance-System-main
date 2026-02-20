@@ -2,6 +2,7 @@ import React, { useState, useMemo, useCallback } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { StatusBar } from 'expo-status-bar';
+import { BlurView } from 'expo-blur';
 import { useTheme, Theme, typography, spacing, radius } from '../lib/ThemeContext';
 import Navbar from '../components/Navbar';
 import Sidebar from '../components/Sidebar';
@@ -233,12 +234,18 @@ const IndexPageContent: React.FC<IndexPageProps> = ({
             ].map((action) => (
               <TouchableOpacity
                 key={action.screen}
-                style={styles.quickActionItem}
+                style={{ width: '31%', marginBottom: spacing.sm }}
                 onPress={() => handleNavigation(action.screen)}
                 activeOpacity={0.7}
               >
-                <Ionicons name={action.icon as any} size={28} color={colors.primary} style={{ marginBottom: 8 }} />
-                <Text style={styles.quickActionLabel}>{action.label}</Text>
+                <BlurView
+                  intensity={80}
+                  tint={theme === 'dark' ? 'dark' : 'light'}
+                  style={styles.quickActionItem}
+                >
+                  <Ionicons name={action.icon as any} size={28} color={colors.primary} style={{ marginBottom: 8 }} />
+                  <Text style={styles.quickActionLabel}>{action.label}</Text>
+                </BlurView>
               </TouchableOpacity>
             ))}
           </View>
@@ -341,7 +348,7 @@ const IndexPageContent: React.FC<IndexPageProps> = ({
 
 const createStyles = (colors: Theme) =>
   StyleSheet.create({
-    container: { flex: 1, backgroundColor: colors.background },
+    container: { flex: 1, backgroundColor: 'transparent' },
     content: { flex: 1 },
     section: { paddingHorizontal: spacing.lg, marginBottom: spacing.xl },
     sectionTitle: { ...typography.title3, color: colors.text, marginBottom: spacing.sm },
@@ -355,9 +362,9 @@ const createStyles = (colors: Theme) =>
     // Self-Assessment CTA
     ctaContainer: { paddingHorizontal: spacing.lg, marginBottom: spacing.lg },
     ctaButton: {
-      flexDirection: 'row', alignItems: 'center', backgroundColor: colors.primary + '12',
+      flexDirection: 'row', alignItems: 'center', backgroundColor: colors.glass,
       borderRadius: radius.xl, padding: spacing.lg,
-      borderWidth: 1.5, borderColor: colors.primary + '30',
+      borderWidth: 1, borderColor: colors.glassBorder,
     },
     ctaIcon: { fontSize: 28, marginRight: spacing.md },
     ctaContent: { flex: 1 },
@@ -366,19 +373,19 @@ const createStyles = (colors: Theme) =>
     ctaArrow: { fontSize: 24, color: colors.primary, fontWeight: '300' },
     // Quick Actions
     quickActionsGrid: {
-      flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm,
+      flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between',
     },
     quickActionItem: {
-      width: '31%', backgroundColor: colors.surface, borderRadius: radius.xl,
-      padding: spacing.lg, alignItems: 'center',
-      borderWidth: 1, borderColor: colors.border,
+      borderRadius: radius.xl, padding: spacing.lg, alignItems: 'center',
+      borderWidth: 1, borderColor: colors.glassBorder,
+      backgroundColor: colors.glass, overflow: 'hidden'
     },
     quickActionIcon: { fontSize: 24, marginBottom: spacing.xs },
     quickActionLabel: { ...typography.caption1, color: colors.textSecondary, fontWeight: '500', textAlign: 'center' },
     // Empty states
     emptyState: {
-      backgroundColor: colors.surface, borderRadius: radius.xl, padding: spacing.xxl,
-      alignItems: 'center', borderWidth: 1, borderColor: colors.border,
+      backgroundColor: colors.glass, borderRadius: radius.xl, padding: spacing.xxl,
+      alignItems: 'center', borderWidth: 1, borderColor: colors.glassBorder,
     },
     emptyStateIcon: { fontSize: 24, marginBottom: spacing.sm },
     emptyStateText: { ...typography.subhead, color: colors.textSecondary },

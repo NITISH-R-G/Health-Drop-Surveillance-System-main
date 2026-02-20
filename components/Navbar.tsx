@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import { View, TouchableOpacity, Image, StyleSheet, Text } from 'react-native';
+import { BlurView } from 'expo-blur';
 import { useTheme, Theme, typography, spacing, radius } from '../lib/ThemeContext';
 
 interface NavbarProps {
@@ -16,7 +17,7 @@ const Navbar: React.FC<NavbarProps> = ({ onMenuPress, userName }) => {
   };
 
   return (
-    <View style={styles.navbar}>
+    <BlurView intensity={80} tint={colors.background === '#000000' ? 'dark' : 'light'} style={styles.navbar}>
       <View style={styles.leftSection}>
         <TouchableOpacity onPress={onMenuPress} style={styles.menuButton} activeOpacity={0.7}>
           <View style={styles.menuIconContainer}>
@@ -46,21 +47,21 @@ const Navbar: React.FC<NavbarProps> = ({ onMenuPress, userName }) => {
         </View>
         <View style={styles.statusDot} />
       </TouchableOpacity>
-    </View>
+    </BlurView>
   );
 };
 
 const createStyles = (colors: Theme) => StyleSheet.create({
   navbar: {
-    height: 56,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: spacing.xl,
-    backgroundColor: colors.surface,
+    paddingTop: 48 + spacing.md,
+    paddingBottom: spacing.md,
+    backgroundColor: colors.glass,
     borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: colors.border,
-    marginTop: 48,
+    borderBottomColor: colors.glassBorder,
   },
   leftSection: {
     flexDirection: 'row',

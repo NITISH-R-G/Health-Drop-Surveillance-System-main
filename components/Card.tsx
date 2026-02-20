@@ -1,6 +1,7 @@
 import React, { useMemo, useRef } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { BlurView } from 'expo-blur';
 import { useTheme, Theme, themes, typography, spacing, radius } from '../lib/ThemeContext';
 
 interface CardProps {
@@ -78,7 +79,7 @@ const Card: React.FC<CardProps> = ({ title, date, description, location, type, s
         onPressOut={handlePressOut}
         activeOpacity={1}
       >
-        <View style={styles.card}>
+        <BlurView intensity={80} tint={colors.background === '#000000' ? 'dark' : 'light'} style={styles.card}>
           {/* Severity indicator bar */}
           <View style={[styles.severityBar, { backgroundColor: severityColor }]} />
 
@@ -112,7 +113,7 @@ const Card: React.FC<CardProps> = ({ title, date, description, location, type, s
               </View>
             )}
           </View>
-        </View>
+        </BlurView>
       </TouchableOpacity>
     </Animated.View>
   );
@@ -120,12 +121,12 @@ const Card: React.FC<CardProps> = ({ title, date, description, location, type, s
 
 const createStyles = (colors: Theme) => StyleSheet.create({
   card: {
-    backgroundColor: colors.surface,
+    backgroundColor: colors.glass,
     borderRadius: radius.xl,
     marginBottom: spacing.md,
     overflow: 'hidden',
     borderWidth: 1,
-    borderColor: colors.border,
+    borderColor: colors.glassBorder,
   },
   severityBar: {
     height: 3,

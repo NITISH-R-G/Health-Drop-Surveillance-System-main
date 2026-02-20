@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { BlurView } from 'expo-blur';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme, Theme, typography, spacing, radius } from '../lib/ThemeContext';
 import { AlertItem } from '../lib/mockData';
@@ -49,7 +50,7 @@ const AlertHistoryPanel: React.FC<AlertHistoryPanelProps> = ({ alerts, maxItems 
     };
 
     return (
-        <View style={styles.container}>
+        <BlurView intensity={80} tint={colors.background === '#000000' ? 'dark' : 'light'} style={styles.container}>
             <View style={styles.header}>
                 <Text style={styles.title}>Alert History</Text>
                 <Text style={styles.count}>{alerts.length} total</Text>
@@ -84,18 +85,19 @@ const AlertHistoryPanel: React.FC<AlertHistoryPanelProps> = ({ alerts, maxItems 
                     </View>
                 );
             })}
-        </View>
+        </BlurView>
     );
 };
 
 const createStyles = (colors: Theme) =>
     StyleSheet.create({
         container: {
-            backgroundColor: colors.surface,
+            backgroundColor: colors.glass,
             borderRadius: radius.xl,
             padding: spacing.xl,
             borderWidth: 1,
-            borderColor: colors.border,
+            borderColor: colors.glassBorder,
+            overflow: 'hidden',
         },
         header: {
             flexDirection: 'row',

@@ -1,13 +1,16 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import {
     View,
     Text,
     ScrollView,
     StyleSheet,
     TouchableOpacity,
+    ActivityIndicator
 } from 'react-native';
+import { BlurView } from 'expo-blur';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme, Theme, typography, spacing, radius } from '../lib/ThemeContext';
+import { fetchCholeraCases, fetchCholeraDeaths, GhoDataPoint } from '../lib/ghoApi';
 
 interface StateData {
     name: string;
@@ -22,6 +25,7 @@ interface DiseaseCounter {
     count: number;
     icon: string;
     color: string;
+    isLive?: boolean;
 }
 
 const nationalSummary = {
@@ -32,15 +36,6 @@ const nationalSummary = {
     waterSourcesTested: 45200,
     contaminated: 3812,
 };
-
-const diseases: DiseaseCounter[] = [
-    { name: 'Cholera', count: 34521, icon: 'water', color: '#FF3B30' },
-    { name: 'Typhoid', count: 42890, icon: 'thermometer', color: '#FF9500' },
-    { name: 'Dysentery', count: 28310, icon: 'bug', color: '#AF52DE' },
-    { name: 'Hepatitis A', count: 18940, icon: 'warning', color: '#FFCC00' },
-    { name: 'Leptospirosis', count: 12450, icon: 'paw', color: '#5AC8FA' },
-    { name: 'Gastroenteritis', count: 11216, icon: 'sad', color: '#34C759' },
-];
 
 const stateData: StateData[] = [
     { name: 'West Bengal', active: 2340, recovered: 18420, deceased: 480, total: 21240 },
@@ -68,6 +63,40 @@ const NationalStats: React.FC<NationalStatsProps> = ({ onNavigate }) => {
     const styles = useMemo(() => createStyles(colors), [colors]);
     const [sortBy, setSortBy] = useState<'total' | 'active'>('total');
 
+    // Live API Data State
+    const [choleraCases, setCholeraCases] = useState<number | null>(null);
+    const [choleraDeaths, setCholeraDeaths] = useState<number | null>(null);
+    const [isLoadingLive, setIsLoadingLive] = useState(true);
+
+    useEffect(() => {
+        const loadLiveData = async () => {
+            setIsLoadingLive(true);
+            try {
+                // Fetching for India (IND)
+                const casesData = await fetchCholeraCases('IND', 1);
+                const deathsData = await fetchCholeraDeaths('IND', 1);
+
+                if (casesData.length > 0) setCholeraCases(Number(casesData[0].Value));
+                if (deathsData.length > 0) setCholeraDeaths(Number(deathsData[0].Value));
+            } catch (error) {
+                console.error("Failed to load live GHO data", error);
+            } finally {
+                setIsLoadingLive(false);
+            }
+        };
+
+        loadLiveData();
+    }, []);
+
+    const diseases: DiseaseCounter[] = [
+        { name: 'Cholera (API IND)', count: choleraCases ?? 14210, icon: 'water', color: '#FF3B30', isLive: choleraCases !== null },
+        { name: 'Typhoid', count: 42890, icon: 'thermometer', color: '#FF9500' },
+        { name: 'Dysentery', count: 28310, icon: 'bug', color: '#AF52DE' },
+        { name: 'Hepatitis A', count: 18940, icon: 'warning', color: '#FFCC00' },
+        { name: 'Leptospirosis', count: 12450, icon: 'paw', color: '#5AC8FA' },
+        { name: 'Gastroenteritis', count: 11216, icon: 'sad', color: '#34C759' },
+    ];
+
     const sortedStates = useMemo(() =>
         [...stateData].sort((a, b) => b[sortBy] - a[sortBy]),
         [sortBy]
@@ -84,52 +113,59 @@ const NationalStats: React.FC<NationalStatsProps> = ({ onNavigate }) => {
                 </TouchableOpacity>
                 <Text style={styles.headerTitle}>National Statistics</Text>
                 <Text style={styles.headerSubtitle}>Water-Borne Disease Surveillance · India</Text>
+                {isLoadingLive && <ActivityIndicator size="small" color={colors.primary} style={{ marginTop: 8, alignSelf: 'flex-start' }} />}
             </View>
 
             {/* Summary Cards */}
             <View style={styles.summaryGrid}>
-                <View style={[styles.summaryCard, styles.summaryCardLarge]}>
+                <BlurView intensity={80} tint={colors.background === '#000000' ? 'dark' : 'light'} style={[styles.summaryCard, styles.summaryCardLarge]}>
                     <Text style={styles.summaryLabel}>Total Cases</Text>
                     <Text style={[styles.summaryValue, { color: colors.text }]}>
                         {nationalSummary.totalCases.toLocaleString()}
                     </Text>
-                </View>
-                <View style={styles.summaryCard}>
+                </BlurView>
+                <BlurView intensity={80} tint={colors.background === '#000000' ? 'dark' : 'light'} style={styles.summaryCard}>
                     <Text style={styles.summaryLabel}>Active</Text>
                     <Text style={[styles.summaryValue, { color: colors.error }]}>
                         {nationalSummary.activeCases.toLocaleString()}
                     </Text>
-                </View>
-                <View style={styles.summaryCard}>
+                </BlurView>
+                <BlurView intensity={80} tint={colors.background === '#000000' ? 'dark' : 'light'} style={styles.summaryCard}>
                     <Text style={styles.summaryLabel}>Recovered</Text>
                     <Text style={[styles.summaryValue, { color: colors.success }]}>
                         {nationalSummary.recovered.toLocaleString()}
                     </Text>
-                </View>
-                <View style={styles.summaryCard}>
+                </BlurView>
+                <BlurView intensity={80} tint={colors.background === '#000000' ? 'dark' : 'light'} style={styles.summaryCard}>
                     <Text style={styles.summaryLabel}>Deceased</Text>
                     <Text style={[styles.summaryValue, { color: colors.textSecondary }]}>
                         {nationalSummary.deceased.toLocaleString()}
                     </Text>
-                </View>
-                <View style={styles.summaryCard}>
+                </BlurView>
+                <BlurView intensity={80} tint={colors.background === '#000000' ? 'dark' : 'light'} style={[styles.summaryCard, styles.summaryCardLarge]}>
+                    <Text style={[styles.summaryLabel, { color: colors.primary }]}>{isLoadingLive ? 'Fetching Live Data...' : 'Cholera Deaths (WHO GHO API)'}</Text>
+                    <Text style={[styles.summaryValue, { color: colors.primary, fontWeight: '800' }]}>
+                        {choleraDeaths ? choleraDeaths.toLocaleString() : 'Loading...'}
+                    </Text>
+                </BlurView>
+                <BlurView intensity={80} tint={colors.background === '#000000' ? 'dark' : 'light'} style={styles.summaryCard}>
                     <Text style={styles.summaryLabel}>Water Sources Tested</Text>
                     <Text style={[styles.summaryValue, { color: colors.primary }]}>
                         {nationalSummary.waterSourcesTested.toLocaleString()}
                     </Text>
-                </View>
-                <View style={styles.summaryCard}>
+                </BlurView>
+                <BlurView intensity={80} tint={colors.background === '#000000' ? 'dark' : 'light'} style={styles.summaryCard}>
                     <Text style={styles.summaryLabel}>Contaminated</Text>
                     <Text style={[styles.summaryValue, { color: colors.warning }]}>
                         {nationalSummary.contaminated.toLocaleString()}
                     </Text>
-                </View>
+                </BlurView>
             </View>
 
             {/* 30-Day Trend */}
             <View style={styles.section}>
                 <Text style={styles.sectionTitle}>30-Day Trend</Text>
-                <View style={styles.trendCard}>
+                <BlurView intensity={80} tint={colors.background === '#000000' ? 'dark' : 'light'} style={styles.trendCard}>
                     <View style={styles.trendChart}>
                         {trendData.map((val, idx) => (
                             <View key={idx} style={styles.trendBarContainer}>
@@ -147,7 +183,7 @@ const NationalStats: React.FC<NationalStatsProps> = ({ onNavigate }) => {
                         <Text style={styles.trendLabel}>30 days ago</Text>
                         <Text style={styles.trendLabel}>Today</Text>
                     </View>
-                </View>
+                </BlurView>
             </View>
 
             {/* Disease Breakdown */}
@@ -155,13 +191,14 @@ const NationalStats: React.FC<NationalStatsProps> = ({ onNavigate }) => {
                 <Text style={styles.sectionTitle}>By Disease Type</Text>
                 <View style={styles.diseaseGrid}>
                     {diseases.map((disease) => (
-                        <View key={disease.name} style={styles.diseaseCard}>
+                        <BlurView intensity={80} tint={colors.background === '#000000' ? 'dark' : 'light'} key={disease.name} style={[styles.diseaseCard]}>
+                            {disease.isLive && <View style={{ position: 'absolute', top: 8, right: 8, width: 8, height: 8, borderRadius: 4, backgroundColor: disease.color }} />}
                             <Ionicons name={disease.icon as any} size={28} color={disease.color} style={{ marginBottom: 4 }} />
                             <Text style={styles.diseaseName}>{disease.name}</Text>
                             <Text style={[styles.diseaseCount, { color: disease.color }]}>
-                                {disease.count.toLocaleString()}
+                                {isLoadingLive && disease.isLive ? '...' : disease.count.toLocaleString()}
                             </Text>
-                        </View>
+                        </BlurView>
                     ))}
                 </View>
             </View>
@@ -188,7 +225,7 @@ const NationalStats: React.FC<NationalStatsProps> = ({ onNavigate }) => {
                     </View>
                 </View>
 
-                <View style={styles.stateTable}>
+                <BlurView intensity={80} tint={colors.background === '#000000' ? 'dark' : 'light'} style={styles.stateTable}>
                     <View style={styles.stateTableHead}>
                         <Text style={[styles.stateColHead, { flex: 2 }]}>State</Text>
                         <Text style={styles.stateColHead}>Active</Text>
@@ -205,7 +242,7 @@ const NationalStats: React.FC<NationalStatsProps> = ({ onNavigate }) => {
                             <Text style={[styles.stateVal, { fontWeight: '700' }]}>{state.total.toLocaleString()}</Text>
                         </View>
                     ))}
-                </View>
+                </BlurView>
             </View>
 
             <View style={styles.footer}>
@@ -218,7 +255,7 @@ const NationalStats: React.FC<NationalStatsProps> = ({ onNavigate }) => {
 
 const createStyles = (colors: Theme) =>
     StyleSheet.create({
-        container: { flex: 1, backgroundColor: colors.background },
+        container: { flex: 1, backgroundColor: 'transparent' },
         header: { paddingHorizontal: spacing.xl, paddingVertical: spacing.lg, paddingTop: spacing.xxl },
         backText: { ...typography.callout, color: colors.primary, fontWeight: '500', marginBottom: spacing.md },
         headerTitle: { ...typography.largeTitle, color: colors.text },
@@ -228,8 +265,8 @@ const createStyles = (colors: Theme) =>
             gap: spacing.sm, marginBottom: spacing.xl,
         },
         summaryCard: {
-            flex: 1, minWidth: '30%', backgroundColor: colors.surface, borderRadius: radius.xl,
-            padding: spacing.lg, borderWidth: 1, borderColor: colors.border,
+            flex: 1, minWidth: '30%', backgroundColor: colors.glass, borderRadius: radius.xl,
+            padding: spacing.lg, borderWidth: 1, borderColor: colors.glassBorder, overflow: 'hidden'
         },
         summaryCardLarge: { minWidth: '100%' },
         summaryLabel: { ...typography.caption2, color: colors.textTertiary, fontWeight: '600', textTransform: 'uppercase', letterSpacing: 0.5 },
@@ -237,8 +274,8 @@ const createStyles = (colors: Theme) =>
         section: { paddingHorizontal: spacing.lg, marginBottom: spacing.xl },
         sectionTitle: { ...typography.title3, color: colors.text, marginBottom: spacing.md },
         trendCard: {
-            backgroundColor: colors.surface, borderRadius: radius.xl, padding: spacing.lg,
-            borderWidth: 1, borderColor: colors.border,
+            backgroundColor: colors.glass, borderRadius: radius.xl, padding: spacing.lg,
+            borderWidth: 1, borderColor: colors.glassBorder, overflow: 'hidden'
         },
         trendChart: { flexDirection: 'row', height: 100, alignItems: 'flex-end', gap: 2, marginBottom: spacing.sm },
         trendBarContainer: { flex: 1, height: '100%', justifyContent: 'flex-end' },
@@ -246,11 +283,11 @@ const createStyles = (colors: Theme) =>
         trendLabels: { flexDirection: 'row', justifyContent: 'space-between' },
         trendLabel: { ...typography.caption2, color: colors.textTertiary },
         diseaseGrid: {
-            flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm,
+            flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm, justifyContent: 'space-between'
         },
         diseaseCard: {
-            width: '48%', backgroundColor: colors.surface, borderRadius: radius.xl,
-            padding: spacing.lg, borderWidth: 1, borderColor: colors.border, alignItems: 'center',
+            width: '48%', backgroundColor: colors.glass, borderRadius: radius.xl,
+            padding: spacing.lg, borderWidth: 1, borderColor: colors.glassBorder, alignItems: 'center', overflow: 'hidden'
         },
         diseaseIcon: { fontSize: 24, marginBottom: spacing.xs },
         diseaseName: { ...typography.caption1, color: colors.textSecondary, fontWeight: '500' },
@@ -265,8 +302,8 @@ const createStyles = (colors: Theme) =>
         sortBtnText: { ...typography.caption1, color: colors.textSecondary, fontWeight: '600' },
         sortBtnTextActive: { color: '#FFFFFF' },
         stateTable: {
-            backgroundColor: colors.surface, borderRadius: radius.xl,
-            borderWidth: 1, borderColor: colors.border, overflow: 'hidden',
+            backgroundColor: colors.glass, borderRadius: radius.xl,
+            borderWidth: 1, borderColor: colors.glassBorder, overflow: 'hidden',
         },
         stateTableHead: {
             flexDirection: 'row', paddingVertical: spacing.sm, paddingHorizontal: spacing.md,

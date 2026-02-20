@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import { View, Text, StyleSheet, Image } from 'react-native';
+import { BlurView } from 'expo-blur';
 import { useTheme, Theme, typography, spacing, radius } from '../lib/ThemeContext';
 import { dashboardStats } from '../lib/mockData';
 
@@ -36,7 +37,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ userName, selectedRegion }) =
   ];
 
   return (
-    <View style={styles.container}>
+    <BlurView intensity={80} tint={colors.background === '#000000' ? 'dark' : 'light'} style={styles.container}>
       {/* Greeting */}
       <View style={styles.greetingSection}>
         <View style={styles.greetingLeft}>
@@ -78,18 +79,19 @@ const HeroSection: React.FC<HeroSectionProps> = ({ userName, selectedRegion }) =
           <Text style={styles.summaryLabel}>People Educated</Text>
         </View>
       </View>
-    </View>
+    </BlurView>
   );
 };
 
 const createStyles = (colors: Theme) => StyleSheet.create({
   container: {
     margin: spacing.lg,
-    backgroundColor: colors.surface,
-    borderRadius: radius.xl,
+    backgroundColor: colors.glass,
+    borderRadius: radius.xxl,
     padding: spacing.xl,
     borderWidth: 1,
-    borderColor: colors.border,
+    borderColor: colors.glassBorder,
+    overflow: 'hidden',
   },
   greetingSection: {
     flexDirection: 'row',

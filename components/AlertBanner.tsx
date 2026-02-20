@@ -1,7 +1,10 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { BlurView } from 'expo-blur';
 import { useTheme, Theme, typography, spacing, radius } from '../lib/ThemeContext';
+
+const AnimatedBlurView = Animated.createAnimatedComponent(BlurView);
 import { AlertItem } from '../lib/mockData';
 
 interface AlertBannerProps {
@@ -59,7 +62,9 @@ const AlertBanner: React.FC<AlertBannerProps> = ({ alerts }) => {
     const severityColor = getSeverityColor(currentAlert.severity);
 
     return (
-        <Animated.View
+        <AnimatedBlurView
+            intensity={80}
+            tint={colors.background === '#000000' ? 'dark' : 'light'}
             style={[
                 styles.container,
                 {
@@ -93,7 +98,7 @@ const AlertBanner: React.FC<AlertBannerProps> = ({ alerts }) => {
             <TouchableOpacity onPress={handleDismiss} style={styles.dismissButton} activeOpacity={0.7}>
                 <Ionicons name="close" size={20} color={colors.textTertiary} />
             </TouchableOpacity>
-        </Animated.View>
+        </AnimatedBlurView>
     );
 };
 
@@ -102,14 +107,15 @@ const createStyles = (colors: Theme) =>
         container: {
             flexDirection: 'row',
             alignItems: 'center',
-            backgroundColor: colors.surface,
+            backgroundColor: colors.glass,
             marginHorizontal: spacing.lg,
             marginVertical: spacing.sm,
             padding: spacing.lg,
             borderRadius: radius.lg,
             borderLeftWidth: 4,
             borderWidth: 1,
-            borderColor: colors.border,
+            borderColor: colors.glassBorder,
+            overflow: 'hidden',
         },
         iconContainer: {
             width: 36,

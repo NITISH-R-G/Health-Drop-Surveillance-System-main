@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import { BlurView } from 'expo-blur';
 import { useTheme, Theme, typography, spacing, radius } from '../lib/ThemeContext';
 import { regions as allRegions } from '../lib/mockData';
 
@@ -28,7 +29,7 @@ const RiskHeatmap: React.FC<RiskHeatmapProps> = ({ selectedRegion = 'all' }) => 
     };
 
     return (
-        <View style={styles.container}>
+        <BlurView intensity={80} tint={colors.background === '#000000' ? 'dark' : 'light'} style={styles.container}>
             <View style={styles.header}>
                 <Text style={styles.title}>Risk Assessment</Text>
                 <Text style={styles.subtitle}>Regional risk levels</Text>
@@ -74,18 +75,19 @@ const RiskHeatmap: React.FC<RiskHeatmapProps> = ({ selectedRegion = 'all' }) => 
                     </View>
                 ))}
             </View>
-        </View>
+        </BlurView>
     );
 };
 
 const createStyles = (colors: Theme) =>
     StyleSheet.create({
         container: {
-            backgroundColor: colors.surface,
+            backgroundColor: colors.glass,
             borderRadius: radius.xl,
             padding: spacing.xl,
             borderWidth: 1,
-            borderColor: colors.border,
+            borderColor: colors.glassBorder,
+            overflow: 'hidden',
         },
         header: {
             marginBottom: spacing.lg,

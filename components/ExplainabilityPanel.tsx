@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import { BlurView } from 'expo-blur';
 import { useTheme, Theme, typography, spacing, radius } from '../lib/ThemeContext';
 import { PredictionInsight } from '../lib/mockData';
 
@@ -21,7 +22,7 @@ const ExplainabilityPanel: React.FC<ExplainabilityPanelProps> = ({ insight }) =>
     const maxImpact = Math.max(...insight.factors.map(f => f.impact));
 
     return (
-        <View style={styles.container}>
+        <BlurView intensity={80} tint={colors.background === '#000000' ? 'dark' : 'light'} style={styles.container}>
             {/* Header */}
             <View style={styles.header}>
                 <View style={styles.headerLeft}>
@@ -104,18 +105,19 @@ const ExplainabilityPanel: React.FC<ExplainabilityPanelProps> = ({ insight }) =>
                 </View>
                 <Text style={styles.confidenceValue}>{Math.round(insight.confidence * 100)}%</Text>
             </View>
-        </View>
+        </BlurView>
     );
 };
 
 const createStyles = (colors: Theme) =>
     StyleSheet.create({
         container: {
-            backgroundColor: colors.surface,
+            backgroundColor: colors.glass,
             borderRadius: radius.xl,
             padding: spacing.xl,
             borderWidth: 1,
-            borderColor: colors.border,
+            borderColor: colors.glassBorder,
+            overflow: 'hidden',
         },
         header: {
             flexDirection: 'row',
