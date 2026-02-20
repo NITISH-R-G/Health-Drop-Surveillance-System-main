@@ -7,6 +7,7 @@ export interface Region {
     population: number;
     riskLevel: 'low' | 'medium' | 'high' | 'critical';
     riskScore: number;
+    activeCases?: number; // Added for proportional circle sizing
 }
 
 export interface Outbreak {
@@ -73,14 +74,18 @@ export interface EnvironmentalData {
 
 // Regions
 export const regions: Region[] = [
-    { id: 'all', name: 'All Regions', district: 'Northeast India', population: 245000, riskLevel: 'medium', riskScore: 62 },
-    { id: 'shillong', name: 'Shillong', district: 'East Khasi Hills', population: 35400, riskLevel: 'high', riskScore: 78 },
-    { id: 'mawsynram', name: 'Mawsynram', district: 'East Khasi Hills', population: 8200, riskLevel: 'critical', riskScore: 89 },
-    { id: 'sohra', name: 'Sohra', district: 'East Khasi Hills', population: 11500, riskLevel: 'medium', riskScore: 55 },
-    { id: 'nongpoh', name: 'Nongpoh', district: 'Ri-Bhoi', population: 22600, riskLevel: 'high', riskScore: 72 },
-    { id: 'tura', name: 'Tura', district: 'West Garo Hills', population: 41200, riskLevel: 'low', riskScore: 28 },
-    { id: 'jowai', name: 'Jowai', district: 'West Jaintia Hills', population: 18900, riskLevel: 'medium', riskScore: 48 },
-    { id: 'dawki', name: 'Dawki', district: 'West Jaintia Hills', population: 6700, riskLevel: 'low', riskScore: 32 },
+    { id: 'all', name: 'All Regions', district: 'India', population: 2450000, riskLevel: 'medium', riskScore: 62, activeCases: 145 },
+    { id: 'coimbatore', name: 'Coimbatore', district: 'Coimbatore District', population: 1600000, riskLevel: 'critical', riskScore: 92, activeCases: 85 }, // Prioritized high-risk area
+    { id: 'chiyanda', name: 'Chennai', district: 'Chennai', population: 7000000, riskLevel: 'high', riskScore: 78, activeCases: 32 },
+    { id: 'bengaluru', name: 'Bengaluru', district: 'Bangalore Urban', population: 8400000, riskLevel: 'medium', riskScore: 55, activeCases: 15 },
+    { id: 'mysuru', name: 'Mysuru', district: 'Mysore District', population: 1000000, riskLevel: 'low', riskScore: 28, activeCases: 4 },
+    { id: 'shillong', name: 'Shillong', district: 'East Khasi Hills', population: 35400, riskLevel: 'high', riskScore: 78, activeCases: 22 },
+    { id: 'mawsynram', name: 'Mawsynram', district: 'East Khasi Hills', population: 8200, riskLevel: 'critical', riskScore: 89, activeCases: 18 },
+    { id: 'sohra', name: 'Sohhra', district: 'East Khasi Hills', population: 11500, riskLevel: 'medium', riskScore: 55, activeCases: 7 },
+    { id: 'nongpoh', name: 'Nongpoh', district: 'Ri-Bhoi', population: 22600, riskLevel: 'high', riskScore: 72, activeCases: 12 },
+    { id: 'tura', name: 'Tura', district: 'West Garo Hills', population: 41200, riskLevel: 'low', riskScore: 28, activeCases: 2 },
+    { id: 'jowai', name: 'Jowai', district: 'West Jaintia Hills', population: 18900, riskLevel: 'medium', riskScore: 48, activeCases: 5 },
+    { id: 'dawki', name: 'Dawki', district: 'West Jaintia Hills', population: 6700, riskLevel: 'low', riskScore: 32, activeCases: 1 },
 ];
 
 // Outbreaks
@@ -111,26 +116,26 @@ export const outbreaks: Outbreak[] = [
     },
     {
         id: 3,
-        title: 'Typhoid Cases Reported',
-        description: 'Three confirmed typhoid cases in market area. Contact tracing underway. Linked to shared food source.',
-        location: 'Nongpoh Market Area',
-        regionId: 'nongpoh',
-        date: '2025-09-20',
+        title: 'Water Discoloration - Sewage Mixing',
+        description: 'Residents report drinking water turning black and omitting a foul odor, likely due to sewage mixing in the Bhavani River supply. TNPCB testing ongoing.',
+        location: 'Jadayampalayam Panchayat',
+        regionId: 'coimbatore',
+        date: '2026-02-15',
         type: 'outbreak',
-        severity: 'medium',
-        caseCount: 3,
-        status: 'contained',
+        severity: 'critical',
+        caseCount: 45,
+        status: 'active',
     },
     {
         id: 4,
-        title: 'Hepatitis A Warning',
-        description: 'Elevated hepatitis A cases observed in Shillong suburbs. Likely linked to contaminated water supply during monsoon flooding.',
-        location: 'Shillong Suburbs',
-        regionId: 'shillong',
-        date: '2025-09-18',
-        type: 'outbreak',
+        title: 'Microplastic Contamination Detected',
+        description: 'Elevated levels of microplastics found in local tanks posing ecological and health risks to freshwater organisms and residents.',
+        location: 'Singanallur & Ukkadam Tanks',
+        regionId: 'coimbatore',
+        date: '2026-02-10',
+        type: 'alert',
         severity: 'high',
-        caseCount: 5,
+        caseCount: 15,
         status: 'active',
     },
 ];
@@ -139,24 +144,24 @@ export const outbreaks: Outbreak[] = [
 export const waterQualityAlerts: Outbreak[] = [
     {
         id: 10,
-        title: 'Water Contamination Warning',
-        description: 'High bacterial count detected in community well water. E.coli levels exceed safe limits by 4x. Boil water advisory issued.',
-        location: 'Nongpoh Market Area',
-        regionId: 'nongpoh',
-        date: '2025-09-22',
+        title: 'Bhavani River Algal Bloom',
+        description: 'River water turned yellow for a 6 km stretch near a major pumping station. Preliminary investigations point to severe algae spread. Fish deaths reported.',
+        location: 'Sirumugai Pumping Station',
+        regionId: 'coimbatore',
+        date: '2026-03-01',
         type: 'water_quality',
         severity: 'high',
         status: 'active',
     },
     {
         id: 11,
-        title: 'Turbidity Levels Rising',
-        description: 'Monsoon affecting water clarity in mountain streams. Sediment levels increasing. Manual filtration recommended.',
-        location: 'East Khasi Hills',
-        regionId: 'shillong',
-        date: '2025-09-21',
+        title: 'Leachate Percolation Warning',
+        description: 'Groundwater sources contaminated due to leachate percolation from accumulated waste. Elevated TDS, BOD, and COD detected in local borewells.',
+        location: 'Vellalore Dump Yard Area',
+        regionId: 'coimbatore',
+        date: '2025-08-20',
         type: 'water_quality',
-        severity: 'medium',
+        severity: 'critical',
         status: 'active',
     },
     {
@@ -169,6 +174,17 @@ export const waterQualityAlerts: Outbreak[] = [
         type: 'water_quality',
         severity: 'low',
         status: 'resolved',
+    },
+    {
+        id: 13,
+        title: 'Pipeline Burst - Supply Interruption',
+        description: 'Main feeder pipeline burst causing massive water wastage and disruption. Low chlorine content suspected in alternate supplies.',
+        location: 'Saravanampatti (Pillur-II)',
+        regionId: 'coimbatore',
+        date: '2025-11-15',
+        type: 'water_quality',
+        severity: 'medium',
+        status: 'contained',
     },
 ];
 
