@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { useTheme, Theme, typography, spacing, radius } from '../lib/ThemeContext';
+import { outbreaks } from '../lib/mockData';
 
 interface ProximityData {
     radius: string;
@@ -9,20 +10,67 @@ interface ProximityData {
 }
 
 interface ProximityStatsProps {
-    data?: ProximityData[];
+    userLocation?: { lat: number; lng: number };
 }
 
-const defaultData: ProximityData[] = [
-    { radius: '500m', cases: 2, contamination: 1 },
-    { radius: '1 km', cases: 8, contamination: 3 },
-    { radius: '2 km', cases: 15, contamination: 5 },
-    { radius: '5 km', cases: 34, contamination: 9 },
-    { radius: '10 km', cases: 67, contamination: 14 },
-];
+// Simulated User Location (Coimbatore Center)
+const defaultLocation = { lat: 11.0168, lng: 76.9558 };
 
-const ProximityStats: React.FC<ProximityStatsProps> = ({ data = defaultData }) => {
+// Haversine formula to calculate distance between two coordinates in kilometers
+const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number) => {
+    const R = 6371; // Earth's radius in km
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLon = (lon2 - lon1) * Math.PI / 180;
+    const a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+        Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c;
+};
+
+const ProximityStats: React.FC<ProximityStatsProps> = ({ userLocation = defaultLocation }) => {
     const { colors } = useTheme();
     const styles = useMemo(() => createStyles(colors), [colors]);
+
+    const data = useMemo(() => {
+        const rings = [
+            { limit: 0.5, label: '500m' },
+            { limit: 1.0, label: '1 km' },
+            { limit: 2.0, label: '2 km' },
+            { limit: 5.0, label: '5 km' },
+            { limit: 10.0, label: '10 km' }
+        ];
+
+        const aggregatedData = rings.map(ring => ({
+            radius: ring.label,
+            limit: ring.limit,
+            cases: 0,
+            contamination: 0
+        }));
+
+        // Filter for Coimbatore outbreaks to keep things relevant to our test dataset
+        const coimbatoreOutbreaks = outbreaks.filter(o => o.regionId === 'reg-1');
+
+        coimbatoreOutbreaks.forEach(outbreak => {
+            const distance = calculateDistance(
+                userLocation.lat,
+                userLocation.lng,
+                outbreak.coordinates?.latitude || userLocation.lat,
+                outbreak.coordinates?.longitude || userLocation.lng
+            );
+
+            // Add cases to all rings that cover this distance
+            aggregatedData.forEach(ring => {
+                if (distance <= ring.limit) {
+                    ring.cases += outbreak.caseCount || 1; // Default to 1 case if unknown
+                    ring.contamination += 1; // Count each outbreak location as 1 contaminated source
+                }
+            });
+        });
+
+        return aggregatedData;
+    }, [userLocation]);
 
     const maxCases = Math.max(...data.map(d => d.cases));
 

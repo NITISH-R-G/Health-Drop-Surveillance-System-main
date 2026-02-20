@@ -117,7 +117,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({ onNavigate, userId, userEma
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => onNavigate('Dashboard')} style={styles.backButton} activeOpacity={0.6}>
-          <Text style={styles.backText}>‹ Back</Text>
+          <Ionicons name="arrow-back" size={24} color={colors.text} />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Settings</Text>
       </View>

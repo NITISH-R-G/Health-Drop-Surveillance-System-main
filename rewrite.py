@@ -1,4 +1,9 @@
-import React, { useState, useMemo, useCallback, useEffect } from 'react';
+import sys
+
+with open('pages/IndexPage.tsx', 'r', encoding='utf-8') as f:
+    text = f.read()
+
+new_index = """import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { StatusBar } from 'expo-status-bar';
@@ -102,7 +107,7 @@ const IndexPageContent: React.FC<IndexPageProps> = ({
   const filteredAlerts = useMemo(() => filterByRegion(alerts, selectedRegion), [selectedRegion]);
 
   const renderScreenContent = () => {
-    switch (currentScreen) {
+    switch(currentScreen) {
       case 'SelfAssessment':
         return <SelfAssessment onComplete={handleAssessmentComplete} onClose={() => handleNavigation('Dashboard')} />;
       case 'NationalStats':
@@ -111,8 +116,8 @@ const IndexPageContent: React.FC<IndexPageProps> = ({
         return (
           <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
             <View style={styles.screenHeader}>
-              <TouchableOpacity onPress={() => handleNavigation('Dashboard')} activeOpacity={0.6} style={{ marginBottom: spacing.md }}>
-                <Ionicons name="arrow-back" size={24} color={colors.text} />
+              <TouchableOpacity onPress={() => handleNavigation('Dashboard')} activeOpacity={0.6}>
+                <Text style={styles.backText}>‹ Back</Text>
               </TouchableOpacity>
               <Text style={styles.screenTitle}>Contamination Hotspots</Text>
             </View>
@@ -125,8 +130,8 @@ const IndexPageContent: React.FC<IndexPageProps> = ({
         return (
           <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
             <View style={styles.screenHeader}>
-              <TouchableOpacity onPress={() => handleNavigation('Dashboard')} activeOpacity={0.6} style={{ marginBottom: spacing.md }}>
-                <Ionicons name="arrow-back" size={24} color={colors.text} />
+              <TouchableOpacity onPress={() => handleNavigation('Dashboard')} activeOpacity={0.6}>
+                <Text style={styles.backText}>‹ Back</Text>
               </TouchableOpacity>
               <Text style={styles.screenTitle}>Approved Testing Labs</Text>
               <Text style={styles.screenSubtitle}>Water testing & pathology facilities near you</Text>
@@ -140,8 +145,8 @@ const IndexPageContent: React.FC<IndexPageProps> = ({
         return (
           <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
             <View style={styles.screenHeader}>
-              <TouchableOpacity onPress={() => handleNavigation('Dashboard')} activeOpacity={0.6} style={{ marginBottom: spacing.md }}>
-                <Ionicons name="arrow-back" size={24} color={colors.text} />
+              <TouchableOpacity onPress={() => handleNavigation('Dashboard')} activeOpacity={0.6}>
+                <Text style={styles.backText}>‹ Back</Text>
               </TouchableOpacity>
               <Text style={styles.screenTitle}>Emergency Helpline</Text>
             </View>
@@ -154,8 +159,8 @@ const IndexPageContent: React.FC<IndexPageProps> = ({
         return (
           <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
             <View style={styles.screenHeader}>
-              <TouchableOpacity onPress={() => handleNavigation('Dashboard')} activeOpacity={0.6} style={{ marginBottom: spacing.md }}>
-                <Ionicons name="arrow-back" size={24} color={colors.text} />
+              <TouchableOpacity onPress={() => handleNavigation('Dashboard')} activeOpacity={0.6}>
+                <Text style={styles.backText}>‹ Back</Text>
               </TouchableOpacity>
               <Text style={styles.screenTitle}>Health Certificate</Text>
             </View>
@@ -266,7 +271,7 @@ const IndexPageContent: React.FC<IndexPageProps> = ({
                 </TouchableOpacity>
               </View>
             )}
-
+            
             <HeroSection userName={userName} selectedRegion={selectedRegion} />
             <RegionFilter regions={regions} selectedRegion={selectedRegion} onSelect={handleRegionSelect} />
 
@@ -274,55 +279,55 @@ const IndexPageContent: React.FC<IndexPageProps> = ({
             <View style={styles.section}>
               <Text style={styles.sectionTitle}>Surveillance Categories</Text>
               <Text style={styles.sectionSubtitle}>Select an area to view detailed reports</Text>
-
+              
               <View style={styles.categoryGrid}>
-                <TouchableOpacity style={[styles.categoryCard, { borderColor: colors.error }]} onPress={() => handleNavigation('Outbreaks')} activeOpacity={0.7}>
-                  <View style={[styles.categoryIconBg, { backgroundColor: colors.error + '15' }]}>
-                    <Ionicons name="bug" size={28} color={colors.error} />
-                  </View>
-                  <Text style={[styles.categoryTitle, { color: colors.text }]}>Outbreaks</Text>
-                  <Text style={styles.categorySubtitle} numberOfLines={2}>Active disease reports & campaigns</Text>
-                </TouchableOpacity>
+                 <TouchableOpacity style={[styles.categoryCard, { borderColor: colors.error }]} onPress={() => handleNavigation('Outbreaks')} activeOpacity={0.7}>
+                   <View style={[styles.categoryIconBg, { backgroundColor: colors.error + '15' }]}>
+                     <Ionicons name="bug" size={28} color={colors.error} />
+                   </View>
+                   <Text style={[styles.categoryTitle, { color: colors.text }]}>Outbreaks</Text>
+                   <Text style={styles.categorySubtitle} numberOfLines={2}>Active disease reports & campaigns</Text>
+                 </TouchableOpacity>
 
-                <TouchableOpacity style={[styles.categoryCard, { borderColor: colors.primary }]} onPress={() => handleNavigation('WaterQuality')} activeOpacity={0.7}>
-                  <View style={[styles.categoryIconBg, { backgroundColor: colors.primary + '15' }]}>
-                    <Ionicons name="water" size={28} color={colors.primary} />
-                  </View>
-                  <Text style={[styles.categoryTitle, { color: colors.text }]}>Water Quality</Text>
-                  <Text style={styles.categorySubtitle} numberOfLines={2}>Safety alerts & contamination levels</Text>
-                </TouchableOpacity>
+                 <TouchableOpacity style={[styles.categoryCard, { borderColor: colors.primary }]} onPress={() => handleNavigation('WaterQuality')} activeOpacity={0.7}>
+                   <View style={[styles.categoryIconBg, { backgroundColor: colors.primary + '15' }]}>
+                     <Ionicons name="water" size={28} color={colors.primary} />
+                   </View>
+                   <Text style={[styles.categoryTitle, { color: colors.text }]}>Water Quality</Text>
+                   <Text style={styles.categorySubtitle} numberOfLines={2}>Safety alerts & contamination levels</Text>
+                 </TouchableOpacity>
 
-                <TouchableOpacity style={[styles.categoryCard, { borderColor: colors.warning }]} onPress={() => handleNavigation('Warnings')} activeOpacity={0.7}>
-                  <View style={[styles.categoryIconBg, { backgroundColor: colors.warning + '15' }]}>
-                    <Ionicons name="notifications" size={28} color={colors.warning} />
-                  </View>
-                  <Text style={[styles.categoryTitle, { color: colors.text }]}>Alerts & AI</Text>
-                  <Text style={styles.categorySubtitle} numberOfLines={2}>AI predictions & risk advisories</Text>
-                </TouchableOpacity>
+                 <TouchableOpacity style={[styles.categoryCard, { borderColor: colors.warning }]} onPress={() => handleNavigation('Warnings')} activeOpacity={0.7}>
+                   <View style={[styles.categoryIconBg, { backgroundColor: colors.warning + '15' }]}>
+                     <Ionicons name="notifications" size={28} color={colors.warning} />
+                   </View>
+                   <Text style={[styles.categoryTitle, { color: colors.text }]}>Alerts & AI</Text>
+                   <Text style={styles.categorySubtitle} numberOfLines={2}>AI predictions & risk advisories</Text>
+                 </TouchableOpacity>
 
-                <TouchableOpacity style={[styles.categoryCard, { borderColor: colors.success }]} onPress={() => handleNavigation('NationalStats')} activeOpacity={0.7}>
-                  <View style={[styles.categoryIconBg, { backgroundColor: colors.success + '15' }]}>
-                    <Ionicons name="stats-chart" size={28} color={colors.success} />
-                  </View>
-                  <Text style={[styles.categoryTitle, { color: colors.text }]}>Analytics</Text>
-                  <Text style={styles.categorySubtitle} numberOfLines={2}>National statistics & trend charts</Text>
-                </TouchableOpacity>
+                 <TouchableOpacity style={[styles.categoryCard, { borderColor: colors.success }]} onPress={() => handleNavigation('NationalStats')} activeOpacity={0.7}>
+                   <View style={[styles.categoryIconBg, { backgroundColor: colors.success + '15' }]}>
+                     <Ionicons name="stats-chart" size={28} color={colors.success} />
+                   </View>
+                   <Text style={[styles.categoryTitle, { color: colors.text }]}>Analytics</Text>
+                   <Text style={styles.categorySubtitle} numberOfLines={2}>National statistics & trend charts</Text>
+                 </TouchableOpacity>
+                 
+                 <TouchableOpacity style={[styles.categoryCard, { borderColor: colors.secondary }]} onPress={() => handleNavigation('HotspotMap')} activeOpacity={0.7}>
+                   <View style={[styles.categoryIconBg, { backgroundColor: colors.secondary + '15' }]}>
+                     <Ionicons name="map" size={28} color={colors.secondary} />
+                   </View>
+                   <Text style={[styles.categoryTitle, { color: colors.text }]}>Hotspot Map</Text>
+                   <Text style={styles.categorySubtitle} numberOfLines={2}>Live view of contamination zones</Text>
+                 </TouchableOpacity>
 
-                <TouchableOpacity style={[styles.categoryCard, { borderColor: colors.secondary }]} onPress={() => handleNavigation('HotspotMap')} activeOpacity={0.7}>
-                  <View style={[styles.categoryIconBg, { backgroundColor: colors.secondary + '15' }]}>
-                    <Ionicons name="map" size={28} color={colors.secondary} />
-                  </View>
-                  <Text style={[styles.categoryTitle, { color: colors.text }]}>Hotspot Map</Text>
-                  <Text style={styles.categorySubtitle} numberOfLines={2}>Live view of contamination zones</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity style={[styles.categoryCard, { borderColor: colors.primary }]} onPress={() => handleNavigation('SelfAssessment')} activeOpacity={0.7}>
-                  <View style={[styles.categoryIconBg, { backgroundColor: colors.primary + '15' }]}>
-                    <Ionicons name="clipboard" size={28} color={colors.primary} />
-                  </View>
-                  <Text style={[styles.categoryTitle, { color: colors.text }]}>Assessment</Text>
-                  <Text style={styles.categorySubtitle} numberOfLines={2}>Check your personal health risk</Text>
-                </TouchableOpacity>
+                 <TouchableOpacity style={[styles.categoryCard, { borderColor: colors.primary }]} onPress={() => handleNavigation('SelfAssessment')} activeOpacity={0.7}>
+                   <View style={[styles.categoryIconBg, { backgroundColor: colors.primary + '15' }]}>
+                     <Ionicons name="clipboard" size={28} color={colors.primary} />
+                   </View>
+                   <Text style={[styles.categoryTitle, { color: colors.text }]}>Assessment</Text>
+                   <Text style={styles.categorySubtitle} numberOfLines={2}>Check your personal health risk</Text>
+                 </TouchableOpacity>
               </View>
             </View>
 
@@ -354,16 +359,6 @@ const IndexPageContent: React.FC<IndexPageProps> = ({
             <View style={styles.section}>
               <ProximityStats />
             </View>
-
-            <View style={styles.section}>
-              <Text style={styles.sectionTitle}>Trends Overview</Text>
-              <View style={styles.cardGap}>
-                <TrendChart data={diseaseTrendData} title="Disease Cases" subtitle="Monthly reported cases" color={colors.error} unit=" cases" />
-              </View>
-              <View style={styles.cardGap}>
-                <TrendChart data={waterQualityTrendData} title="Water Quality Index" subtitle="Average safety score" color={colors.primary} unit="%" />
-              </View>
-            </View>
           </ScrollView>
         );
     }
@@ -371,7 +366,7 @@ const IndexPageContent: React.FC<IndexPageProps> = ({
 
   return (
     <View style={styles.container}>
-      <StatusBar style={theme === 'dark' ? 'light' : 'dark'} backgroundColor={colors.surface} />
+      <StatusBar barStyle={theme === 'dark' ? 'light-content' : 'dark-content'} backgroundColor={colors.surface} />
       <Navbar onMenuPress={() => setSidebarVisible(true)} userName={userName} toggleTheme={toggleTheme} />
       <Sidebar isVisible={isSidebarVisible} onClose={() => setSidebarVisible(false)} onNavigate={handleNavigation} isGuest={isGuest} currentScreen={currentScreen} />
 
@@ -394,7 +389,7 @@ const createStyles = (colors: Theme) =>
     backText: { ...typography.callout, color: colors.primary, fontWeight: '500', marginBottom: spacing.sm },
     screenTitle: { ...typography.largeTitle, color: colors.text },
     screenSubtitle: { ...typography.caption1, color: colors.textSecondary, marginTop: 2 },
-
+    
     // Category Grid
     categoryGrid: {
       flexDirection: 'row', flexWrap: 'wrap', gap: spacing.md, justifyContent: 'space-between'
@@ -439,3 +434,8 @@ const createStyles = (colors: Theme) =>
   });
 
 export default IndexPageContent;
+"""
+
+with open('pages/IndexPage.tsx', 'w', encoding='utf-8') as f:
+    f.write(new_index)
+print("Rewrote IndexPage.tsx successfully to Categorized dashboard")

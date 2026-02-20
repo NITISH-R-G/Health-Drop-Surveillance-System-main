@@ -20,18 +20,18 @@ interface HotspotMapProps {
 }
 
 const defaultZones: HotspotZone[] = [
-    { id: '1', name: 'Sector A', level: 'safe', cases: 0, waterSources: 5, latitude: 25.5788, longitude: 91.8933 },
-    { id: '2', name: 'Sector B', level: 'caution', cases: 3, waterSources: 3, latitude: 25.5888, longitude: 91.8833 },
-    { id: '3', name: 'Sector C', level: 'contaminated', cases: 8, waterSources: 2, latitude: 25.5688, longitude: 91.9033 },
-    { id: '4', name: 'Sector D', level: 'safe', cases: 1, waterSources: 6, latitude: 25.5988, longitude: 91.8733 },
-    { id: '5', name: 'Sector E', level: 'outbreak', cases: 22, waterSources: 1, latitude: 25.5588, longitude: 91.8633 },
-    { id: '6', name: 'Sector F', level: 'caution', cases: 5, waterSources: 4, latitude: 25.5488, longitude: 91.8533 },
-    { id: '7', name: 'Sector G', level: 'safe', cases: 0, waterSources: 7, latitude: 25.6088, longitude: 91.9133 },
-    { id: '8', name: 'Sector H', level: 'contaminated', cases: 11, waterSources: 2, latitude: 25.6188, longitude: 91.9233 },
-    { id: '9', name: 'Sector I', level: 'caution', cases: 4, waterSources: 3, latitude: 25.5388, longitude: 91.8433 },
-    { id: '10', name: 'Sector J', level: 'safe', cases: 0, waterSources: 8, latitude: 25.5288, longitude: 91.8333 },
-    { id: '11', name: 'Sector K', level: 'outbreak', cases: 18, waterSources: 1, latitude: 25.5688, longitude: 91.8533 },
-    { id: '12', name: 'Sector L', level: 'safe', cases: 1, waterSources: 5, latitude: 25.5888, longitude: 91.8633 },
+    { id: '1', name: 'Singanallur Lake', level: 'outbreak', cases: 22, waterSources: 1, latitude: 10.9934, longitude: 77.0188 },
+    { id: '2', name: 'Ukkadam Tank', level: 'contaminated', cases: 8, waterSources: 2, latitude: 10.9856, longitude: 76.9583 },
+    { id: '3', name: 'Kuruchi Kulam', level: 'caution', cases: 5, waterSources: 4, latitude: 10.9542, longitude: 76.9611 },
+    { id: '4', name: 'Vellalore Dump', level: 'outbreak', cases: 18, waterSources: 1, latitude: 10.9634, longitude: 77.0016 },
+    { id: '5', name: 'Bhavani River (Sirumugai)', level: 'contaminated', cases: 11, waterSources: 2, latitude: 11.3323, longitude: 77.0003 },
+    { id: '6', name: 'Jadayampalayam', level: 'caution', cases: 4, waterSources: 3, latitude: 11.2589, longitude: 76.9832 },
+    { id: '7', name: 'Saravanampatti', level: 'caution', cases: 3, waterSources: 3, latitude: 11.0776, longitude: 76.9942 },
+    { id: '8', name: 'RS Puram', level: 'safe', cases: 0, waterSources: 5, latitude: 11.0069, longitude: 76.9454 },
+    { id: '9', name: 'Peelamedu', level: 'safe', cases: 0, waterSources: 6, latitude: 11.0264, longitude: 77.0041 },
+    { id: '10', name: 'Town Hall', level: 'safe', cases: 0, waterSources: 7, latitude: 10.9997, longitude: 76.9636 },
+    { id: '11', name: 'Gandhipuram', level: 'safe', cases: 1, waterSources: 5, latitude: 11.0181, longitude: 76.9669 },
+    { id: '12', name: 'Thudiyalur', level: 'safe', cases: 0, waterSources: 8, latitude: 11.0722, longitude: 76.9419 },
 ];
 
 const levelConfig = {
@@ -58,11 +58,14 @@ const HotspotMap: React.FC<HotspotMapProps> = ({ zones = defaultZones, onZonePre
                 <MapView
                     style={styles.map}
                     initialRegion={{
-                        latitude: 25.5788,
-                        longitude: 91.8833,
-                        latitudeDelta: 0.12,
-                        longitudeDelta: 0.12,
+                        latitude: 11.0500, // Roughly Center on Coimbatore and surrounding spots
+                        longitude: 76.9800,
+                        latitudeDelta: 0.40,
+                        longitudeDelta: 0.40,
                     }}
+                    zoomEnabled={true}
+                    scrollEnabled={true}
+                    pitchEnabled={true}
                 >
                     {zones.map((zone) => {
                         const cfg = levelConfig[zone.level];
@@ -70,7 +73,7 @@ const HotspotMap: React.FC<HotspotMapProps> = ({ zones = defaultZones, onZonePre
                             <React.Fragment key={zone.id}>
                                 <Circle
                                     center={{ latitude: zone.latitude, longitude: zone.longitude }}
-                                    radius={1200}
+                                    radius={1000 + (zone.cases * 150)}
                                     fillColor={cfg.bg}
                                     strokeColor={cfg.color}
                                     strokeWidth={2}

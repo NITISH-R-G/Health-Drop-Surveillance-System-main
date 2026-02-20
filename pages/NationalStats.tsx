@@ -79,8 +79,8 @@ const NationalStats: React.FC<NationalStatsProps> = ({ onNavigate }) => {
         <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
             {/* Header */}
             <View style={styles.header}>
-                <TouchableOpacity onPress={() => onNavigate('Dashboard')} activeOpacity={0.6}>
-                    <Text style={styles.backText}>‹ Back</Text>
+                <TouchableOpacity onPress={() => onNavigate('Dashboard')} activeOpacity={0.6} style={{ marginBottom: spacing.md }}>
+                    <Ionicons name="arrow-back" size={24} color={colors.text} />
                 </TouchableOpacity>
                 <Text style={styles.headerTitle}>National Statistics</Text>
                 <Text style={styles.headerSubtitle}>Water-Borne Disease Surveillance · India</Text>

@@ -18,9 +18,13 @@ export interface Outbreak {
     regionId: string;
     date: string;
     type: 'outbreak' | 'water_quality' | 'prevention' | 'alert';
-    severity: 'high' | 'medium' | 'low';
+    severity: 'critical' | 'high' | 'medium' | 'low';
     caseCount?: number;
     status: 'active' | 'contained' | 'resolved';
+    coordinates?: {
+        latitude: number;
+        longitude: number;
+    };
 }
 
 export interface WaterQualityReading {

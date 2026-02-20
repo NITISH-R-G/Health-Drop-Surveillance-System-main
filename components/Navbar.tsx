@@ -1,18 +1,37 @@
 import React, { useMemo } from 'react';
-import { View, TouchableOpacity, Image, StyleSheet, Text } from 'react-native';
+import { View, TouchableOpacity, Image, StyleSheet, Text, Alert, Platform } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { useTheme, Theme, typography, spacing, radius } from '../lib/ThemeContext';
 
 interface NavbarProps {
   onMenuPress: () => void;
   userName: string;
+  toggleTheme: () => void;
 }
 
-const Navbar: React.FC<NavbarProps> = ({ onMenuPress, userName }) => {
-  const { colors } = useTheme();
+const Navbar: React.FC<NavbarProps> = ({ onMenuPress, userName, toggleTheme }) => {
+  const { theme, colors } = useTheme();
   const styles = useMemo(() => createStyles(colors), [colors]);
 
   const getInitials = (name: string) => {
     return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+  };
+
+  const handleProfilePress = () => {
+    if (Platform.OS === 'web') {
+      window.alert('Profile Menu:\n\n- View Profile\n- Preferences\n- Sign Out');
+    } else {
+      Alert.alert(
+        "Profile Menu",
+        `Signed in as ${userName}`,
+        [
+          { text: "View Profile", onPress: () => console.log("Profile Pressed") },
+          { text: "Preferences", onPress: () => console.log("Settings Pressed") },
+          { text: "Sign Out", onPress: () => console.log("Logout Pressed"), style: "destructive" },
+          { text: "Cancel", style: "cancel" }
+        ]
+      );
+    }
   };
 
   return (
@@ -40,12 +59,18 @@ const Navbar: React.FC<NavbarProps> = ({ onMenuPress, userName }) => {
         </View>
       </View>
 
-      <TouchableOpacity style={styles.avatarContainer} activeOpacity={0.8}>
-        <View style={styles.avatar}>
-          <Text style={styles.avatarText}>{getInitials(userName)}</Text>
-        </View>
-        <View style={styles.statusDot} />
-      </TouchableOpacity>
+      <View style={styles.rightSection}>
+        <TouchableOpacity style={styles.themeToggle} onPress={toggleTheme}>
+          <Ionicons name={theme === 'dark' ? 'sunny' : 'moon'} size={24} color={colors.text} />
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.avatarContainer} activeOpacity={0.8} onPress={handleProfilePress}>
+          <View style={styles.avatar}>
+            <Text style={styles.avatarText}>{getInitials(userName)}</Text>
+          </View>
+          <View style={styles.statusDot} />
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
@@ -115,6 +140,19 @@ const createStyles = (colors: Theme) => StyleSheet.create({
     ...typography.caption2,
     color: colors.textSecondary,
     marginTop: 1,
+  },
+  rightSection: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.md,
+  },
+  themeToggle: {
+    width: 34,
+    height: 34,
+    borderRadius: 17,
+    backgroundColor: colors.surfaceVariant,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   avatarContainer: {
     position: 'relative',
