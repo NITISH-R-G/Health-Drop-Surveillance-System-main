@@ -229,6 +229,9 @@ export const diseaseTrendData: TrendDataPoint[] = [
     { label: 'Jul', value: 45 },
     { label: 'Aug', value: 38 },
     { label: 'Sep', value: 32 },
+    { label: 'Oct', value: 24 },
+    { label: 'Nov', value: 15 },
+    { label: 'Dec', value: 10 },
 ];
 
 export const waterQualityTrendData: TrendDataPoint[] = [
@@ -241,6 +244,9 @@ export const waterQualityTrendData: TrendDataPoint[] = [
     { label: 'Jul', value: 48 },
     { label: 'Aug', value: 55 },
     { label: 'Sep', value: 60 },
+    { label: 'Oct', value: 72 },
+    { label: 'Nov', value: 82 },
+    { label: 'Dec', value: 86 },
 ];
 
 // Alerts

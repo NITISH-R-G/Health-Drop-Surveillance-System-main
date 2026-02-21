@@ -44,6 +44,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isVisible, onClose, onNavigate, isGue
     { icon: 'flask', label: 'Testing Labs', screen: 'TestingLabs' },
     { icon: 'warning', label: 'Emergency Helpline', screen: 'Helpline' },
     { icon: 'document-text', label: 'Health Certificate', screen: 'HealthCertificate' },
+    { icon: 'cube', label: 'Field Logistics', screen: 'FieldWorkerLogistics' },
     ...(!isGuest ? [{ icon: 'person', label: 'Profile', screen: 'Profile' }] : []),
     { icon: 'settings', label: 'Settings', screen: 'Settings' },
     {

@@ -14,6 +14,7 @@ import AlertBanner from '../components/AlertBanner';
 import AlertHistoryPanel from '../components/AlertHistoryPanel';
 import ExplainabilityPanel from '../components/ExplainabilityPanel';
 import RiskAnalysisPanel from '../components/RiskAnalysisPanel';
+import ProfilePage from './ProfilePage';
 import SettingsPage from './SettingsPage';
 import NationalStats from './NationalStats';
 import CommunityReport from './CommunityReport';
@@ -28,6 +29,7 @@ import EmergencyHelpline from '../components/EmergencyHelpline';
 import TestingLabs from '../components/TestingLabs';
 import AdvisoriesPanel from '../components/AdvisoriesPanel';
 import HealthCertificate from '../components/HealthCertificate';
+import FieldWorkerLogistics from '../components/FieldWorkerLogistics';
 import {
   regions,
   outbreaks,
@@ -39,6 +41,7 @@ import {
   predictionInsights,
   filterByRegion,
 } from '../lib/mockData';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 interface IndexPageProps {
   userEmail?: string;
@@ -53,10 +56,10 @@ const IndexPageContent: React.FC<IndexPageProps> = ({
   userName = 'Health Worker',
   onLogout,
   isGuest = false,
-  userId = '',
-}) => {
+  userId }) => {
   const { theme, toggleTheme, colors } = useTheme();
-  const styles = useMemo(() => createStyles(colors), [colors]);
+  const insets = useSafeAreaInsets();
+  const styles = useMemo(() => createStyles(colors, insets), [colors, insets]);
 
   const [isSidebarVisible, setSidebarVisible] = useState(false);
   const [currentScreen, setCurrentScreen] = useState<string>('Dashboard');
@@ -109,17 +112,9 @@ const IndexPageContent: React.FC<IndexPageProps> = ({
         return <NationalStats onNavigate={handleNavigation} />;
       case 'HotspotMap':
         return (
-          <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
-            <View style={styles.screenHeader}>
-              <TouchableOpacity onPress={() => handleNavigation('Dashboard')} activeOpacity={0.6} style={{ marginBottom: spacing.md }}>
-                <Ionicons name="arrow-back" size={24} color={colors.text} />
-              </TouchableOpacity>
-              <Text style={styles.screenTitle}>Contamination Hotspots</Text>
-            </View>
-            <View style={styles.section}>
-              <CategorizedMap userLocation={userLocation} />
-            </View>
-          </ScrollView>
+          <View style={{ flex: 1, backgroundColor: colors.background }}>
+            <CategorizedMap userLocation={userLocation} fullscreen={true} onBack={() => handleNavigation('Dashboard')} />
+          </View>
         );
       case 'TestingLabs':
         return (
@@ -164,14 +159,31 @@ const IndexPageContent: React.FC<IndexPageProps> = ({
             </View>
           </ScrollView>
         );
+      case 'FieldWorkerLogistics':
+        return (
+          <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
+            <View style={styles.screenHeader}>
+              <TouchableOpacity onPress={() => handleNavigation('Dashboard')} activeOpacity={0.6} style={{ marginBottom: spacing.md }}>
+                <Ionicons name="arrow-back" size={24} color={colors.text} />
+              </TouchableOpacity>
+              <Text style={styles.screenTitle}>Field Worker Logistics</Text>
+              <Text style={styles.screenSubtitle}>Inventory & Active Dispatches</Text>
+            </View>
+            <View style={styles.section}>
+              <FieldWorkerLogistics />
+            </View>
+          </ScrollView>
+        );
       case 'CommunityReport':
         return <CommunityReport onBack={() => handleNavigation('Dashboard')} />;
       case 'Telemedicine':
         return <Telemedicine onBack={() => handleNavigation('Dashboard')} />;
       case 'HygieneEducation':
         return <HygieneEducation onBack={() => handleNavigation('Dashboard')} modules={hygieneModules} score={hygieneScore} onUpdateModule={handleHygieneUpdate} />;
+      case 'Profile':
+        return <ProfilePage onBack={() => handleNavigation('Dashboard')} onNavigate={handleNavigation} userName={userName} userEmail={userEmail} onLogout={onLogout} />;
       case 'Settings':
-        return <SettingsPage onNavigate={handleNavigation} userId={userId} userEmail={userEmail} />;
+        return <SettingsPage onNavigate={handleNavigation} userId={userId} userEmail={userEmail} userName={userName} />;
       case 'Outbreaks':
         return (
           <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
@@ -253,7 +265,7 @@ const IndexPageContent: React.FC<IndexPageProps> = ({
       case 'Dashboard':
       default:
         return (
-          <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
+          <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 100 }}>
             {geoAlertVisible && (
               <View style={styles.geoAlert}>
                 <Ionicons name="location" size={24} color="#fff" style={{ marginRight: 12 }} />
@@ -270,61 +282,7 @@ const IndexPageContent: React.FC<IndexPageProps> = ({
             <HeroSection userName={userName} selectedRegion={selectedRegion} />
             <RegionFilter regions={regions} selectedRegion={selectedRegion} onSelect={handleRegionSelect} />
 
-            {/* Main Category Menu Grid */}
-            <View style={styles.section}>
-              <Text style={styles.sectionTitle}>Surveillance Categories</Text>
-              <Text style={styles.sectionSubtitle}>Select an area to view detailed reports</Text>
-
-              <View style={styles.categoryGrid}>
-                <TouchableOpacity style={[styles.categoryCard, { borderColor: colors.error }]} onPress={() => handleNavigation('Outbreaks')} activeOpacity={0.7}>
-                  <View style={[styles.categoryIconBg, { backgroundColor: colors.error + '15' }]}>
-                    <Ionicons name="bug" size={28} color={colors.error} />
-                  </View>
-                  <Text style={[styles.categoryTitle, { color: colors.text }]}>Outbreaks</Text>
-                  <Text style={styles.categorySubtitle} numberOfLines={2}>Active disease reports & campaigns</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity style={[styles.categoryCard, { borderColor: colors.primary }]} onPress={() => handleNavigation('WaterQuality')} activeOpacity={0.7}>
-                  <View style={[styles.categoryIconBg, { backgroundColor: colors.primary + '15' }]}>
-                    <Ionicons name="water" size={28} color={colors.primary} />
-                  </View>
-                  <Text style={[styles.categoryTitle, { color: colors.text }]}>Water Quality</Text>
-                  <Text style={styles.categorySubtitle} numberOfLines={2}>Safety alerts & contamination levels</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity style={[styles.categoryCard, { borderColor: colors.warning }]} onPress={() => handleNavigation('Warnings')} activeOpacity={0.7}>
-                  <View style={[styles.categoryIconBg, { backgroundColor: colors.warning + '15' }]}>
-                    <Ionicons name="notifications" size={28} color={colors.warning} />
-                  </View>
-                  <Text style={[styles.categoryTitle, { color: colors.text }]}>Alerts & AI</Text>
-                  <Text style={styles.categorySubtitle} numberOfLines={2}>AI predictions & risk advisories</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity style={[styles.categoryCard, { borderColor: colors.success }]} onPress={() => handleNavigation('NationalStats')} activeOpacity={0.7}>
-                  <View style={[styles.categoryIconBg, { backgroundColor: colors.success + '15' }]}>
-                    <Ionicons name="stats-chart" size={28} color={colors.success} />
-                  </View>
-                  <Text style={[styles.categoryTitle, { color: colors.text }]}>Analytics</Text>
-                  <Text style={styles.categorySubtitle} numberOfLines={2}>National statistics & trend charts</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity style={[styles.categoryCard, { borderColor: colors.secondary }]} onPress={() => handleNavigation('HotspotMap')} activeOpacity={0.7}>
-                  <View style={[styles.categoryIconBg, { backgroundColor: colors.secondary + '15' }]}>
-                    <Ionicons name="map" size={28} color={colors.secondary} />
-                  </View>
-                  <Text style={[styles.categoryTitle, { color: colors.text }]}>Hotspot Map</Text>
-                  <Text style={styles.categorySubtitle} numberOfLines={2}>Live view of contamination zones</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity style={[styles.categoryCard, { borderColor: colors.primary }]} onPress={() => handleNavigation('SelfAssessment')} activeOpacity={0.7}>
-                  <View style={[styles.categoryIconBg, { backgroundColor: colors.primary + '15' }]}>
-                    <Ionicons name="clipboard" size={28} color={colors.primary} />
-                  </View>
-                  <Text style={[styles.categoryTitle, { color: colors.text }]}>Assessment</Text>
-                  <Text style={styles.categorySubtitle} numberOfLines={2}>Check your personal health risk</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
+            {/* Surveillance Categories have been moved to the floating bottom tabs */}
 
             {/* Additional Info grouped together */}
             <View style={styles.section}>
@@ -334,7 +292,7 @@ const IndexPageContent: React.FC<IndexPageProps> = ({
                   { icon: 'megaphone', label: 'Report', screen: 'CommunityReport' },
                   { icon: 'flask', label: 'Labs', screen: 'TestingLabs' },
                   { icon: 'warning', label: 'Helpline', screen: 'Helpline' },
-                  { icon: 'document-text', label: 'Certificate', screen: 'HealthCertificate' },
+                  { icon: 'cube', label: 'Logistics', screen: 'FieldWorkerLogistics' },
                   { icon: 'bulb', label: 'Learn', screen: 'HygieneEducation' },
                   { icon: 'settings', label: 'Settings', screen: 'Settings' },
                 ].map((action) => (
@@ -372,17 +330,53 @@ const IndexPageContent: React.FC<IndexPageProps> = ({
   return (
     <View style={styles.container}>
       <StatusBar style={theme === 'dark' ? 'light' : 'dark'} backgroundColor={colors.surface} />
-      <Navbar onMenuPress={() => setSidebarVisible(true)} userName={userName} toggleTheme={toggleTheme} />
+      <Navbar onMenuPress={() => setSidebarVisible(true)} userName={userName} toggleTheme={toggleTheme} onNavigate={handleNavigation} />
       <Sidebar isVisible={isSidebarVisible} onClose={() => setSidebarVisible(false)} onNavigate={handleNavigation} isGuest={isGuest} currentScreen={currentScreen} />
 
       <View style={styles.content}>
         {renderScreenContent()}
       </View>
+
+      {/* Floating Bottom Nav */}
+      <View style={styles.floatingNavWrapper}>
+        <View style={styles.floatingNavContainer}>
+          {[
+            { id: 'Outbreaks', icon: 'bug', color: colors.error },
+            { id: 'WaterQuality', icon: 'water', color: colors.primary },
+            { id: 'Dashboard', icon: 'home', color: colors.text },
+            { id: 'NationalStats', icon: 'stats-chart', color: colors.success },
+            { id: 'HotspotMap', icon: 'map', color: colors.secondary },
+            { id: 'SelfAssessment', icon: 'clipboard', color: colors.primary },
+          ].map((item) => {
+            const isActive = currentScreen === item.id || (item.id === 'Dashboard' && !['Outbreaks', 'WaterQuality', 'HotspotMap', 'SelfAssessment', 'NationalStats'].includes(currentScreen));
+
+            const activeIconColor = item.id === 'Dashboard' && theme === 'dark' ? colors.background : '#fff';
+
+            return (
+              <TouchableOpacity
+                key={item.id}
+                style={[
+                  styles.navPill,
+                  isActive && { backgroundColor: item.color }
+                ]}
+                onPress={() => handleNavigation(item.id)}
+                activeOpacity={0.8}
+              >
+                <Ionicons
+                  name={item.icon as any}
+                  size={24}
+                  color={isActive ? activeIconColor : colors.textSecondary}
+                />
+              </TouchableOpacity>
+            )
+          })}
+        </View>
+      </View>
     </View>
   );
 };
 
-const createStyles = (colors: Theme) =>
+const createStyles = (colors: Theme, insets: any) =>
   StyleSheet.create({
     container: { flex: 1, backgroundColor: colors.background },
     content: { flex: 1 },
@@ -390,7 +384,7 @@ const createStyles = (colors: Theme) =>
     sectionTitle: { ...typography.title3, color: colors.text, marginBottom: spacing.sm },
     sectionSubtitle: { ...typography.caption1, color: colors.textSecondary, marginBottom: spacing.lg },
     cardGap: { marginBottom: spacing.md },
-    screenHeader: { paddingHorizontal: spacing.xl, paddingVertical: spacing.lg, paddingTop: spacing.xl },
+    screenHeader: { paddingHorizontal: spacing.xl, paddingVertical: spacing.lg, paddingTop: Math.max(insets?.top || 0, spacing.xl) },
     backText: { ...typography.callout, color: colors.primary, fontWeight: '500', marginBottom: spacing.sm },
     screenTitle: { ...typography.largeTitle, color: colors.text },
     screenSubtitle: { ...typography.caption1, color: colors.textSecondary, marginTop: 2 },
@@ -435,7 +429,38 @@ const createStyles = (colors: Theme) =>
     emptyStateText: { ...typography.subhead, color: colors.textSecondary },
     footer: { alignItems: 'center', paddingVertical: spacing.xxxl, marginBottom: spacing.xl },
     footerText: { ...typography.footnote, color: colors.textTertiary, fontWeight: '600' },
-    footerSubtext: { ...typography.caption2, color: colors.textTertiary, marginTop: 4 }
+    footerSubtext: { ...typography.caption2, color: colors.textTertiary, marginTop: 4 },
+
+    // Floating Nav Styles
+    floatingNavWrapper: {
+      position: 'absolute',
+      bottom: spacing.xl,
+      left: 0,
+      right: 0,
+      alignItems: 'center',
+    },
+    floatingNavContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      backgroundColor: colors.surface,
+      borderRadius: 40,
+      padding: 6,
+      gap: 4,
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 4 },
+      shadowOpacity: 0.15,
+      shadowRadius: 12,
+      elevation: 6,
+      borderWidth: 1,
+      borderColor: colors.border,
+    },
+    navPill: {
+      width: 48,
+      height: 48,
+      borderRadius: 24,
+      alignItems: 'center',
+      justifyContent: 'center',
+    }
   });
 
 export default IndexPageContent;

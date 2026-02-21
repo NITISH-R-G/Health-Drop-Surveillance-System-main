@@ -1,5 +1,5 @@
-import React, { useMemo } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import React, { useMemo, useState, useRef } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Animated, Easing } from 'react-native';
 import { useTheme, Theme, typography, spacing, radius } from '../lib/ThemeContext';
 import { outbreaks } from '../lib/mockData';
 
@@ -35,11 +35,11 @@ const ProximityStats: React.FC<ProximityStatsProps> = ({ userLocation = defaultL
 
     const data = useMemo(() => {
         const rings = [
-            { limit: 0.5, label: '500m' },
-            { limit: 1.0, label: '1 km' },
-            { limit: 2.0, label: '2 km' },
             { limit: 5.0, label: '5 km' },
-            { limit: 10.0, label: '10 km' }
+            { limit: 15.0, label: '15 km' },
+            { limit: 30.0, label: '30 km' },
+            { limit: 50.0, label: '50 km' },
+            { limit: 100.0, label: '100 km' }
         ];
 
         const aggregatedData = rings.map(ring => ({
@@ -49,10 +49,11 @@ const ProximityStats: React.FC<ProximityStatsProps> = ({ userLocation = defaultL
             contamination: 0
         }));
 
-        // Filter for Coimbatore outbreaks to keep things relevant to our test dataset
-        const coimbatoreOutbreaks = outbreaks.filter(o => o.regionId === 'reg-1');
+        // In our mock data, regions are named 'mawsynram', 'coimbatore', etc.
+        // We will just process all active outbreaks to see what falls in the radius
+        const activeOutbreaks = outbreaks.filter(o => o.status === 'active');
 
-        coimbatoreOutbreaks.forEach(outbreak => {
+        activeOutbreaks.forEach(outbreak => {
             const distance = calculateDistance(
                 userLocation.lat,
                 userLocation.lng,
@@ -72,7 +73,29 @@ const ProximityStats: React.FC<ProximityStatsProps> = ({ userLocation = defaultL
         return aggregatedData;
     }, [userLocation]);
 
-    const maxCases = Math.max(...data.map(d => d.cases));
+    const [selectedIndex, setSelectedIndex] = useState<number>(data.length - 1);
+    const fadeAnim = useRef(new Animated.Value(1)).current;
+
+    const handleSelect = (index: number) => {
+        if (index === selectedIndex) return;
+        Animated.timing(fadeAnim, {
+            toValue: 0,
+            duration: 150,
+            useNativeDriver: true,
+            easing: Easing.out(Easing.ease)
+        }).start(() => {
+            setSelectedIndex(index);
+            Animated.timing(fadeAnim, {
+                toValue: 1,
+                duration: 250,
+                useNativeDriver: true,
+                easing: Easing.in(Easing.ease)
+            }).start();
+        });
+    };
+
+    const ringsToRender = [...data].map((item, index) => ({ item, originalIndex: index })).reverse();
+    const selectedData = data[selectedIndex];
 
     return (
         <View style={styles.container}>
@@ -81,50 +104,53 @@ const ProximityStats: React.FC<ProximityStatsProps> = ({ userLocation = defaultL
 
             {/* Concentric rings visual */}
             <View style={styles.ringsContainer}>
-                {data.map((item, index) => {
-                    const size = 60 + index * 36;
-                    const opacity = 0.08 + (index * 0.04);
+                {ringsToRender.map(({ item, originalIndex }) => {
+                    const size = 60 + originalIndex * 36;
+                    const isSelected = originalIndex === selectedIndex;
+                    const opacity = isSelected ? 0.2 : 0.08 + (originalIndex * 0.04);
                     return (
-                        <View
+                        <TouchableOpacity
                             key={item.radius}
+                            activeOpacity={0.8}
+                            onPress={() => handleSelect(originalIndex)}
                             style={[styles.ring, {
                                 width: size, height: size, borderRadius: size / 2,
-                                backgroundColor: `rgba(255, 59, 48, ${opacity})`,
-                                borderColor: `rgba(255, 59, 48, ${0.15 + index * 0.05})`,
+                                backgroundColor: isSelected ? `rgba(255, 59, 48, 0.25)` : `rgba(255, 59, 48, ${opacity})`,
+                                borderColor: isSelected ? colors.error : `rgba(255, 59, 48, ${0.15 + originalIndex * 0.05})`,
+                                borderWidth: isSelected ? 2 : 1,
+                                zIndex: 10 - originalIndex
                             }]}
-                        />
+                        >
+                            <Text style={[
+                                styles.ringLabel,
+                                isSelected ? { color: colors.text, fontWeight: '700' } : { color: colors.textSecondary }
+                            ]}>
+                                {item.radius}
+                            </Text>
+                        </TouchableOpacity>
                     );
                 })}
-                <View style={styles.ringCenter}>
+                <View style={styles.ringCenter} pointerEvents="none">
                     <Text style={styles.ringCenterIcon}>📍</Text>
                     <Text style={styles.ringCenterText}>You</Text>
                 </View>
             </View>
 
-            {/* Table */}
-            <View style={styles.table}>
-                <View style={styles.tableHeader}>
-                    <Text style={[styles.tableHeaderText, { flex: 1 }]}>Radius</Text>
-                    <Text style={[styles.tableHeaderText, { flex: 1, textAlign: 'center' }]}>Cases</Text>
-                    <Text style={[styles.tableHeaderText, { flex: 1, textAlign: 'center' }]}>Contaminated</Text>
-                    <Text style={[styles.tableHeaderText, { flex: 1.5 }]} />
+            {/* Animated Selected Data */}
+            <Animated.View style={[styles.selectedDataContainer, { opacity: fadeAnim }]}>
+                <Text style={styles.selectedRadiusTitle}>Within {selectedData.radius}</Text>
+                <View style={styles.statsRow}>
+                    <View style={styles.statBox}>
+                        <Text style={styles.statValueCases}>{selectedData.cases}</Text>
+                        <Text style={styles.statLabel}>Cases</Text>
+                    </View>
+                    <View style={styles.statDivider} />
+                    <View style={styles.statBox}>
+                        <Text style={styles.statValueContamination}>{selectedData.contamination}</Text>
+                        <Text style={styles.statLabel}>Contaminated</Text>
+                    </View>
                 </View>
-                {data.map((item) => {
-                    const barWidth = (item.cases / maxCases) * 100;
-                    return (
-                        <View key={item.radius} style={styles.tableRow}>
-                            <Text style={[styles.radiusText, { flex: 1 }]}>{item.radius}</Text>
-                            <Text style={[styles.casesText, { flex: 1, textAlign: 'center' }]}>{item.cases}</Text>
-                            <Text style={[styles.contaminationText, { flex: 1, textAlign: 'center' }]}>{item.contamination}</Text>
-                            <View style={{ flex: 1.5 }}>
-                                <View style={styles.barBackground}>
-                                    <View style={[styles.barFill, { width: `${barWidth}%` }]} />
-                                </View>
-                            </View>
-                        </View>
-                    );
-                })}
-            </View>
+            </Animated.View>
 
             <View style={styles.footer}>
                 <View style={styles.footerDot} />
@@ -143,31 +169,70 @@ const createStyles = (colors: Theme) =>
         title: { ...typography.title3, color: colors.text },
         subtitle: { ...typography.caption1, color: colors.textSecondary, marginTop: 2, marginBottom: spacing.lg },
         ringsContainer: {
-            height: 200, alignItems: 'center', justifyContent: 'center', marginBottom: spacing.xl,
+            height: 250, alignItems: 'center', justifyContent: 'center', marginBottom: spacing.xl,
         },
         ring: {
-            position: 'absolute', borderWidth: 1, justifyContent: 'center', alignItems: 'center',
+            position: 'absolute',
+            justifyContent: 'flex-start',
+            alignItems: 'center',
+            paddingTop: 2,
         },
-        ringCenter: { alignItems: 'center', zIndex: 10 },
+        ringLabel: {
+            ...typography.caption2,
+            fontSize: 10,
+            opacity: 0.8,
+        },
+        ringCenter: { alignItems: 'center', zIndex: 10, position: 'absolute' },
         ringCenterIcon: { fontSize: 20 },
         ringCenterText: { ...typography.caption2, color: colors.textSecondary, marginTop: 2 },
-        table: {},
-        tableHeader: {
-            flexDirection: 'row', paddingBottom: spacing.sm,
-            borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: colors.borderLight,
+        selectedDataContainer: {
+            alignItems: 'center',
+            backgroundColor: colors.surfaceVariant,
+            borderRadius: radius.lg,
+            padding: spacing.lg,
+            marginTop: spacing.sm,
+            marginBottom: spacing.sm,
         },
-        tableHeaderText: { ...typography.caption2, color: colors.textTertiary, fontWeight: '600', textTransform: 'uppercase', letterSpacing: 0.5 },
-        tableRow: {
-            flexDirection: 'row', alignItems: 'center', paddingVertical: spacing.sm + 2,
-            borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: colors.borderLight,
+        selectedRadiusTitle: {
+            ...typography.callout,
+            color: colors.textSecondary,
+            marginBottom: spacing.md,
+            fontWeight: '600',
         },
-        radiusText: { ...typography.callout, color: colors.text, fontWeight: '500' },
-        casesText: { ...typography.callout, color: colors.error, fontWeight: '700' },
-        contaminationText: { ...typography.callout, color: colors.warning, fontWeight: '600' },
-        barBackground: {
-            height: 6, backgroundColor: colors.surfaceVariant, borderRadius: 3, overflow: 'hidden',
+        statsRow: {
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: '100%',
         },
-        barFill: { height: '100%', backgroundColor: colors.error, borderRadius: 3 },
+        statBox: {
+            flex: 1,
+            alignItems: 'center',
+        },
+        statDivider: {
+            width: 1,
+            height: 40,
+            backgroundColor: colors.borderLight,
+        },
+        statValueCases: {
+            ...typography.title1,
+            color: colors.error,
+            fontWeight: 'bold',
+            fontSize: 32,
+        },
+        statValueContamination: {
+            ...typography.title1,
+            color: colors.warning,
+            fontWeight: 'bold',
+            fontSize: 32,
+        },
+        statLabel: {
+            ...typography.caption1,
+            color: colors.textSecondary,
+            marginTop: 4,
+            textTransform: 'uppercase',
+            letterSpacing: 0.5,
+        },
         footer: { flexDirection: 'row', alignItems: 'center', marginTop: spacing.md },
         footerDot: { width: 6, height: 6, borderRadius: 3, backgroundColor: colors.textTertiary, marginRight: spacing.sm },
         footerText: { ...typography.caption2, color: colors.textTertiary },

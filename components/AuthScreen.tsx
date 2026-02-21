@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import {
   View,
   Text,
@@ -14,12 +14,17 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Profile } from '../types/profile';
+import { useTheme, Theme, spacing, radius, typography } from '../lib/ThemeContext';
 
 interface AuthScreenProps {
   onAuthSuccess: (data?: any) => void;
 }
 
 export default function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
+  const { theme, toggleTheme, colors } = useTheme();
+  // We recreate styles when colors or theme changes
+  const styles = useMemo(() => createStyles(colors, theme), [colors, theme]);
+
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
@@ -97,6 +102,21 @@ export default function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
       <ScrollView contentContainerStyle={styles.scrollContainer} showsVerticalScrollIndicator={false}>
+        {/* Top bar with theme toggle */}
+        <View style={styles.topBar}>
+          <TouchableOpacity
+            style={styles.themeToggle}
+            onPress={toggleTheme}
+            activeOpacity={0.7}
+          >
+            <Ionicons
+              name={theme === 'dark' ? 'sunny' : 'moon'}
+              size={24}
+              color={colors.text}
+            />
+          </TouchableOpacity>
+        </View>
+
         {/* Header */}
         <View style={styles.headerContainer}>
           <View style={styles.logoWrapper}>
@@ -137,7 +157,7 @@ export default function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
                 <TextInput
                   style={styles.input}
                   placeholder="name@example.com"
-                  placeholderTextColor="#AEAEB2"
+                  placeholderTextColor={colors.textTertiary}
                   value={email}
                   onChangeText={setEmail}
                   keyboardType="email-address"
@@ -150,7 +170,7 @@ export default function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
                 <TextInput
                   style={styles.input}
                   placeholder="Enter your password"
-                  placeholderTextColor="#AEAEB2"
+                  placeholderTextColor={colors.textTertiary}
                   value={password}
                   onChangeText={setPassword}
                   secureTextEntry
@@ -165,7 +185,7 @@ export default function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
                 <TextInput
                   style={styles.input}
                   placeholder="Your full name"
-                  placeholderTextColor="#AEAEB2"
+                  placeholderTextColor={colors.textTertiary}
                   value={fullName}
                   onChangeText={setFullName}
                   autoCapitalize="words"
@@ -176,7 +196,7 @@ export default function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
                 <TextInput
                   style={styles.input}
                   placeholder="name@example.com"
-                  placeholderTextColor="#AEAEB2"
+                  placeholderTextColor={colors.textTertiary}
                   value={email}
                   onChangeText={setEmail}
                   keyboardType="email-address"
@@ -189,7 +209,7 @@ export default function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
                 <TextInput
                   style={styles.input}
                   placeholder="+91 XXXXX XXXXX"
-                  placeholderTextColor="#AEAEB2"
+                  placeholderTextColor={colors.textTertiary}
                   value={phone}
                   onChangeText={setPhone}
                   keyboardType="phone-pad"
@@ -209,7 +229,12 @@ export default function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
                       onPress={() => setRole(roleOption.value)}
                       activeOpacity={0.7}
                     >
-                      <Ionicons name={roleOption.icon as any} size={16} color={role === roleOption.value ? '#007AFF' : '#636366'} style={styles.roleIcon} />
+                      <Ionicons
+                        name={roleOption.icon as any}
+                        size={16}
+                        color={role === roleOption.value ? colors.primary : colors.textSecondary}
+                        style={styles.roleIcon}
+                      />
                       <Text
                         style={[
                           styles.roleButtonText,
@@ -227,7 +252,7 @@ export default function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
                 <TextInput
                   style={styles.input}
                   placeholder="Your organization"
-                  placeholderTextColor="#AEAEB2"
+                  placeholderTextColor={colors.textTertiary}
                   value={organization}
                   onChangeText={setOrganization}
                   autoCapitalize="words"
@@ -238,7 +263,7 @@ export default function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
                 <TextInput
                   style={styles.input}
                   placeholder="Your location"
-                  placeholderTextColor="#AEAEB2"
+                  placeholderTextColor={colors.textTertiary}
                   value={location}
                   onChangeText={setLocation}
                   autoCapitalize="words"
@@ -249,7 +274,7 @@ export default function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
                 <TextInput
                   style={styles.input}
                   placeholder="Create a strong password"
-                  placeholderTextColor="#AEAEB2"
+                  placeholderTextColor={colors.textTertiary}
                   value={password}
                   onChangeText={setPassword}
                   secureTextEntry
@@ -300,16 +325,34 @@ export default function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (colors: Theme, themeMode: 'light' | 'dark') => StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F2F2F7',
+    backgroundColor: colors.background,
   },
   scrollContainer: {
     flexGrow: 1,
     paddingHorizontal: 24,
-    paddingTop: 80,
+    paddingTop: 40,
     paddingBottom: 30,
+  },
+  topBar: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    marginBottom: 20,
+    zIndex: 10,
+  },
+  themeToggle: {
+    padding: 10,
+    backgroundColor: colors.surface,
+    borderRadius: radius.full,
+    borderWidth: 1,
+    borderColor: colors.border,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
   },
   headerContainer: {
     alignItems: 'center',
@@ -319,7 +362,7 @@ const styles = StyleSheet.create({
     width: 64,
     height: 64,
     borderRadius: 18,
-    backgroundColor: '#007AFF',
+    backgroundColor: colors.primary,
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 16,
@@ -332,29 +375,29 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 28,
     fontWeight: '700',
-    color: '#1C1C1E',
+    color: colors.text,
     letterSpacing: 0.36,
     marginBottom: 4,
   },
   subtitle: {
     fontSize: 17,
-    color: '#636366',
+    color: colors.textSecondary,
     letterSpacing: -0.41,
   },
   formContainer: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: colors.surface,
     borderRadius: 20,
     padding: 24,
     borderWidth: 1,
-    borderColor: '#E5E5EA',
+    borderColor: colors.border,
   },
   googleButton: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#FFFFFF',
+    backgroundColor: colors.surface,
     borderWidth: 1,
-    borderColor: '#E5E5EA',
+    borderColor: colors.border,
     paddingVertical: 14,
     borderRadius: 14,
     marginBottom: 16,
@@ -367,7 +410,7 @@ const styles = StyleSheet.create({
   googleButtonText: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#1C1C1E',
+    color: colors.text,
   },
   dividerContainer: {
     flexDirection: 'row',
@@ -377,11 +420,11 @@ const styles = StyleSheet.create({
   dividerLine: {
     flex: 1,
     height: 1,
-    backgroundColor: '#E5E5EA',
+    backgroundColor: colors.border,
   },
   dividerText: {
     marginHorizontal: 12,
-    color: '#8E8E93',
+    color: colors.textTertiary,
     fontSize: 14,
     fontWeight: '500',
   },
@@ -391,19 +434,19 @@ const styles = StyleSheet.create({
   inputLabel: {
     fontSize: 13,
     fontWeight: '600',
-    color: '#636366',
+    color: colors.textSecondary,
     marginBottom: 6,
     letterSpacing: -0.08,
   },
   input: {
     borderWidth: 1,
-    borderColor: '#E5E5EA',
+    borderColor: colors.border,
     paddingHorizontal: 16,
     paddingVertical: 14,
     borderRadius: 12,
     fontSize: 17,
-    backgroundColor: '#F2F2F7',
-    color: '#1C1C1E',
+    backgroundColor: colors.background,
+    color: colors.text,
     letterSpacing: -0.41,
   },
   roleContainer: {
@@ -418,35 +461,35 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     borderRadius: 20,
     borderWidth: 1,
-    borderColor: '#E5E5EA',
-    backgroundColor: '#F2F2F7',
+    borderColor: colors.border,
+    backgroundColor: colors.background,
   },
   roleButtonSelected: {
-    backgroundColor: '#007AFF18',
-    borderColor: '#007AFF',
+    backgroundColor: colors.primary + '18',
+    borderColor: colors.primary,
   },
   roleIcon: {
     fontSize: 14,
     marginRight: 6,
   },
   roleButtonText: {
-    color: '#636366',
+    color: colors.textSecondary,
     fontSize: 14,
     fontWeight: '500',
   },
   roleButtonTextSelected: {
-    color: '#007AFF',
+    color: colors.primary,
     fontWeight: '600',
   },
   primaryButton: {
-    backgroundColor: '#007AFF',
+    backgroundColor: colors.primary,
     paddingVertical: 16,
     borderRadius: 14,
     alignItems: 'center',
     marginTop: 8,
   },
   buttonDisabled: {
-    backgroundColor: '#C7C7CC',
+    backgroundColor: colors.textTertiary,
   },
   primaryButtonText: {
     color: '#FFFFFF',
@@ -459,11 +502,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   switchText: {
-    color: '#636366',
+    color: colors.textSecondary,
     fontSize: 15,
   },
   switchTextBold: {
-    color: '#007AFF',
+    color: colors.primary,
     fontWeight: '600',
   },
 });

@@ -3,39 +3,32 @@ import { View, TouchableOpacity, Image, StyleSheet, Text, Alert, Platform } from
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme, Theme, typography, spacing, radius } from '../lib/ThemeContext';
 
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
 interface NavbarProps {
   onMenuPress: () => void;
   userName: string;
   toggleTheme: () => void;
+  onNavigate?: (screen: string) => void;
 }
 
-const Navbar: React.FC<NavbarProps> = ({ onMenuPress, userName, toggleTheme }) => {
+const Navbar: React.FC<NavbarProps> = ({ onMenuPress, userName, toggleTheme, onNavigate }) => {
   const { theme, colors } = useTheme();
   const styles = useMemo(() => createStyles(colors), [colors]);
+  const insets = useSafeAreaInsets();
 
   const getInitials = (name: string) => {
     return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
   };
 
   const handleProfilePress = () => {
-    if (Platform.OS === 'web') {
-      window.alert('Profile Menu:\n\n- View Profile\n- Preferences\n- Sign Out');
-    } else {
-      Alert.alert(
-        "Profile Menu",
-        `Signed in as ${userName}`,
-        [
-          { text: "View Profile", onPress: () => console.log("Profile Pressed") },
-          { text: "Preferences", onPress: () => console.log("Settings Pressed") },
-          { text: "Sign Out", onPress: () => console.log("Logout Pressed"), style: "destructive" },
-          { text: "Cancel", style: "cancel" }
-        ]
-      );
+    if (onNavigate) {
+      onNavigate('Profile');
     }
   };
 
   return (
-    <View style={styles.navbar}>
+    <View style={[styles.navbar, { paddingTop: Math.max(insets.top, 16) }]}>
       <View style={styles.leftSection}>
         <TouchableOpacity onPress={onMenuPress} style={styles.menuButton} activeOpacity={0.7}>
           <View style={styles.menuIconContainer}>
@@ -60,6 +53,10 @@ const Navbar: React.FC<NavbarProps> = ({ onMenuPress, userName, toggleTheme }) =
       </View>
 
       <View style={styles.rightSection}>
+        <TouchableOpacity style={styles.themeToggle} onPress={() => onNavigate && onNavigate('Warnings')}>
+          <Ionicons name="notifications" size={24} color={colors.text} />
+        </TouchableOpacity>
+
         <TouchableOpacity style={styles.themeToggle} onPress={toggleTheme}>
           <Ionicons name={theme === 'dark' ? 'sunny' : 'moon'} size={24} color={colors.text} />
         </TouchableOpacity>
@@ -77,15 +74,14 @@ const Navbar: React.FC<NavbarProps> = ({ onMenuPress, userName, toggleTheme }) =
 
 const createStyles = (colors: Theme) => StyleSheet.create({
   navbar: {
-    height: 56,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: spacing.xl,
+    paddingBottom: spacing.sm,
     backgroundColor: colors.surface,
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: colors.border,
-    marginTop: 48,
   },
   leftSection: {
     flexDirection: 'row',

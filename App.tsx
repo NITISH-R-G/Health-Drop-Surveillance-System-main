@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
-import { ThemeProvider } from './lib/ThemeContext';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import { ThemeProvider, useTheme } from './lib/ThemeContext';
 import AuthScreen from './components/AuthScreen';
 import ProfileSetup from './components/ProfileSetup';
 import IndexPage from './pages/IndexPage';
 import { Profile } from './types/profile';
 
 function AppContent() {
+  const { theme, colors } = useTheme();
   // Dummy session state
   const [session, setSession] = useState<any>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
@@ -35,6 +37,11 @@ function AppContent() {
     // No-op for dummy mode
   };
 
+  const handleLogout = () => {
+    setSession(null);
+    setProfile(null);
+  };
+
   if (!session) {
     return <AuthScreen onAuthSuccess={handleAuthSuccess} />;
   }
@@ -50,22 +57,25 @@ function AppContent() {
   }
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
       <IndexPage
         userName={profile.full_name || session.user.email?.split('@')[0] || 'User'}
         userEmail={session.user.email || ''}
         userId={session.user.id}
+        onLogout={handleLogout}
       />
-      <StatusBar style="auto" />
-    </View>
+      <StatusBar style={theme === 'dark' ? 'light' : 'dark'} />
+    </SafeAreaView>
   );
 }
 
 export default function App() {
   return (
-    <ThemeProvider>
-      <AppContent />
-    </ThemeProvider>
+    <SafeAreaProvider>
+      <ThemeProvider>
+        <AppContent />
+      </ThemeProvider>
+    </SafeAreaProvider>
   );
 }
 

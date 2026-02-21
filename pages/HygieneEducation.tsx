@@ -25,6 +25,7 @@ const HygieneEducation: React.FC<HygieneEducationProps> = ({ onBack, modules, sc
   const [activeModule, setActiveModule] = useState<HygieneModule | null>(null);
   const [quizMode, setQuizMode] = useState(false);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
+  const [activeTab, setActiveTab] = useState<'learn' | 'leaderboard'>('learn');
 
   // Dynamic Rank Calculation
   const getRank = (currentScore: number) => {
@@ -34,6 +35,19 @@ const HygieneEducation: React.FC<HygieneEducationProps> = ({ onBack, modules, sc
   };
 
   const currentRank = getRank(score);
+
+  const badges = [
+    { id: 1, name: 'Novice', icon: 'leaf', threshold: 0, color: '#34C759' },
+    { id: 2, name: 'Learner', icon: 'book', threshold: 100, color: '#5856D6' },
+    { id: 3, name: 'Protector', icon: 'shield-checkmark', threshold: 200, color: '#007AFF' },
+    { id: 4, name: 'Master', icon: 'trophy', threshold: 400, color: '#FF9500' },
+  ];
+
+  const nextBadge = badges.find(b => b.threshold > score);
+  const currentBadge = [...badges].reverse().find(b => b.threshold <= score) || badges[0];
+  const progressToNext = nextBadge 
+    ? ((score - currentBadge.threshold) / (nextBadge.threshold - currentBadge.threshold)) * 100 
+    : 100;
 
   const handleModulePress = (mod: HygieneModule) => {
     if (mod.completed) {
@@ -57,6 +71,34 @@ const HygieneEducation: React.FC<HygieneEducationProps> = ({ onBack, modules, sc
     }
   };
 
+  const renderLeaderboard = () => {
+    const leaderboardData = [
+      { id: 'user', name: 'You', score: score, avatar: '👤', isUser: true },
+      { id: '2', name: 'Sarah K.', score: 450, avatar: '👩‍⚕️', isUser: false },
+      { id: '3', name: 'Rajesh M.', score: 420, avatar: '👨‍🌾', isUser: false },
+      { id: '4', name: 'Priya D.', score: 390, avatar: '👩‍🏫', isUser: false },
+      { id: '5', name: 'Amit B.', score: 310, avatar: '👨‍🔧', isUser: false },
+    ].sort((a, b) => b.score - a.score);
+
+    return (
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>Community Leaderboard</Text>
+        <View style={styles.leaderboardCard}>
+          {leaderboardData.map((item, index) => (
+            <View key={item.id} style={[styles.leaderboardRow, item.isUser && styles.leaderboardRowActive]}>
+              <Text style={[styles.rankText, item.isUser && styles.textActive]}>{index + 1}</Text>
+              <View style={styles.avatarCircle}>
+                <Text style={{ fontSize: 20 }}>{item.avatar}</Text>
+              </View>
+              <Text style={[styles.leaderboardName, item.isUser && styles.textActive]}>{item.name}</Text>
+              <Text style={[styles.leaderboardScore, item.isUser && styles.textActive]}>{item.score} XP</Text>
+            </View>
+          ))}
+        </View>
+      </View>
+    );
+  };
+
   const renderDashboard = () => (
     <ScrollView style={styles.container}>
       <View style={styles.header}>
@@ -71,6 +113,43 @@ const HygieneEducation: React.FC<HygieneEducationProps> = ({ onBack, modules, sc
         <Text style={styles.scoreValue}>{score} XP</Text>
         <View style={styles.rankBadge}>
           <Text style={styles.scoreRank}>{currentRank}</Text>
+        </View>
+        
+        {/* Progress Bar */}
+        <View style={styles.progressContainer}>
+          <View style={[styles.progressBar, { width: `${Math.min(progressToNext, 100)}%` }]} />
+        </View>
+        <Text style={styles.progressText}>
+          {nextBadge ? `${Math.round(nextBadge.threshold - score)} XP to ${nextBadge.name}` : 'Max Rank Achieved!'}
+        </Text>
+      </View>
+
+      {/* Tab Switcher */}
+      <View style={styles.tabContainer}>
+        <TouchableOpacity style={[styles.tabButton, activeTab === 'learn' && styles.tabActive]} onPress={() => setActiveTab('learn')}>
+          <Text style={[styles.tabText, activeTab === 'learn' && styles.tabTextActive]}>My Learning</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={[styles.tabButton, activeTab === 'leaderboard' && styles.tabActive]} onPress={() => setActiveTab('leaderboard')}>
+          <Text style={[styles.tabText, activeTab === 'leaderboard' && styles.tabTextActive]}>Leaderboard</Text>
+        </TouchableOpacity>
+      </View>
+
+      {activeTab === 'learn' ? (
+        <>
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>Your Badges</Text>
+        <View style={styles.badgeGrid}>
+          {badges.map((badge) => {
+            const unlocked = score >= badge.threshold;
+            return (
+              <View key={badge.id} style={[styles.badgeItem, !unlocked && styles.badgeLocked]}>
+                <View style={[styles.badgeIconCircle, { backgroundColor: unlocked ? badge.color : colors.surfaceVariant }]}>
+                  <Ionicons name={badge.icon as any} size={24} color={unlocked ? '#FFF' : colors.textTertiary} />
+                </View>
+                <Text style={[styles.badgeText, !unlocked && { color: colors.textTertiary }]}>{badge.name}</Text>
+              </View>
+            );
+          })}
         </View>
       </View>
 
@@ -95,6 +174,8 @@ const HygieneEducation: React.FC<HygieneEducationProps> = ({ onBack, modules, sc
           </TouchableOpacity>
         ))}
       </View>
+        </>
+      ) : renderLeaderboard()}
     </ScrollView>
   );
 
@@ -174,6 +255,15 @@ const createStyles = (colors: Theme) => StyleSheet.create({
   scoreValue: { fontSize: 48, fontWeight: '800', color: '#fff', marginVertical: spacing.sm },
   rankBadge: { backgroundColor: 'rgba(255,255,255,0.2)', paddingHorizontal: spacing.md, paddingVertical: spacing.xs, borderRadius: radius.full },
   scoreRank: { ...typography.headline, color: '#fff', fontWeight: '700' },
+  progressContainer: { width: '100%', height: 6, backgroundColor: 'rgba(0,0,0,0.2)', borderRadius: 3, marginTop: spacing.lg, overflow: 'hidden' },
+  progressBar: { height: '100%', backgroundColor: '#fff', borderRadius: 3 },
+  progressText: { ...typography.caption2, color: 'rgba(255,255,255,0.8)', marginTop: spacing.xs },
+
+  badgeGrid: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: spacing.md },
+  badgeItem: { alignItems: 'center', width: '22%' },
+  badgeLocked: { opacity: 0.6 },
+  badgeIconCircle: { width: 54, height: 54, borderRadius: 27, alignItems: 'center', justifyContent: 'center', marginBottom: spacing.xs },
+  badgeText: { ...typography.caption2, color: colors.text, fontWeight: '600', textAlign: 'center' },
 
   section: { padding: spacing.lg },
   sectionTitle: { ...typography.title3, color: colors.text, marginBottom: spacing.md },
@@ -198,7 +288,22 @@ const createStyles = (colors: Theme) => StyleSheet.create({
   quizOptionText: { ...typography.callout, color: colors.text, flex: 1 },
 
   primaryButton: { backgroundColor: colors.primary, padding: spacing.lg, borderRadius: radius.xl, alignItems: 'center', marginTop: 'auto' },
-  primaryButtonText: { ...typography.headline, color: '#fff' }
+  primaryButtonText: { ...typography.headline, color: '#fff' },
+
+  // Leaderboard & Tabs
+  tabContainer: { flexDirection: 'row', padding: spacing.md, marginHorizontal: spacing.lg, backgroundColor: colors.surface, borderRadius: radius.lg, marginBottom: spacing.sm, borderWidth: 1, borderColor: colors.border },
+  tabButton: { flex: 1, paddingVertical: spacing.sm, alignItems: 'center', borderRadius: radius.md },
+  tabActive: { backgroundColor: colors.primary + '20' },
+  tabText: { ...typography.subhead, color: colors.textSecondary, fontWeight: '600' },
+  tabTextActive: { color: colors.primary },
+  leaderboardCard: { backgroundColor: colors.surface, borderRadius: radius.xl, borderWidth: 1, borderColor: colors.border, overflow: 'hidden' },
+  leaderboardRow: { flexDirection: 'row', alignItems: 'center', padding: spacing.md, borderBottomWidth: 1, borderBottomColor: colors.borderLight },
+  leaderboardRowActive: { backgroundColor: colors.primary + '10' },
+  rankText: { ...typography.headline, width: 30, color: colors.textSecondary, fontWeight: '700' },
+  avatarCircle: { width: 40, height: 40, borderRadius: 20, backgroundColor: colors.surfaceVariant, alignItems: 'center', justifyContent: 'center', marginRight: spacing.md },
+  leaderboardName: { ...typography.body, flex: 1, color: colors.text, fontWeight: '600' },
+  leaderboardScore: { ...typography.subhead, color: colors.primary, fontWeight: '700' },
+  textActive: { color: colors.primary },
 });
 
 export default HygieneEducation;

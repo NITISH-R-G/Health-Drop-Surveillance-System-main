@@ -2,11 +2,13 @@ import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import {
   View,
   Text,
+  TextInput,
   ScrollView,
   TouchableOpacity,
   StyleSheet,
   Modal,
   Alert,
+  ActivityIndicator,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { supabase } from '../lib/supabase';
@@ -16,6 +18,7 @@ interface SettingsPageProps {
   onNavigate: (screen: string) => void;
   userId?: string;
   userEmail?: string;
+  userName?: string;
 }
 
 interface UserData {
@@ -26,12 +29,12 @@ interface UserData {
   location: string;
 }
 
-const SettingsPage: React.FC<SettingsPageProps> = ({ onNavigate, userId, userEmail }) => {
+const SettingsPage: React.FC<SettingsPageProps> = ({ onNavigate, userId, userEmail, userName }) => {
   const { theme, toggleTheme, colors } = useTheme();
   const styles = useMemo(() => createStyles(colors), [colors]);
 
   const [userData, setUserData] = useState<UserData>({
-    name: '',
+    name: userName || '',
     email: userEmail || '',
     role: '',
     organization: '',
@@ -40,6 +43,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({ onNavigate, userId, userEma
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [notifications, setNotifications] = useState(true);
   const [locationServices, setLocationServices] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
     fetchUserData();
@@ -57,7 +61,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({ onNavigate, userId, userEma
 
         if (profile) {
           setUserData({
-            name: profile.full_name || 'User',
+            name: profile.full_name || userName || 'User',
             email: user.email || '',
             role: profile.role || 'volunteer',
             organization: profile.organization || '',
@@ -67,6 +71,31 @@ const SettingsPage: React.FC<SettingsPageProps> = ({ onNavigate, userId, userEma
       }
     } catch {
       // Silently handle
+    }
+  };
+
+  const handleSaveProfile = async () => {
+    setIsSaving(true);
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        const { error } = await supabase
+          .from('profiles')
+          .update({
+            full_name: userData.name,
+            organization: userData.organization,
+            location: userData.location,
+          })
+          .eq('id', user.id);
+
+        if (error) throw error;
+        Alert.alert('Success', 'Profile updated successfully');
+      }
+    } catch (error) {
+      console.error(error);
+      Alert.alert('Error', 'Failed to update profile');
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -80,23 +109,37 @@ const SettingsPage: React.FC<SettingsPageProps> = ({ onNavigate, userId, userEma
     }
   }, [onNavigate]);
 
-  const SettingRow = ({ icon, label, value, onPress, trailing }: {
+  const SettingRow = ({ icon, label, value, onPress, trailing, editable, onChangeText, keyboardType = 'default' }: {
     icon: any;
     label: string;
     value?: string;
     onPress?: () => void;
     trailing?: React.ReactNode;
+    editable?: boolean;
+    onChangeText?: (text: string) => void;
+    keyboardType?: any;
   }) => (
     <TouchableOpacity
       style={styles.settingRow}
       onPress={onPress}
       activeOpacity={onPress ? 0.6 : 1}
-      disabled={!onPress}
+      disabled={!onPress && !editable}
     >
       <Ionicons name={icon} size={20} color={colors.textSecondary} style={{ marginRight: 16 }} />
       <View style={styles.settingContent}>
         <Text style={styles.settingLabel}>{label}</Text>
-        {value && <Text style={styles.settingValue}>{value}</Text>}
+        {editable ? (
+          <TextInput
+            style={styles.settingInput}
+            value={value}
+            onChangeText={onChangeText}
+            placeholder={`Enter ${label}`}
+            placeholderTextColor={colors.textTertiary}
+            keyboardType={keyboardType}
+          />
+        ) : (
+          value ? <Text style={styles.settingValue}>{value}</Text> : null
+        )}
       </View>
       {trailing || (onPress && <Ionicons name="chevron-forward" size={20} color={colors.textTertiary} />)}
     </TouchableOpacity>
@@ -140,12 +183,46 @@ const SettingsPage: React.FC<SettingsPageProps> = ({ onNavigate, userId, userEma
 
       {/* Account Section */}
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Account</Text>
+        <View style={styles.sectionHeaderRow}>
+          <Text style={[styles.sectionTitle, { marginBottom: 0, paddingLeft: 0 }]}>Account</Text>
+          <TouchableOpacity onPress={handleSaveProfile} disabled={isSaving}>
+            {isSaving ? (
+              <ActivityIndicator size="small" color={colors.primary} />
+            ) : (
+              <Text style={styles.saveButtonText}>Save</Text>
+            )}
+          </TouchableOpacity>
+        </View>
         <View style={styles.sectionCard}>
-          <SettingRow icon="person" label="Full Name" value={userData.name} />
-          <SettingRow icon="mail" label="Email" value={userData.email} />
-          <SettingRow icon="business" label="Organization" value={userData.organization} />
-          <SettingRow icon="location" label="Location" value={userData.location} />
+          <SettingRow
+            icon="person"
+            label="Full Name"
+            value={userData.name}
+            editable
+            onChangeText={(text) => setUserData({ ...userData, name: text })}
+          />
+          <SettingRow
+            icon="mail"
+            label="Email"
+            value={userData.email}
+            editable
+            keyboardType="email-address"
+            onChangeText={(text) => setUserData({ ...userData, email: text })}
+          />
+          <SettingRow
+            icon="business"
+            label="Organization"
+            value={userData.organization}
+            editable
+            onChangeText={(text) => setUserData({ ...userData, organization: text })}
+          />
+          <SettingRow
+            icon="location"
+            label="Location"
+            value={userData.location}
+            editable
+            onChangeText={(text) => setUserData({ ...userData, location: text })}
+          />
         </View>
       </View>
 
@@ -347,6 +424,24 @@ const createStyles = (colors: Theme) =>
       ...typography.caption1,
       color: colors.textSecondary,
       marginTop: 1,
+    },
+    settingInput: {
+      ...typography.caption1,
+      color: colors.text,
+      marginTop: 1,
+      padding: 0,
+    },
+    sectionHeaderRow: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      marginBottom: spacing.sm,
+      paddingLeft: spacing.sm,
+    },
+    saveButtonText: {
+      ...typography.caption1,
+      color: colors.primary,
+      fontWeight: '600',
     },
     chevron: {
       fontSize: 22,

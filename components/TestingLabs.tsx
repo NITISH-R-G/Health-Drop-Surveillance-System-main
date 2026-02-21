@@ -1,5 +1,6 @@
 import React, { useMemo, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Linking } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Linking, Alert, ActivityIndicator } from 'react-native';
+import * as Location from 'expo-location';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme, Theme, typography, spacing, radius } from '../lib/ThemeContext';
 
@@ -47,6 +48,8 @@ const TestingLabs: React.FC<TestingLabsProps> = ({ labs = defaultLabs }) => {
     const { colors } = useTheme();
     const styles = useMemo(() => createStyles(colors), [colors]);
     const [filter, setFilter] = useState<'all' | 'water' | 'pathology' | 'both'>('all');
+    const [userLoc, setUserLoc] = useState<Location.LocationObject | null>(null);
+    const [isLocating, setIsLocating] = useState(false);
 
     const filteredLabs = filter === 'all' ? labs : labs.filter(l => l.type === filter);
     const sortedLabs = [...filteredLabs].sort((a, b) => parseFloat(a.distance) - parseFloat(b.distance));
@@ -55,15 +58,53 @@ const TestingLabs: React.FC<TestingLabsProps> = ({ labs = defaultLabs }) => {
         Linking.openURL(`tel:${phone}`);
     };
 
+    const handleGetLocation = async () => {
+        setIsLocating(true);
+        try {
+            const { status } = await Location.requestForegroundPermissionsAsync();
+            if (status !== 'granted') {
+                Alert.alert('Permission Denied', 'Please allow location access to route from your current position.');
+                setIsLocating(false);
+                return;
+            }
+            const location = await Location.getCurrentPositionAsync({});
+            setUserLoc(location);
+        } catch (error) {
+            Alert.alert('Location Error', 'Could not fetch location.');
+        } finally {
+            setIsLocating(false);
+        }
+    };
+
     const handleDirections = (name: string, address: string) => {
         const query = encodeURIComponent(`${name}, ${address}`);
-        Linking.openURL(`https://www.google.com/maps/search/?api=1&query=${query}`);
+        if (userLoc) {
+            const { latitude, longitude } = userLoc.coords;
+            Linking.openURL(`https://www.google.com/maps/dir/?api=1&origin=${latitude},${longitude}&destination=${query}`);
+        } else {
+            Linking.openURL(`https://www.google.com/maps/search/?api=1&query=${query}`);
+        }
     };
 
     return (
         <View style={styles.container}>
             {/* Filter chips */}
             <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.filterRow}>
+                <TouchableOpacity
+                    style={[styles.filterChip, userLoc && { backgroundColor: `${colors.success}15`, borderColor: colors.success }]}
+                    onPress={handleGetLocation}
+                    activeOpacity={0.7}
+                    disabled={isLocating}
+                >
+                    {isLocating ? (
+                        <ActivityIndicator size="small" color={colors.primary} style={{ marginRight: 6 }} />
+                    ) : (
+                        <Ionicons name="navigate" size={14} color={userLoc ? colors.success : colors.textSecondary} style={{ marginRight: 6 }} />
+                    )}
+                    <Text style={[styles.filterLabel, userLoc && { color: colors.success, fontWeight: '600' }]}>
+                        {userLoc ? 'Location Found' : 'Find My Location'}
+                    </Text>
+                </TouchableOpacity>
                 {[
                     { key: 'all', label: 'All Labs', icon: 'business' },
                     { key: 'water', label: 'Water Testing', icon: 'water' },
