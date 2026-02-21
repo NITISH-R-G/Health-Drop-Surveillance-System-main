@@ -9,9 +9,10 @@ import { AlertItem } from '../lib/mockData';
 
 interface AlertBannerProps {
     alerts: AlertItem[];
+    onAlertPress?: (alert: AlertItem) => void;
 }
 
-const AlertBanner: React.FC<AlertBannerProps> = ({ alerts }) => {
+const AlertBanner: React.FC<AlertBannerProps> = ({ alerts, onAlertPress }) => {
     const { colors } = useTheme();
     const styles = useMemo(() => createStyles(colors), [colors]);
     const [dismissed, setDismissed] = useState<Set<number>>(new Set());
@@ -81,19 +82,25 @@ const AlertBanner: React.FC<AlertBannerProps> = ({ alerts }) => {
                 },
             ]}
         >
-            <View style={[styles.iconContainer, { backgroundColor: severityColor + '18' }]}>
-                <Ionicons name={getSeverityIcon(currentAlert.severity) as any} size={18} color={severityColor} />
-            </View>
+            <TouchableOpacity
+                style={{ flexDirection: 'row', alignItems: 'center', flex: 1 }}
+                onPress={() => onAlertPress && onAlertPress(currentAlert)}
+                activeOpacity={0.7}
+            >
+                <View style={[styles.iconContainer, { backgroundColor: severityColor + '18' }]}>
+                    <Ionicons name={getSeverityIcon(currentAlert.severity) as any} size={18} color={severityColor} />
+                </View>
 
-            <View style={styles.content}>
-                <Text style={styles.title} numberOfLines={1}>{currentAlert.title}</Text>
-                <Text style={styles.message} numberOfLines={2}>{currentAlert.message}</Text>
-                {unreadAlerts.length > 1 && (
-                    <Text style={styles.moreAlerts}>
-                        +{unreadAlerts.length - 1} more alert{unreadAlerts.length > 2 ? 's' : ''}
-                    </Text>
-                )}
-            </View>
+                <View style={styles.content}>
+                    <Text style={styles.title} numberOfLines={1}>{currentAlert.title}</Text>
+                    <Text style={styles.message} numberOfLines={2}>{currentAlert.message}</Text>
+                    {unreadAlerts.length > 1 && (
+                        <Text style={styles.moreAlerts}>
+                            +{unreadAlerts.length - 1} more alert{unreadAlerts.length > 2 ? 's' : ''}
+                        </Text>
+                    )}
+                </View>
+            </TouchableOpacity>
 
             <TouchableOpacity onPress={handleDismiss} style={styles.dismissButton} activeOpacity={0.7}>
                 <Ionicons name="close" size={20} color={colors.textTertiary} />

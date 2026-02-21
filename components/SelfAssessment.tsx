@@ -6,6 +6,7 @@ import {
     ScrollView,
     StyleSheet,
     Animated,
+    Linking,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme, Theme, typography, spacing, radius } from '../lib/ThemeContext';
@@ -150,6 +151,14 @@ const SelfAssessment: React.FC<SelfAssessmentProps> = ({ onComplete, onClose }) 
         setShowResult(false);
     }, []);
 
+    const handleCallHelpline = useCallback(() => {
+        Linking.openURL('tel:104'); // Standard health helpline
+    }, []);
+
+    const handleFindLab = useCallback(() => {
+        Linking.openURL('https://www.google.com/maps/search/nearby+hospital+clinic+or+lab');
+    }, []);
+
     if (showResult) {
         const finalResult = getRiskResult(Object.values(answers).reduce((a, b) => a + b, 0));
         return (
@@ -179,12 +188,20 @@ const SelfAssessment: React.FC<SelfAssessmentProps> = ({ onComplete, onClose }) 
 
                     {finalResult.level !== 'low' && (
                         <View style={styles.actionCards}>
-                            <TouchableOpacity style={[styles.actionBtn, { backgroundColor: finalResult.color }]} activeOpacity={0.7}>
+                            <TouchableOpacity
+                                style={[styles.actionBtn, { backgroundColor: finalResult.color }]}
+                                activeOpacity={0.7}
+                                onPress={handleCallHelpline}
+                            >
                                 <Text style={styles.actionBtnText}>
                                     <Ionicons name="call" size={16} color="#FFFFFF" /> Call Helpline
                                 </Text>
                             </TouchableOpacity>
-                            <TouchableOpacity style={[styles.actionBtn, { backgroundColor: colors.primary }]} activeOpacity={0.7}>
+                            <TouchableOpacity
+                                style={[styles.actionBtn, { backgroundColor: colors.primary }]}
+                                activeOpacity={0.7}
+                                onPress={handleFindLab}
+                            >
                                 <Text style={styles.actionBtnText}>
                                     <Ionicons name="medkit" size={16} color="#FFFFFF" /> Find Nearby Lab
                                 </Text>

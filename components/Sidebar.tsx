@@ -1,19 +1,17 @@
 import React, { useEffect, useRef, useMemo } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Animated, Image } from 'react-native';
-import { BlurView } from 'expo-blur';
+import { View, Text, TouchableOpacity, StyleSheet, Animated, Image, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme, Theme, typography, spacing, radius } from '../lib/ThemeContext';
-
-const AnimatedBlurView = Animated.createAnimatedComponent(BlurView);
 
 interface SidebarProps {
   isVisible: boolean;
   onClose: () => void;
   onNavigate: (screen: string) => void;
   isGuest?: boolean;
+  currentScreen?: string;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ isVisible, onClose, onNavigate, isGuest = false }) => {
+const Sidebar: React.FC<SidebarProps> = ({ isVisible, onClose, onNavigate, isGuest = false, currentScreen }) => {
   const translateX = useRef(new Animated.Value(-300)).current;
   const overlayOpacity = useRef(new Animated.Value(0)).current;
   const { theme, toggleTheme, colors } = useTheme();
@@ -46,6 +44,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isVisible, onClose, onNavigate, isGue
     { icon: 'flask', label: 'Testing Labs', screen: 'TestingLabs' },
     { icon: 'warning', label: 'Emergency Helpline', screen: 'Helpline' },
     { icon: 'document-text', label: 'Health Certificate', screen: 'HealthCertificate' },
+    { icon: 'cube', label: 'Field Logistics', screen: 'FieldWorkerLogistics' },
     ...(!isGuest ? [{ icon: 'person', label: 'Profile', screen: 'Profile' }] : []),
     { icon: 'settings', label: 'Settings', screen: 'Settings' },
     {
@@ -67,9 +66,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isVisible, onClose, onNavigate, isGue
           />
         </Animated.View>
       )}
-      <AnimatedBlurView
-        intensity={95}
-        tint={colors.background === '#000000' ? 'dark' : 'light'}
+      <Animated.View
         style={[
           styles.sidebar,
           { transform: [{ translateX }] },
@@ -111,27 +108,34 @@ const Sidebar: React.FC<SidebarProps> = ({ isVisible, onClose, onNavigate, isGue
         )}
 
         {/* Menu */}
-        <View style={styles.menuItems}>
-          {menuItems.map((item, index) => (
-            <TouchableOpacity
-              key={index}
-              style={styles.menuItem}
-              activeOpacity={0.6}
-              onPress={() => {
-                if ('action' in item && item.action) {
-                  item.action();
-                } else if ('screen' in item && item.screen) {
-                  onNavigate(item.screen);
-                  onClose();
-                }
-              }}
-            >
-              <Ionicons name={item.icon as any} size={22} color={colors.textSecondary} style={{ width: 28, textAlign: 'center' }} />
-              <Text style={styles.menuItemText}>{item.label}</Text>
-            </TouchableOpacity>
-          ))}
-        </View>
-      </AnimatedBlurView>
+        <ScrollView style={styles.menuItems} showsVerticalScrollIndicator={false}>
+          {menuItems.map((item, index) => {
+            const isActive = 'screen' in item && currentScreen === item.screen;
+
+            return (
+              <TouchableOpacity
+                key={index}
+                style={[
+                  styles.menuItem,
+                  isActive && { backgroundColor: colors.primary + '20' }
+                ]}
+                activeOpacity={0.6}
+                onPress={() => {
+                  if ('action' in item && item.action) {
+                    item.action();
+                  } else if ('screen' in item && item.screen) {
+                    onNavigate(item.screen);
+                    onClose();
+                  }
+                }}
+              >
+                <Ionicons name={item.icon as any} size={22} color={isActive ? colors.primary : colors.textSecondary} style={{ width: 28, textAlign: 'center' }} />
+                <Text style={[styles.menuItemText, isActive && { color: colors.primary }]}>{item.label}</Text>
+              </TouchableOpacity>
+            );
+          })}
+        </ScrollView>
+      </Animated.View>
     </>
   );
 };
@@ -148,10 +152,10 @@ const createStyles = (colors: Theme) => StyleSheet.create({
     left: 0,
     bottom: 0,
     width: 280,
-    backgroundColor: colors.glass,
+    backgroundColor: colors.surface,
     zIndex: 11,
     borderRightWidth: StyleSheet.hairlineWidth,
-    borderRightColor: colors.glassBorder,
+    borderRightColor: colors.border,
     paddingTop: 48,
   },
   header: {

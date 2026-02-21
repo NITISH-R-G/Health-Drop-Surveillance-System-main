@@ -1,123 +1,101 @@
 import React, { useMemo } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { BlurView } from 'expo-blur';
 import { useTheme, Theme, typography, spacing, radius } from '../lib/ThemeContext';
-import { PredictionInsight } from '../lib/mockData';
+import { Ionicons } from '@expo/vector-icons';
 
-interface ExplainabilityPanelProps {
-    insight: PredictionInsight;
+interface ProximityRiskAnalysisProps {
+    insight?: any; // Assuming PredictionInsight type from mockData
 }
 
-const ExplainabilityPanel: React.FC<ExplainabilityPanelProps> = ({ insight }) => {
+const ExplainabilityPanel: React.FC<ProximityRiskAnalysisProps> = ({
+    insight
+}) => {
+    // If insight is provided, use its properties, else default
+    const riskLevel = insight?.riskLevel || 'Severe';
+    const distanceToHotspot = insight?.distanceToHotspot || 1.2;
+    const delay = insight?.delay || "Data fresh as of 12 mins ago";
     const { colors } = useTheme();
     const styles = useMemo(() => createStyles(colors), [colors]);
 
-    const getProbabilityColor = (prob: number) => {
-        if (prob >= 0.7) return colors.error;
-        if (prob >= 0.4) return colors.warning;
+    const getProbabilityColor = (level: string) => {
+        if (level === 'Severe' || level === 'High') return colors.error;
+        if (level === 'Moderate') return colors.warning;
         return colors.success;
     };
 
-    const probColor = getProbabilityColor(insight.probability);
-    const maxImpact = Math.max(...insight.factors.map(f => f.impact));
+    const probColor = getProbabilityColor(riskLevel);
 
     return (
-        <BlurView intensity={80} tint={colors.background === '#000000' ? 'dark' : 'light'} style={styles.container}>
+        <View style={styles.container}>
             {/* Header */}
             <View style={styles.header}>
                 <View style={styles.headerLeft}>
-                    <Text style={styles.diseaseLabel}>{insight.disease}</Text>
-                    <Text style={styles.regionLabel}>{insight.region}</Text>
+                    <Text style={styles.diseaseLabel}>Public Health Advisory</Text>
+                    <Text style={styles.regionLabel}>Localized Analysis within 2km radius</Text>
                 </View>
                 <View style={styles.headerRight}>
                     <Text style={[styles.probability, { color: probColor }]}>
-                        {Math.round(insight.probability * 100)}%
+                        {riskLevel} Risk
                     </Text>
-                    <Text style={styles.timeframe}>{insight.timeframe}</Text>
+                    <Text style={styles.timeframe}>{delay}</Text>
                 </View>
             </View>
 
-            {/* Probability Bar */}
-            <View style={styles.probBarContainer}>
-                <View style={styles.probBarBg}>
-                    <View
-                        style={[
-                            styles.probBarFill,
-                            {
-                                width: `${insight.probability * 100}%` as any,
-                                backgroundColor: probColor,
-                            },
-                        ]}
-                    />
-                </View>
-                <View style={styles.probLabels}>
-                    <Text style={styles.probLabel}>Low Risk</Text>
-                    <Text style={styles.probLabel}>High Risk</Text>
-                </View>
-            </View>
-
-            {/* Feature Importance */}
-            <View style={styles.factorsSection}>
-                <Text style={styles.factorsTitle}>Contributing Factors</Text>
-                {insight.factors.map((factor, index) => {
-                    const barWidth = (factor.impact / maxImpact) * 100;
-                    const factorColor = factor.direction === 'up' ? colors.error : colors.success;
-                    return (
-                        <View key={index} style={styles.factorRow}>
-                            <View style={styles.factorLabelContainer}>
-                                <Text style={styles.factorDirection}>
-                                    {factor.direction === 'up' ? '↑' : '↓'}
-                                </Text>
-                                <Text style={styles.factorName} numberOfLines={1}>{factor.name}</Text>
-                            </View>
-                            <View style={styles.factorBarContainer}>
-                                <View
-                                    style={[
-                                        styles.factorBar,
-                                        { width: `${barWidth}%` as any, backgroundColor: factorColor },
-                                    ]}
-                                />
-                            </View>
-                            <Text style={[styles.factorImpact, { color: factorColor }]}>
-                                {Math.round(factor.impact * 100)}%
-                            </Text>
-                        </View>
-                    );
-                })}
-            </View>
-
-            {/* Reasoning */}
+            {/* Analysis Text */}
             <View style={styles.reasoningSection}>
-                <Text style={styles.reasoningTitle}>Analysis</Text>
-                <Text style={styles.reasoningText}>{insight.reasoning}</Text>
+                <Text style={styles.reasoningTitle}>Why does this risk exist?</Text>
+                <Text style={styles.reasoningText}>
+                    You are currently located {distanceToHotspot}km from a confirmed water contamination source.
+                    During the last 14 days, overlapping environmental factors and verified health records
+                    indicate a highly contagious environment for diarrheal diseases in your immediate vicinity.
+                </Text>
             </View>
 
-            {/* Confidence */}
-            <View style={styles.confidenceRow}>
-                <Text style={styles.confidenceLabel}>Model Confidence</Text>
-                <View style={styles.confidenceBarBg}>
-                    <View
-                        style={[
-                            styles.confidenceBarFill,
-                            { width: `${insight.confidence * 100}%` as any },
-                        ]}
-                    />
+            {/* Key Contributing Factors */}
+            <View style={styles.factorsSection}>
+                <Text style={styles.factorsTitle}>Signal Integration</Text>
+
+                <View style={styles.factorRow}>
+                    <Ionicons name="cloud-download-outline" size={20} color={colors.warning} style={styles.factorIcon} />
+                    <View style={styles.factorTextContainer}>
+                        <Text style={styles.factorName}>Environmental Early Warning</Text>
+                        <Text style={styles.factorDesc}>85mm of heavy rainfall preceded by 32°C high temperatures created ideal vector breeding grounds and overwhelmed local drainage systems.</Text>
+                    </View>
                 </View>
-                <Text style={styles.confidenceValue}>{Math.round(insight.confidence * 100)}%</Text>
+
+                <View style={styles.factorRow}>
+                    <Ionicons name="analytics-outline" size={20} color={colors.error} style={styles.factorIcon} />
+                    <View style={styles.factorTextContainer}>
+                        <Text style={styles.factorName}>Government Ground Truth</Text>
+                        <Text style={styles.factorDesc}>Local authorities confirmed 22 active cholera cases linked to the Singanallur water distribution sector adjacent to your location.</Text>
+                    </View>
+                </View>
             </View>
-        </BlurView>
+
+            {/* Practical Advice */}
+            <View style={[styles.reasoningSection, { backgroundColor: colors.primary + '10' }]}>
+                <Text style={[styles.reasoningTitle, { color: colors.primary, marginBottom: spacing.xs }]}>
+                    <Ionicons name="shield-checkmark" size={16} /> Protective Actions
+                </Text>
+                <Text style={styles.reasoningText}>
+                    • Boil all drinking water for at least 3 minutes.
+                    {'\n'}• Avoid consuming raw street food or unwashed vegetables.
+                    {'\n'}• Immediately report symptoms of dehydration via the Telemedicine portal.
+                </Text>
+            </View>
+
+        </View>
     );
 };
 
 const createStyles = (colors: Theme) =>
     StyleSheet.create({
         container: {
-            backgroundColor: colors.glass,
+            backgroundColor: colors.surface,
             borderRadius: radius.xl,
             padding: spacing.xl,
             borderWidth: 1,
-            borderColor: colors.glassBorder,
-            overflow: 'hidden',
+            borderColor: colors.border,
         },
         header: {
             flexDirection: 'row',
@@ -129,46 +107,24 @@ const createStyles = (colors: Theme) =>
             flex: 1,
         },
         diseaseLabel: {
-            ...typography.headline,
+            ...typography.title3,
             color: colors.text,
         },
         regionLabel: {
             ...typography.caption1,
             color: colors.textSecondary,
-            marginTop: 2,
+            marginTop: 4,
         },
         headerRight: {
             alignItems: 'flex-end',
         },
         probability: {
-            ...typography.title1,
+            ...typography.headline,
         },
         timeframe: {
             ...typography.caption2,
-            color: colors.textSecondary,
-            marginTop: 2,
-        },
-        probBarContainer: {
-            marginBottom: spacing.xl,
-        },
-        probBarBg: {
-            height: 6,
-            backgroundColor: colors.surfaceVariant,
-            borderRadius: 3,
-            overflow: 'hidden',
-        },
-        probBarFill: {
-            height: '100%',
-            borderRadius: 3,
-        },
-        probLabels: {
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            marginTop: spacing.xs,
-        },
-        probLabel: {
-            ...typography.caption2,
             color: colors.textTertiary,
+            marginTop: 4,
         },
         factorsSection: {
             marginBottom: spacing.xl,
@@ -181,41 +137,26 @@ const createStyles = (colors: Theme) =>
         },
         factorRow: {
             flexDirection: 'row',
-            alignItems: 'center',
-            marginBottom: spacing.sm,
+            alignItems: 'flex-start',
+            marginBottom: spacing.md,
         },
-        factorLabelContainer: {
-            flexDirection: 'row',
-            alignItems: 'center',
-            width: 130,
+        factorIcon: {
+            marginRight: spacing.md,
+            marginTop: 2,
         },
-        factorDirection: {
-            fontSize: 12,
-            marginRight: spacing.xs,
-            fontWeight: '600',
+        factorTextContainer: {
+            flex: 1,
         },
         factorName: {
-            ...typography.caption1,
+            ...typography.subhead,
             color: colors.text,
-            flex: 1,
-        },
-        factorBarContainer: {
-            flex: 1,
-            height: 4,
-            backgroundColor: colors.surfaceVariant,
-            borderRadius: 2,
-            marginHorizontal: spacing.sm,
-            overflow: 'hidden',
-        },
-        factorBar: {
-            height: '100%',
-            borderRadius: 2,
-        },
-        factorImpact: {
-            ...typography.caption2,
             fontWeight: '600',
-            width: 36,
-            textAlign: 'right',
+            marginBottom: 2,
+        },
+        factorDesc: {
+            ...typography.caption1,
+            color: colors.textSecondary,
+            lineHeight: 18,
         },
         reasoningSection: {
             backgroundColor: colors.surfaceVariant,
@@ -228,38 +169,13 @@ const createStyles = (colors: Theme) =>
             fontWeight: '600',
             color: colors.text,
             marginBottom: spacing.sm,
+            flexDirection: 'row',
+            alignItems: 'center'
         },
         reasoningText: {
-            ...typography.caption1,
+            ...typography.callout,
             color: colors.textSecondary,
-            lineHeight: 18,
-        },
-        confidenceRow: {
-            flexDirection: 'row',
-            alignItems: 'center',
-        },
-        confidenceLabel: {
-            ...typography.caption1,
-            color: colors.textSecondary,
-            marginRight: spacing.md,
-        },
-        confidenceBarBg: {
-            flex: 1,
-            height: 4,
-            backgroundColor: colors.surfaceVariant,
-            borderRadius: 2,
-            overflow: 'hidden',
-            marginRight: spacing.sm,
-        },
-        confidenceBarFill: {
-            height: '100%',
-            backgroundColor: colors.primary,
-            borderRadius: 2,
-        },
-        confidenceValue: {
-            ...typography.caption1,
-            color: colors.primary,
-            fontWeight: '600',
+            lineHeight: 22,
         },
     });
 

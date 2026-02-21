@@ -1,23 +1,34 @@
 import React, { useMemo } from 'react';
-import { View, TouchableOpacity, Image, StyleSheet, Text } from 'react-native';
-import { BlurView } from 'expo-blur';
+import { View, TouchableOpacity, Image, StyleSheet, Text, Alert, Platform } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { useTheme, Theme, typography, spacing, radius } from '../lib/ThemeContext';
+
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 interface NavbarProps {
   onMenuPress: () => void;
   userName: string;
+  toggleTheme: () => void;
+  onNavigate?: (screen: string) => void;
 }
 
-const Navbar: React.FC<NavbarProps> = ({ onMenuPress, userName }) => {
-  const { colors } = useTheme();
+const Navbar: React.FC<NavbarProps> = ({ onMenuPress, userName, toggleTheme, onNavigate }) => {
+  const { theme, colors } = useTheme();
   const styles = useMemo(() => createStyles(colors), [colors]);
+  const insets = useSafeAreaInsets();
 
   const getInitials = (name: string) => {
     return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
   };
 
+  const handleProfilePress = () => {
+    if (onNavigate) {
+      onNavigate('Profile');
+    }
+  };
+
   return (
-    <BlurView intensity={80} tint={colors.background === '#000000' ? 'dark' : 'light'} style={styles.navbar}>
+    <View style={[styles.navbar, { paddingTop: Math.max(insets.top, 16) }]}>
       <View style={styles.leftSection}>
         <TouchableOpacity onPress={onMenuPress} style={styles.menuButton} activeOpacity={0.7}>
           <View style={styles.menuIconContainer}>
@@ -41,13 +52,23 @@ const Navbar: React.FC<NavbarProps> = ({ onMenuPress, userName }) => {
         </View>
       </View>
 
-      <TouchableOpacity style={styles.avatarContainer} activeOpacity={0.8}>
-        <View style={styles.avatar}>
-          <Text style={styles.avatarText}>{getInitials(userName)}</Text>
-        </View>
-        <View style={styles.statusDot} />
-      </TouchableOpacity>
-    </BlurView>
+      <View style={styles.rightSection}>
+        <TouchableOpacity style={styles.themeToggle} onPress={() => onNavigate && onNavigate('Warnings')}>
+          <Ionicons name="notifications" size={24} color={colors.text} />
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.themeToggle} onPress={toggleTheme}>
+          <Ionicons name={theme === 'dark' ? 'sunny' : 'moon'} size={24} color={colors.text} />
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.avatarContainer} activeOpacity={0.8} onPress={handleProfilePress}>
+          <View style={styles.avatar}>
+            <Text style={styles.avatarText}>{getInitials(userName)}</Text>
+          </View>
+          <View style={styles.statusDot} />
+        </TouchableOpacity>
+      </View>
+    </View>
   );
 };
 
@@ -57,11 +78,10 @@ const createStyles = (colors: Theme) => StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: spacing.xl,
-    paddingTop: 48 + spacing.md,
-    paddingBottom: spacing.md,
-    backgroundColor: colors.glass,
+    paddingBottom: spacing.sm,
+    backgroundColor: colors.surface,
     borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: colors.glassBorder,
+    borderBottomColor: colors.border,
   },
   leftSection: {
     flexDirection: 'row',
@@ -116,6 +136,19 @@ const createStyles = (colors: Theme) => StyleSheet.create({
     ...typography.caption2,
     color: colors.textSecondary,
     marginTop: 1,
+  },
+  rightSection: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.md,
+  },
+  themeToggle: {
+    width: 34,
+    height: 34,
+    borderRadius: 17,
+    backgroundColor: colors.surfaceVariant,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   avatarContainer: {
     position: 'relative',

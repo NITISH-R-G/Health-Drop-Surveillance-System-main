@@ -10,7 +10,7 @@ interface CardProps {
   description: string;
   location: string;
   type: 'outbreak' | 'water_quality' | 'prevention' | 'alert';
-  severity: 'high' | 'medium' | 'low';
+  severity: 'critical' | 'high' | 'medium' | 'low';
   caseCount?: number;
   onPress: () => void;
 }

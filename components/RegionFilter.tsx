@@ -1,5 +1,5 @@
 import React, { useMemo, useRef, useCallback } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Animated } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Animated, Image, Dimensions, Platform } from 'react-native';
 import { useTheme, Theme, typography, spacing, radius } from '../lib/ThemeContext';
 import { Region } from '../lib/mockData';
 
@@ -22,47 +22,117 @@ const RegionFilter: React.FC<RegionFilterProps> = ({ regions, selectedRegion, on
         }
     };
 
-    return (
-        <View style={styles.container}>
-            <ScrollView
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                contentContainerStyle={styles.scrollContent}
-            >
-                {regions.map((region) => {
-                    const isSelected = selectedRegion === region.id;
-                    const riskColor = getRiskColor(region.riskLevel);
-                    return (
-                        <TouchableOpacity
-                            key={region.id}
+    const { width } = Dimensions.get('window');
+    const ITEM_WIDTH = width * 0.85;
+    const ITEM_SPACING = (width - ITEM_WIDTH) / 2;
+
+    const scrollX = useRef(new Animated.Value(0)).current;
+
+    const renderItem = useCallback(({ item: region, index }: { item: Region; index: number }) => {
+        const isSelected = selectedRegion === region.id;
+        const riskColor = getRiskColor(region.riskLevel);
+
+        const inputRange = [
+            (index - 1) * ITEM_WIDTH,
+            index * ITEM_WIDTH,
+            (index + 1) * ITEM_WIDTH,
+        ];
+
+        const scale = scrollX.interpolate({
+            inputRange,
+            outputRange: [0.9, 1, 0.9],
+            extrapolate: 'clamp',
+        });
+
+        const translateX = scrollX.interpolate({
+            inputRange,
+            outputRange: [-ITEM_WIDTH * 0.3, 0, ITEM_WIDTH * 0.3],
+            extrapolate: 'clamp',
+        });
+
+        const opacity = scrollX.interpolate({
+            inputRange,
+            outputRange: [0.6, 1, 0.6],
+            extrapolate: 'clamp',
+        });
+
+        const placeholderImageUrl = region.id === 'all'
+            ? 'https://images.unsplash.com/photo-1524661135-423995f22d0b?w=800&auto=format&fit=crop&q=80'
+            : `https://picsum.photos/seed/${region.id}/800/600`;
+
+        return (
+            <Animated.View style={{ width: ITEM_WIDTH, transform: [{ scale }], opacity }}>
+                <TouchableOpacity
+                    style={[
+                        styles.card,
+                        isSelected && styles.cardSelected,
+                        isSelected && { borderColor: colors.primary },
+                    ]}
+                    onPress={() => onSelect(region.id)}
+                    activeOpacity={0.9}
+                >
+                    <View style={styles.imageOverflowContainer}>
+                        <Animated.Image
+                            source={{ uri: placeholderImageUrl }}
                             style={[
-                                styles.chip,
-                                isSelected && styles.chipSelected,
-                                isSelected && { borderColor: colors.primary },
+                                styles.cardImage,
+                                { transform: [{ translateX }] }
                             ]}
-                            onPress={() => onSelect(region.id)}
-                            activeOpacity={0.7}
-                        >
-                            {region.id !== 'all' && (
-                                <View style={[styles.riskDot, { backgroundColor: riskColor }]} />
-                            )}
-                            <Text
-                                style={[
-                                    styles.chipText,
-                                    isSelected && styles.chipTextSelected,
-                                ]}
-                            >
+                            resizeMode="cover"
+                        />
+                        <View style={[
+                            styles.cardOverlay,
+                            isSelected ? { backgroundColor: 'rgba(0,0,0,0.3)' } : { backgroundColor: 'rgba(0,0,0,0.6)' }
+                        ]} />
+                    </View>
+
+                    <View style={styles.cardContent}>
+                        {region.id !== 'all' && (
+                            <View style={[styles.riskBadge, { backgroundColor: riskColor }]}>
+                                <Text style={styles.riskBadgeText}>Risk Score: {region.riskScore}</Text>
+                            </View>
+                        )}
+
+                        <View style={styles.cardTextContainer}>
+                            <Text style={[
+                                styles.cardText,
+                                isSelected && styles.cardTextSelected
+                            ]} numberOfLines={1}>
                                 {region.name}
                             </Text>
-                            {region.id !== 'all' && isSelected && (
-                                <Text style={[styles.chipScore, { color: riskColor }]}>
-                                    {region.riskScore}
-                                </Text>
+                            {isSelected && (
+                                <Text style={styles.tapToViewText}>Selected · Tap to filter dashboard</Text>
                             )}
-                        </TouchableOpacity>
-                    );
-                })}
-            </ScrollView>
+                        </View>
+                    </View>
+                </TouchableOpacity>
+            </Animated.View>
+        );
+    }, [selectedRegion, scrollX, colors, onSelect, ITEM_WIDTH]);
+
+    return (
+        <View style={styles.container}>
+            <View style={styles.header}>
+                <Text style={styles.title}>Surveillance Regions</Text>
+                <Text style={styles.subtitle}>Swipe to select an area</Text>
+            </View>
+
+            <Animated.FlatList
+                data={regions}
+                keyExtractor={(item) => item.id}
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={{ paddingHorizontal: ITEM_SPACING, paddingBottom: spacing.lg }}
+                snapToInterval={ITEM_WIDTH}
+                decelerationRate="fast"
+                bounces={false}
+                renderItem={renderItem}
+                onScroll={Animated.event(
+                    [{ nativeEvent: { contentOffset: { x: scrollX } } }],
+                    { useNativeDriver: true }
+                )}
+                scrollEventThrottle={16}
+            />
         </View>
     );
 };
@@ -70,45 +140,96 @@ const RegionFilter: React.FC<RegionFilterProps> = ({ regions, selectedRegion, on
 const createStyles = (colors: Theme) =>
     StyleSheet.create({
         container: {
-            marginVertical: spacing.sm,
+            marginVertical: spacing.md,
+            paddingTop: spacing.sm,
         },
-        scrollContent: {
-            paddingHorizontal: spacing.lg,
-            gap: spacing.sm,
+        header: {
+            paddingHorizontal: spacing.xl,
+            marginBottom: spacing.md,
         },
-        chip: {
-            flexDirection: 'row',
-            alignItems: 'center',
-            paddingHorizontal: spacing.lg,
-            paddingVertical: spacing.sm + 2,
-            borderRadius: radius.full,
-            backgroundColor: colors.surface,
-            borderWidth: 1,
-            borderColor: colors.border,
+        title: {
+            ...typography.largeTitle,
+            color: colors.text,
         },
-        chipSelected: {
-            backgroundColor: colors.primaryLight,
-        },
-        riskDot: {
-            width: 6,
-            height: 6,
-            borderRadius: 3,
-            marginRight: spacing.sm,
-        },
-        chipText: {
+        subtitle: {
             ...typography.subhead,
             color: colors.textSecondary,
-            fontWeight: '500',
+            marginTop: 4,
         },
-        chipTextSelected: {
-            color: colors.primary,
+        card: {
+            height: 400,
+            borderRadius: radius.xxl,
+            backgroundColor: colors.surface,
+            borderWidth: 2,
+            borderColor: 'transparent',
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: 10 },
+            shadowOpacity: 0.2,
+            shadowRadius: 15,
+            elevation: 8,
+            marginHorizontal: 8,
+        },
+        cardSelected: {
+            borderWidth: 2,
+            elevation: 12,
+            shadowOpacity: 0.3,
+            shadowRadius: 20,
+        },
+        imageOverflowContainer: {
+            ...StyleSheet.absoluteFillObject,
+            borderRadius: radius.xxl,
+            overflow: 'hidden',
+        },
+        cardImage: {
+            width: '130%',
+            height: '100%',
+            position: 'absolute',
+            left: '-15%',
+        },
+        cardOverlay: {
+            ...StyleSheet.absoluteFillObject,
+        },
+        cardContent: {
+            flex: 1,
+            padding: spacing.xl,
+            justifyContent: 'space-between',
+        },
+        riskBadge: {
+            alignSelf: 'flex-start',
+            paddingHorizontal: 12,
+            paddingVertical: 6,
+            borderRadius: radius.lg,
+        },
+        riskBadgeText: {
+            ...typography.caption1,
+            color: '#fff',
+            fontWeight: 'bold',
+            textTransform: 'uppercase',
+            letterSpacing: 1,
+        },
+        cardTextContainer: {
+            marginTop: 'auto',
+        },
+        cardText: {
+            ...typography.title1,
+            fontSize: 34,
+            color: '#fff',
             fontWeight: '600',
+            opacity: 0.9,
+            marginBottom: 2,
+            textShadowColor: 'rgba(0,0,0,0.5)',
+            textShadowOffset: { width: 0, height: 2 },
+            textShadowRadius: 6,
         },
-        chipScore: {
-            ...typography.caption2,
-            fontWeight: '700',
-            marginLeft: spacing.sm,
+        cardTextSelected: {
+            opacity: 1,
+            fontWeight: '800',
         },
+        tapToViewText: {
+            ...typography.caption1,
+            color: 'rgba(255,255,255,0.8)',
+            fontWeight: '500',
+        }
     });
 
 export default React.memo(RegionFilter);
