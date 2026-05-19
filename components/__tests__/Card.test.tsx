@@ -22,9 +22,18 @@ jest.mock('expo-blur', () => {
 
 describe('Card Component', () => {
   it('renders correctly with content', () => {
+    const mockOnPress = jest.fn();
     const { getByText } = render(
       <ThemeProvider>
-        <Card title="Test Title" description="Test Description" />
+        <Card
+          title="Test Title"
+          description="Test Description"
+          date="2023-01-01"
+          location="Test Location"
+          type="outbreak"
+          severity="high"
+          onPress={mockOnPress}
+        />
       </ThemeProvider>
     );
 
@@ -33,9 +42,18 @@ describe('Card Component', () => {
   });
 
   it('renders severity correctly if passed', () => {
+    const mockOnPress = jest.fn();
     const { getByText } = render(
       <ThemeProvider>
-        <Card title="Test" severity="high" />
+        <Card
+          title="Test"
+          description="Test Description"
+          date="2023-01-01"
+          location="Test Location"
+          type="outbreak"
+          severity="high"
+          onPress={mockOnPress}
+        />
       </ThemeProvider>
     );
 
