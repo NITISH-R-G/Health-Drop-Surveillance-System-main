@@ -69,6 +69,20 @@ Before you begin, ensure you have met the following requirements:
    npm install
    ```
 
+## 🧪 Testing & Code Quality
+
+This project enforces strict code quality and formatting through ESLint and Prettier, along with a testing suite powered by Jest.
+
+To run tests:
+```bash
+npm run test
+```
+
+To run the linter and format checker:
+```bash
+npm run lint
+```
+
 ## 🚀 Running the App
 
 Start the Expo development server:
