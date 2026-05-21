@@ -1,6 +1,7 @@
 import React from 'react';
 import { render } from '@testing-library/react-native';
 import AlertBanner from '../AlertBanner';
+import { AlertItem } from '../../lib/mockData';
 
 // Mock the ThemeContext
 jest.mock('../../lib/ThemeContext', () => ({
@@ -35,14 +36,17 @@ jest.mock('../../lib/ThemeContext', () => ({
 
 describe('AlertBanner', () => {
   it('renders critical alert correctly', () => {
-    const alerts = [
+    const alerts: AlertItem[] = [
       {
         id: 1,
         title: 'Contaminated Water',
         message: 'Do not drink tap water in Region A',
         severity: 'critical',
-        date: '2023-10-27',
+        timestamp: '2023-10-27T10:00:00Z',
+        regionId: 'reg-a',
+        region: 'Region A',
         isRead: false,
+        category: 'water',
       },
     ];
 
@@ -53,14 +57,17 @@ describe('AlertBanner', () => {
   });
 
   it('renders high severity alert correctly', () => {
-      const alerts = [
+      const alerts: AlertItem[] = [
         {
           id: 1,
           title: 'Contaminated Water',
           message: 'Do not drink tap water in Region A',
           severity: 'high',
-          date: '2023-10-27',
+          timestamp: '2023-10-27T10:00:00Z',
+          regionId: 'reg-a',
+          region: 'Region A',
           isRead: false,
+          category: 'water',
         },
       ];
 
@@ -71,14 +78,17 @@ describe('AlertBanner', () => {
     });
 
   it('does not render read alerts', () => {
-    const alerts = [
+    const alerts: AlertItem[] = [
       {
         id: 1,
         title: 'Contaminated Water',
         message: 'Do not drink tap water in Region A',
         severity: 'critical',
-        date: '2023-10-27',
+        timestamp: '2023-10-27T10:00:00Z',
+        regionId: 'reg-a',
+        region: 'Region A',
         isRead: true, // Mark as read
+        category: 'water',
       },
     ];
 
@@ -88,14 +98,17 @@ describe('AlertBanner', () => {
   });
 
   it('does not render low severity alerts', () => {
-    const alerts = [
+    const alerts: AlertItem[] = [
       {
         id: 1,
         title: 'Mild issue',
         message: 'Nothing to worry about',
         severity: 'low',
-        date: '2023-10-27',
+        timestamp: '2023-10-27T10:00:00Z',
+        regionId: 'reg-a',
+        region: 'Region A',
         isRead: false,
+        category: 'water',
       },
     ];
 
