@@ -94,7 +94,7 @@ const Card: React.FC<CardProps> = ({ title, date, description, location, type, s
               </View>
               <View style={[styles.severityBadge, { backgroundColor: severityColor + '18' }]}>
                 <Text style={[styles.severityText, { color: severityColor }]}>
-                  {severity.toUpperCase()}
+                  {severity ? severity.toUpperCase() : ''}
                 </Text>
               </View>
             </View>
