@@ -1,5 +1,16 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, ScrollView, StyleSheet, Alert, ActivityIndicator, Image, Platform } from 'react-native';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  ScrollView,
+  StyleSheet,
+  Alert,
+  ActivityIndicator,
+  Image,
+  Platform,
+} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import { useTheme, Theme, typography, spacing, radius } from '../lib/ThemeContext';
@@ -31,7 +42,10 @@ const CommunityReport: React.FC<CommunityReportProps> = ({ onBack }) => {
     if (Platform.OS !== 'web') {
       const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
       if (permissionResult.granted === false) {
-        Alert.alert("Permission Refused", "You need to grant camera permissions to use this feature.");
+        Alert.alert(
+          'Permission Refused',
+          'You need to grant camera permissions to use this feature.'
+        );
         return;
       }
     }
@@ -46,8 +60,8 @@ const CommunityReport: React.FC<CommunityReportProps> = ({ onBack }) => {
         setPhotoUri(result.assets[0].uri);
       }
     } catch (error) {
-      console.error("Camera Error:", error);
-      Alert.alert("Error", "Could not open camera.");
+      console.error('Camera Error:', error);
+      Alert.alert('Error', 'Could not open camera.');
     }
   };
 
@@ -55,7 +69,10 @@ const CommunityReport: React.FC<CommunityReportProps> = ({ onBack }) => {
     if (Platform.OS !== 'web') {
       const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
       if (permissionResult.granted === false) {
-        Alert.alert("Permission Refused", "You've refused to allow this app to access your photos.");
+        Alert.alert(
+          'Permission Refused',
+          "You've refused to allow this app to access your photos."
+        );
         return;
       }
     }
@@ -70,8 +87,8 @@ const CommunityReport: React.FC<CommunityReportProps> = ({ onBack }) => {
         setPhotoUri(result.assets[0].uri);
       }
     } catch (error) {
-      console.error("Gallery Error:", error);
-      Alert.alert("Error", "Could not open gallery.");
+      console.error('Gallery Error:', error);
+      Alert.alert('Error', 'Could not open gallery.');
     }
   };
 
@@ -88,7 +105,10 @@ const CommunityReport: React.FC<CommunityReportProps> = ({ onBack }) => {
     // Simulate network request
     setTimeout(() => {
       setIsSubmitting(false);
-      Alert.alert('Report Submitted', 'Thank you for helping your community! Your report has been logged and sent to local health authorities for verification.');
+      Alert.alert(
+        'Report Submitted',
+        'Thank you for helping your community! Your report has been logged and sent to local health authorities for verification.'
+      );
       onBack();
     }, 1500);
   };
@@ -118,8 +138,7 @@ const CommunityReport: React.FC<CommunityReportProps> = ({ onBack }) => {
             <TouchableOpacity
               key={type.id}
               style={[styles.typeCard, issueType === type.id && styles.typeCardActive]}
-              onPress={() => setIssueType(type.id)}
-            >
+              onPress={() => setIssueType(type.id)}>
               <Ionicons
                 name={type.icon as any}
                 size={32}
@@ -197,33 +216,108 @@ const CommunityReport: React.FC<CommunityReportProps> = ({ onBack }) => {
   );
 };
 
-const createStyles = (colors: Theme) => StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.background },
-  header: { flexDirection: 'row', alignItems: 'center', padding: spacing.lg, paddingTop: spacing.xl },
-  backButton: { marginRight: spacing.md },
-  title: { ...typography.title3, color: colors.text },
-  section: { padding: spacing.lg, paddingBottom: 0 },
-  label: { ...typography.subhead, color: colors.textSecondary, marginBottom: spacing.sm },
-  grid: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.md },
-  typeCard: { width: '47%', padding: spacing.md, borderRadius: radius.lg, backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.border, alignItems: 'center', justifyContent: 'center', gap: spacing.sm },
-  typeCardActive: { borderColor: colors.primary, backgroundColor: colors.primary + '10' },
-  typeLabel: { ...typography.caption1, color: colors.textSecondary },
-  typeLabelActive: { color: colors.primary, fontWeight: '600' },
-  locationCard: { flexDirection: 'row', alignItems: 'center', padding: spacing.md, backgroundColor: colors.surface, borderRadius: radius.md, gap: spacing.sm },
-  locationText: { ...typography.body, color: colors.text },
-  photoPlaceholder: { backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.border, borderStyle: 'dashed', borderRadius: radius.lg, padding: spacing.xl, alignItems: 'center', justifyContent: 'center' },
-  photoIconContainer: { width: 60, height: 60, borderRadius: 30, backgroundColor: colors.primary + '10', alignItems: 'center', justifyContent: 'center', marginBottom: spacing.sm },
-  photoText: { ...typography.subhead, color: colors.text, fontWeight: '600' },
-  photoSubtext: { ...typography.caption2, color: colors.textSecondary },
-  photoActionsRow: { flexDirection: 'row', gap: spacing.md },
-  photoActionCard: { flex: 1, backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.border, borderStyle: 'dashed', borderRadius: radius.lg, padding: spacing.lg, alignItems: 'center', justifyContent: 'center' },
-  photoActionText: { ...typography.caption1, color: colors.text, fontWeight: '600', textAlign: 'center' },
-  photoPreviewContainer: { position: 'relative', marginTop: spacing.sm },
-  photoPreview: { width: '100%', height: 200, borderRadius: radius.lg },
-  removePhotoButton: { position: 'absolute', top: -10, right: -10, backgroundColor: colors.surface, borderRadius: 14 },
-  input: { backgroundColor: colors.surface, borderRadius: radius.md, padding: spacing.md, color: colors.text, borderWidth: 1, borderColor: colors.border, textAlignVertical: 'top' },
-  submitButton: { margin: spacing.lg, padding: spacing.lg, backgroundColor: colors.primary, borderRadius: radius.xl, alignItems: 'center' },
-  submitButtonText: { ...typography.headline, color: '#fff' }
-});
+const createStyles = (colors: Theme) =>
+  StyleSheet.create({
+    container: { flex: 1, backgroundColor: colors.background },
+    header: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      padding: spacing.lg,
+      paddingTop: spacing.xl,
+    },
+    backButton: { marginRight: spacing.md },
+    title: { ...typography.title3, color: colors.text },
+    section: { padding: spacing.lg, paddingBottom: 0 },
+    label: { ...typography.subhead, color: colors.textSecondary, marginBottom: spacing.sm },
+    grid: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.md },
+    typeCard: {
+      width: '47%',
+      padding: spacing.md,
+      borderRadius: radius.lg,
+      backgroundColor: colors.surface,
+      borderWidth: 1,
+      borderColor: colors.border,
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: spacing.sm,
+    },
+    typeCardActive: { borderColor: colors.primary, backgroundColor: colors.primary + '10' },
+    typeLabel: { ...typography.caption1, color: colors.textSecondary },
+    typeLabelActive: { color: colors.primary, fontWeight: '600' },
+    locationCard: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      padding: spacing.md,
+      backgroundColor: colors.surface,
+      borderRadius: radius.md,
+      gap: spacing.sm,
+    },
+    locationText: { ...typography.body, color: colors.text },
+    photoPlaceholder: {
+      backgroundColor: colors.surface,
+      borderWidth: 1,
+      borderColor: colors.border,
+      borderStyle: 'dashed',
+      borderRadius: radius.lg,
+      padding: spacing.xl,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    photoIconContainer: {
+      width: 60,
+      height: 60,
+      borderRadius: 30,
+      backgroundColor: colors.primary + '10',
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginBottom: spacing.sm,
+    },
+    photoText: { ...typography.subhead, color: colors.text, fontWeight: '600' },
+    photoSubtext: { ...typography.caption2, color: colors.textSecondary },
+    photoActionsRow: { flexDirection: 'row', gap: spacing.md },
+    photoActionCard: {
+      flex: 1,
+      backgroundColor: colors.surface,
+      borderWidth: 1,
+      borderColor: colors.border,
+      borderStyle: 'dashed',
+      borderRadius: radius.lg,
+      padding: spacing.lg,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    photoActionText: {
+      ...typography.caption1,
+      color: colors.text,
+      fontWeight: '600',
+      textAlign: 'center',
+    },
+    photoPreviewContainer: { position: 'relative', marginTop: spacing.sm },
+    photoPreview: { width: '100%', height: 200, borderRadius: radius.lg },
+    removePhotoButton: {
+      position: 'absolute',
+      top: -10,
+      right: -10,
+      backgroundColor: colors.surface,
+      borderRadius: 14,
+    },
+    input: {
+      backgroundColor: colors.surface,
+      borderRadius: radius.md,
+      padding: spacing.md,
+      color: colors.text,
+      borderWidth: 1,
+      borderColor: colors.border,
+      textAlignVertical: 'top',
+    },
+    submitButton: {
+      margin: spacing.lg,
+      padding: spacing.lg,
+      backgroundColor: colors.primary,
+      borderRadius: radius.xl,
+      alignItems: 'center',
+    },
+    submitButtonText: { ...typography.headline, color: '#fff' },
+  });
 
 export default CommunityReport;
