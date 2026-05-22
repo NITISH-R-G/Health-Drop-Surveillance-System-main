@@ -25,7 +25,7 @@ function AppContent() {
     setProfile({
       id: 'dummy-user-id',
       full_name: fullName,
-      role: role as any,
+      role: role,
       organization: organization,
       location: location,
       created_at: new Date().toISOString(),
@@ -48,12 +48,7 @@ function AppContent() {
 
   // Profile setup skipped for dummy mode if we auto-set profile
   if (!profile) {
-    return (
-      <ProfileSetup
-        userId={session.user.id}
-        onProfileComplete={handleProfileComplete}
-      />
-    );
+    return <ProfileSetup userId={session.user.id} onProfileComplete={handleProfileComplete} />;
   }
 
   return (

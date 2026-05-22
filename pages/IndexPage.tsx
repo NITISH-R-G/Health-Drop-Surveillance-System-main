@@ -56,7 +56,8 @@ const IndexPageContent: React.FC<IndexPageProps> = ({
   userName = 'Health Worker',
   onLogout,
   isGuest = false,
-  userId }) => {
+  userId,
+}) => {
   const { theme, toggleTheme, colors } = useTheme();
   const insets = useSafeAreaInsets();
   const styles = useMemo(() => createStyles(colors, insets), [colors, insets]);
@@ -64,7 +65,9 @@ const IndexPageContent: React.FC<IndexPageProps> = ({
   const [isSidebarVisible, setSidebarVisible] = useState(false);
   const [currentScreen, setCurrentScreen] = useState<string>('Dashboard');
   const [selectedRegion, setSelectedRegion] = useState<string>('all');
-  const [userRiskLevel, setUserRiskLevel] = useState<'low' | 'moderate' | 'high' | 'critical'>('low');
+  const [userRiskLevel, setUserRiskLevel] = useState<'low' | 'moderate' | 'high' | 'critical'>(
+    'low'
+  );
   const [geoAlertVisible, setGeoAlertVisible] = useState(true);
   const [userLocation, setUserLocation] = useState<string>('Locating...');
 
@@ -91,40 +94,63 @@ const IndexPageContent: React.FC<IndexPageProps> = ({
     setSelectedRegion(regionId);
   }, []);
 
-  const handleAssessmentComplete = useCallback((riskLevel: 'low' | 'moderate' | 'high' | 'critical') => {
-    setUserRiskLevel(riskLevel);
-  }, []);
+  const handleAssessmentComplete = useCallback(
+    (riskLevel: 'low' | 'moderate' | 'high' | 'critical') => {
+      setUserRiskLevel(riskLevel);
+    },
+    []
+  );
 
   const handleHygieneUpdate = useCallback((id: number, points: number) => {
-    setHygieneScore(prev => prev + points);
-    setHygieneModules(prev => prev.map(m => m.id === id ? { ...m, completed: true } : m));
+    setHygieneScore((prev) => prev + points);
+    setHygieneModules((prev) => prev.map((m) => (m.id === id ? { ...m, completed: true } : m)));
   }, []);
 
-  const filteredOutbreaks = useMemo(() => filterByRegion(outbreaks, selectedRegion), [selectedRegion]);
-  const filteredWaterAlerts = useMemo(() => filterByRegion(waterQualityAlerts, selectedRegion), [selectedRegion]);
+  const filteredOutbreaks = useMemo(
+    () => filterByRegion(outbreaks, selectedRegion),
+    [selectedRegion]
+  );
+  const filteredWaterAlerts = useMemo(
+    () => filterByRegion(waterQualityAlerts, selectedRegion),
+    [selectedRegion]
+  );
   const filteredAlerts = useMemo(() => filterByRegion(alerts, selectedRegion), [selectedRegion]);
 
   const renderScreenContent = () => {
     switch (currentScreen) {
       case 'SelfAssessment':
-        return <SelfAssessment onComplete={handleAssessmentComplete} onClose={() => handleNavigation('Dashboard')} />;
+        return (
+          <SelfAssessment
+            onComplete={handleAssessmentComplete}
+            onClose={() => handleNavigation('Dashboard')}
+          />
+        );
       case 'NationalStats':
         return <NationalStats onNavigate={handleNavigation} />;
       case 'HotspotMap':
         return (
           <View style={{ flex: 1, backgroundColor: colors.background }}>
-            <CategorizedMap userLocation={userLocation} fullscreen={true} onBack={() => handleNavigation('Dashboard')} />
+            <CategorizedMap
+              userLocation={userLocation}
+              fullscreen={true}
+              onBack={() => handleNavigation('Dashboard')}
+            />
           </View>
         );
       case 'TestingLabs':
         return (
           <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
             <View style={styles.screenHeader}>
-              <TouchableOpacity onPress={() => handleNavigation('Dashboard')} activeOpacity={0.6} style={{ marginBottom: spacing.md }}>
+              <TouchableOpacity
+                onPress={() => handleNavigation('Dashboard')}
+                activeOpacity={0.6}
+                style={{ marginBottom: spacing.md }}>
                 <Ionicons name="arrow-back" size={24} color={colors.text} />
               </TouchableOpacity>
               <Text style={styles.screenTitle}>Approved Testing Labs</Text>
-              <Text style={styles.screenSubtitle}>Water testing & pathology facilities near you</Text>
+              <Text style={styles.screenSubtitle}>
+                Water testing & pathology facilities near you
+              </Text>
             </View>
             <View style={styles.section}>
               <TestingLabs />
@@ -135,7 +161,10 @@ const IndexPageContent: React.FC<IndexPageProps> = ({
         return (
           <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
             <View style={styles.screenHeader}>
-              <TouchableOpacity onPress={() => handleNavigation('Dashboard')} activeOpacity={0.6} style={{ marginBottom: spacing.md }}>
+              <TouchableOpacity
+                onPress={() => handleNavigation('Dashboard')}
+                activeOpacity={0.6}
+                style={{ marginBottom: spacing.md }}>
                 <Ionicons name="arrow-back" size={24} color={colors.text} />
               </TouchableOpacity>
               <Text style={styles.screenTitle}>Emergency Helpline</Text>
@@ -149,13 +178,20 @@ const IndexPageContent: React.FC<IndexPageProps> = ({
         return (
           <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
             <View style={styles.screenHeader}>
-              <TouchableOpacity onPress={() => handleNavigation('Dashboard')} activeOpacity={0.6} style={{ marginBottom: spacing.md }}>
+              <TouchableOpacity
+                onPress={() => handleNavigation('Dashboard')}
+                activeOpacity={0.6}
+                style={{ marginBottom: spacing.md }}>
                 <Ionicons name="arrow-back" size={24} color={colors.text} />
               </TouchableOpacity>
               <Text style={styles.screenTitle}>Health Certificate</Text>
             </View>
             <View style={styles.section}>
-              <HealthCertificate userName={userName} riskLevel={userRiskLevel} location="New Delhi, India" />
+              <HealthCertificate
+                userName={userName}
+                riskLevel={userRiskLevel}
+                location="New Delhi, India"
+              />
             </View>
           </ScrollView>
         );
@@ -163,7 +199,10 @@ const IndexPageContent: React.FC<IndexPageProps> = ({
         return (
           <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
             <View style={styles.screenHeader}>
-              <TouchableOpacity onPress={() => handleNavigation('Dashboard')} activeOpacity={0.6} style={{ marginBottom: spacing.md }}>
+              <TouchableOpacity
+                onPress={() => handleNavigation('Dashboard')}
+                activeOpacity={0.6}
+                style={{ marginBottom: spacing.md }}>
                 <Ionicons name="arrow-back" size={24} color={colors.text} />
               </TouchableOpacity>
               <Text style={styles.screenTitle}>Field Worker Logistics</Text>
@@ -179,11 +218,33 @@ const IndexPageContent: React.FC<IndexPageProps> = ({
       case 'Telemedicine':
         return <Telemedicine onBack={() => handleNavigation('Dashboard')} />;
       case 'HygieneEducation':
-        return <HygieneEducation onBack={() => handleNavigation('Dashboard')} modules={hygieneModules} score={hygieneScore} onUpdateModule={handleHygieneUpdate} />;
+        return (
+          <HygieneEducation
+            onBack={() => handleNavigation('Dashboard')}
+            modules={hygieneModules}
+            score={hygieneScore}
+            onUpdateModule={handleHygieneUpdate}
+          />
+        );
       case 'Profile':
-        return <ProfilePage onBack={() => handleNavigation('Dashboard')} onNavigate={handleNavigation} userName={userName} userEmail={userEmail} onLogout={onLogout} />;
+        return (
+          <ProfilePage
+            onBack={() => handleNavigation('Dashboard')}
+            onNavigate={handleNavigation}
+            userName={userName}
+            userEmail={userEmail}
+            onLogout={onLogout}
+          />
+        );
       case 'Settings':
-        return <SettingsPage onNavigate={handleNavigation} userId={userId} userEmail={userEmail} userName={userName} />;
+        return (
+          <SettingsPage
+            onNavigate={handleNavigation}
+            userId={userId}
+            userEmail={userEmail}
+            userName={userName}
+          />
+        );
       case 'Outbreaks':
         return (
           <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
@@ -191,7 +252,17 @@ const IndexPageContent: React.FC<IndexPageProps> = ({
               <Text style={styles.sectionTitle}>Active Outbreaks</Text>
               {filteredOutbreaks.length > 0 ? (
                 filteredOutbreaks.map((item) => (
-                  <Card key={item.id} title={item.title} date={item.date} description={item.description} location={item.location} type={item.type} severity={item.severity} caseCount={item.caseCount} onPress={() => { }} />
+                  <Card
+                    key={item.id}
+                    title={item.title}
+                    date={item.date}
+                    description={item.description}
+                    location={item.location}
+                    type={item.type}
+                    severity={item.severity}
+                    caseCount={item.caseCount}
+                    onPress={() => {}}
+                  />
                 ))
               ) : (
                 <View style={styles.emptyState}>
@@ -204,7 +275,16 @@ const IndexPageContent: React.FC<IndexPageProps> = ({
             <View style={styles.section}>
               <Text style={styles.sectionTitle}>Prevention Campaigns</Text>
               {preventionCampaigns.map((item) => (
-                <Card key={item.id} title={item.title} date={item.date} description={item.description} location={item.location} type={item.type} severity={item.severity} onPress={() => { }} />
+                <Card
+                  key={item.id}
+                  title={item.title}
+                  date={item.date}
+                  description={item.description}
+                  location={item.location}
+                  type={item.type}
+                  severity={item.severity}
+                  onPress={() => {}}
+                />
               ))}
             </View>
           </ScrollView>
@@ -216,24 +296,41 @@ const IndexPageContent: React.FC<IndexPageProps> = ({
               <Text style={styles.sectionTitle}>Water Quality Alerts</Text>
               {filteredWaterAlerts.length > 0 ? (
                 filteredWaterAlerts.map((item) => (
-                  <Card key={item.id} title={item.title} date={item.date} description={item.description} location={item.location} type={item.type} severity={item.severity} onPress={() => { }} />
+                  <Card
+                    key={item.id}
+                    title={item.title}
+                    date={item.date}
+                    description={item.description}
+                    location={item.location}
+                    type={item.type}
+                    severity={item.severity}
+                    onPress={() => {}}
+                  />
                 ))
               ) : (
                 <View style={styles.emptyState}>
                   <Text style={styles.emptyStateIcon}>💧</Text>
-                  <Text style={styles.emptyStateText}>All water sources are safe in this region</Text>
+                  <Text style={styles.emptyStateText}>
+                    All water sources are safe in this region
+                  </Text>
                 </View>
               )}
             </View>
             <View style={styles.section}>
-              <CategorizedMap userLocation={userLocation} compact onExpand={() => handleNavigation('HotspotMap')} />
+              <CategorizedMap
+                userLocation={userLocation}
+                compact
+                onExpand={() => handleNavigation('HotspotMap')}
+              />
             </View>
             <View style={styles.section}>
               <Text style={styles.sectionTitle}>Regional Risk Map</Text>
               <RiskHeatmap selectedRegion={selectedRegion} />
             </View>
             <View style={styles.section}>
-              <RiskAnalysisPanel locationName={userLocation === 'Locating...' ? 'your area' : userLocation} />
+              <RiskAnalysisPanel
+                locationName={userLocation === 'Locating...' ? 'your area' : userLocation}
+              />
             </View>
           </ScrollView>
         );
@@ -265,13 +362,18 @@ const IndexPageContent: React.FC<IndexPageProps> = ({
       case 'Dashboard':
       default:
         return (
-          <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 100 }}>
+          <ScrollView
+            style={{ flex: 1 }}
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{ paddingBottom: 100 }}>
             {geoAlertVisible && (
               <View style={styles.geoAlert}>
                 <Ionicons name="location" size={24} color="#fff" style={{ marginRight: 12 }} />
                 <View style={{ flex: 1 }}>
                   <Text style={styles.geoAlertTitle}>High Risk Zone Detected</Text>
-                  <Text style={styles.geoAlertText}>You are near a reported contamination site.</Text>
+                  <Text style={styles.geoAlertText}>
+                    You are near a reported contamination site.
+                  </Text>
                 </View>
                 <TouchableOpacity onPress={() => setGeoAlertVisible(false)}>
                   <Ionicons name="close" size={24} color="#fff" />
@@ -280,7 +382,11 @@ const IndexPageContent: React.FC<IndexPageProps> = ({
             )}
 
             <HeroSection userName={userName} selectedRegion={selectedRegion} />
-            <RegionFilter regions={regions} selectedRegion={selectedRegion} onSelect={handleRegionSelect} />
+            <RegionFilter
+              regions={regions}
+              selectedRegion={selectedRegion}
+              onSelect={handleRegionSelect}
+            />
 
             {/* Surveillance Categories have been moved to the floating bottom tabs */}
 
@@ -300,9 +406,13 @@ const IndexPageContent: React.FC<IndexPageProps> = ({
                     key={action.screen}
                     style={styles.quickActionItem}
                     onPress={() => handleNavigation(action.screen)}
-                    activeOpacity={0.7}
-                  >
-                    <Ionicons name={action.icon as any} size={28} color={colors.primary} style={{ marginBottom: 8 }} />
+                    activeOpacity={0.7}>
+                    <Ionicons
+                      name={action.icon as any}
+                      size={28}
+                      color={colors.primary}
+                      style={{ marginBottom: 8 }}
+                    />
                     <Text style={styles.quickActionLabel}>{action.label}</Text>
                   </TouchableOpacity>
                 ))}
@@ -316,10 +426,22 @@ const IndexPageContent: React.FC<IndexPageProps> = ({
             <View style={styles.section}>
               <Text style={styles.sectionTitle}>Trends Overview</Text>
               <View style={styles.cardGap}>
-                <TrendChart data={diseaseTrendData} title="Disease Cases" subtitle="Monthly reported cases" color={colors.error} unit=" cases" />
+                <TrendChart
+                  data={diseaseTrendData}
+                  title="Disease Cases"
+                  subtitle="Monthly reported cases"
+                  color={colors.error}
+                  unit=" cases"
+                />
               </View>
               <View style={styles.cardGap}>
-                <TrendChart data={waterQualityTrendData} title="Water Quality Index" subtitle="Average safety score" color={colors.primary} unit="%" />
+                <TrendChart
+                  data={waterQualityTrendData}
+                  title="Water Quality Index"
+                  subtitle="Average safety score"
+                  color={colors.primary}
+                  unit="%"
+                />
               </View>
             </View>
           </ScrollView>
@@ -330,12 +452,21 @@ const IndexPageContent: React.FC<IndexPageProps> = ({
   return (
     <View style={styles.container}>
       <StatusBar style={theme === 'dark' ? 'light' : 'dark'} backgroundColor={colors.surface} />
-      <Navbar onMenuPress={() => setSidebarVisible(true)} userName={userName} toggleTheme={toggleTheme} onNavigate={handleNavigation} />
-      <Sidebar isVisible={isSidebarVisible} onClose={() => setSidebarVisible(false)} onNavigate={handleNavigation} isGuest={isGuest} currentScreen={currentScreen} />
+      <Navbar
+        onMenuPress={() => setSidebarVisible(true)}
+        userName={userName}
+        toggleTheme={toggleTheme}
+        onNavigate={handleNavigation}
+      />
+      <Sidebar
+        isVisible={isSidebarVisible}
+        onClose={() => setSidebarVisible(false)}
+        onNavigate={handleNavigation}
+        isGuest={isGuest}
+        currentScreen={currentScreen}
+      />
 
-      <View style={styles.content}>
-        {renderScreenContent()}
-      </View>
+      <View style={styles.content}>{renderScreenContent()}</View>
 
       {/* Floating Bottom Nav */}
       <View style={styles.floatingNavWrapper}>
@@ -348,27 +479,33 @@ const IndexPageContent: React.FC<IndexPageProps> = ({
             { id: 'HotspotMap', icon: 'map', color: colors.secondary },
             { id: 'SelfAssessment', icon: 'clipboard', color: colors.primary },
           ].map((item) => {
-            const isActive = currentScreen === item.id || (item.id === 'Dashboard' && !['Outbreaks', 'WaterQuality', 'HotspotMap', 'SelfAssessment', 'NationalStats'].includes(currentScreen));
+            const isActive =
+              currentScreen === item.id ||
+              (item.id === 'Dashboard' &&
+                ![
+                  'Outbreaks',
+                  'WaterQuality',
+                  'HotspotMap',
+                  'SelfAssessment',
+                  'NationalStats',
+                ].includes(currentScreen));
 
-            const activeIconColor = item.id === 'Dashboard' && theme === 'dark' ? colors.background : '#fff';
+            const activeIconColor =
+              item.id === 'Dashboard' && theme === 'dark' ? colors.background : '#fff';
 
             return (
               <TouchableOpacity
                 key={item.id}
-                style={[
-                  styles.navPill,
-                  isActive && { backgroundColor: item.color }
-                ]}
+                style={[styles.navPill, isActive && { backgroundColor: item.color }]}
                 onPress={() => handleNavigation(item.id)}
-                activeOpacity={0.8}
-              >
+                activeOpacity={0.8}>
                 <Ionicons
                   name={item.icon as any}
                   size={24}
                   color={isActive ? activeIconColor : colors.textSecondary}
                 />
               </TouchableOpacity>
-            )
+            );
           })}
         </View>
       </View>
@@ -382,48 +519,92 @@ const createStyles = (colors: Theme, insets: any) =>
     content: { flex: 1 },
     section: { paddingHorizontal: spacing.lg, marginBottom: spacing.xl },
     sectionTitle: { ...typography.title3, color: colors.text, marginBottom: spacing.sm },
-    sectionSubtitle: { ...typography.caption1, color: colors.textSecondary, marginBottom: spacing.lg },
+    sectionSubtitle: {
+      ...typography.caption1,
+      color: colors.textSecondary,
+      marginBottom: spacing.lg,
+    },
     cardGap: { marginBottom: spacing.md },
-    screenHeader: { paddingHorizontal: spacing.xl, paddingVertical: spacing.lg, paddingTop: Math.max(insets?.top || 0, spacing.xl) },
-    backText: { ...typography.callout, color: colors.primary, fontWeight: '500', marginBottom: spacing.sm },
+    screenHeader: {
+      paddingHorizontal: spacing.xl,
+      paddingVertical: spacing.lg,
+      paddingTop: Math.max(insets?.top || 0, spacing.xl),
+    },
+    backText: {
+      ...typography.callout,
+      color: colors.primary,
+      fontWeight: '500',
+      marginBottom: spacing.sm,
+    },
     screenTitle: { ...typography.largeTitle, color: colors.text },
     screenSubtitle: { ...typography.caption1, color: colors.textSecondary, marginTop: 2 },
 
     // Category Grid
     categoryGrid: {
-      flexDirection: 'row', flexWrap: 'wrap', gap: spacing.md, justifyContent: 'space-between'
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      gap: spacing.md,
+      justifyContent: 'space-between',
     },
     categoryCard: {
-      width: '48%', backgroundColor: colors.surface, borderRadius: radius.xl,
-      padding: spacing.md, borderWidth: 1, borderColor: colors.border,
-      marginBottom: spacing.xs
+      width: '48%',
+      backgroundColor: colors.surface,
+      borderRadius: radius.xl,
+      padding: spacing.md,
+      borderWidth: 1,
+      borderColor: colors.border,
+      marginBottom: spacing.xs,
     },
     categoryIconBg: {
-      width: 48, height: 48, borderRadius: 24, justifyContent: 'center', alignItems: 'center',
-      marginBottom: spacing.md
+      width: 48,
+      height: 48,
+      borderRadius: 24,
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginBottom: spacing.md,
     },
     categoryTitle: { ...typography.headline, marginBottom: 2 },
     categorySubtitle: { ...typography.caption2, color: colors.textSecondary },
 
     quickActionsGrid: {
-      flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm,
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      gap: spacing.sm,
     },
     quickActionItem: {
-      width: '31%', backgroundColor: colors.surface, borderRadius: radius.xl,
-      padding: spacing.lg, alignItems: 'center',
-      borderWidth: 1, borderColor: colors.border,
+      width: '31%',
+      backgroundColor: colors.surface,
+      borderRadius: radius.xl,
+      padding: spacing.lg,
+      alignItems: 'center',
+      borderWidth: 1,
+      borderColor: colors.border,
     },
     quickActionIcon: { fontSize: 24, marginBottom: spacing.xs },
-    quickActionLabel: { ...typography.caption1, color: colors.textSecondary, fontWeight: '500', textAlign: 'center' },
+    quickActionLabel: {
+      ...typography.caption1,
+      color: colors.textSecondary,
+      fontWeight: '500',
+      textAlign: 'center',
+    },
     geoAlert: {
-      flexDirection: 'row', alignItems: 'center', backgroundColor: colors.error,
-      margin: spacing.lg, marginBottom: 0, padding: spacing.md, borderRadius: radius.lg
+      flexDirection: 'row',
+      alignItems: 'center',
+      backgroundColor: colors.error,
+      margin: spacing.lg,
+      marginBottom: 0,
+      padding: spacing.md,
+      borderRadius: radius.lg,
     },
     geoAlertTitle: { ...typography.headline, color: '#fff', fontSize: 14 },
     geoAlertText: { ...typography.caption2, color: '#fff', opacity: 0.9 },
     emptyState: {
-      backgroundColor: colors.surface, borderRadius: radius.xl, padding: spacing.xxl,
-      alignItems: 'center', borderWidth: 1, borderColor: colors.border,
+      backgroundColor: colors.surface,
+      borderRadius: radius.xl,
+      padding: spacing.xxl,
+      alignItems: 'center',
+      borderWidth: 1,
+      borderColor: colors.border,
     },
     emptyStateIcon: { fontSize: 24, marginBottom: spacing.sm },
     emptyStateText: { ...typography.subhead, color: colors.textSecondary },
@@ -460,7 +641,7 @@ const createStyles = (colors: Theme, insets: any) =>
       borderRadius: 24,
       alignItems: 'center',
       justifyContent: 'center',
-    }
+    },
   });
 
 export default IndexPageContent;

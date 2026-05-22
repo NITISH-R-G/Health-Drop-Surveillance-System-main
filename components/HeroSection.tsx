@@ -37,7 +37,10 @@ const HeroSection: React.FC<HeroSectionProps> = ({ userName, selectedRegion }) =
   ];
 
   return (
-    <BlurView intensity={80} tint={colors.background === '#000000' ? 'dark' : 'light'} style={styles.container}>
+    <BlurView
+      intensity={80}
+      tint={colors.background === '#000000' ? 'dark' : 'light'}
+      style={styles.container}>
       {/* Greeting */}
       <View style={styles.greetingSection}>
         <View style={styles.greetingLeft}>
@@ -45,10 +48,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ userName, selectedRegion }) =
           <Text style={styles.dateText}>{getCurrentDate()}</Text>
         </View>
         <View style={styles.logoCircle}>
-          <Image
-            source={require('../assets/app_logo.png')}
-            style={styles.logoImage}
-          />
+          <Image source={require('../assets/app_logo.png')} style={styles.logoImage} />
         </View>
       </View>
 
@@ -70,7 +70,9 @@ const HeroSection: React.FC<HeroSectionProps> = ({ userName, selectedRegion }) =
         </View>
         <View style={styles.summaryDivider} />
         <View style={styles.summaryItem}>
-          <Text style={styles.summaryValue}>{dashboardStats.villagesAffected}/{dashboardStats.villagesTotal}</Text>
+          <Text style={styles.summaryValue}>
+            {dashboardStats.villagesAffected}/{dashboardStats.villagesTotal}
+          </Text>
           <Text style={styles.summaryLabel}>Villages Affected</Text>
         </View>
         <View style={styles.summaryDivider} />
@@ -83,93 +85,94 @@ const HeroSection: React.FC<HeroSectionProps> = ({ userName, selectedRegion }) =
   );
 };
 
-const createStyles = (colors: Theme) => StyleSheet.create({
-  container: {
-    margin: spacing.lg,
-    backgroundColor: colors.glass,
-    borderRadius: radius.xxl,
-    padding: spacing.xl,
-    borderWidth: 1,
-    borderColor: colors.glassBorder,
-    overflow: 'hidden',
-  },
-  greetingSection: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    marginBottom: spacing.xl,
-  },
-  greetingLeft: {
-    flex: 1,
-  },
-  greeting: {
-    ...typography.title2,
-    color: colors.text,
-    marginBottom: spacing.xs,
-  },
-  dateText: {
-    ...typography.subhead,
-    color: colors.textSecondary,
-  },
-  logoCircle: {
-    width: 44,
-    height: 44,
-    borderRadius: 14,
-    backgroundColor: colors.primary,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  logoImage: {
-    width: 26,
-    height: 26,
-    tintColor: '#FFFFFF',
-  },
-  statsRow: {
-    flexDirection: 'row',
-    gap: spacing.sm,
-    marginBottom: spacing.lg,
-  },
-  statCard: {
-    flex: 1,
-    backgroundColor: colors.surfaceVariant,
-    borderRadius: radius.lg,
-    padding: spacing.md,
-    alignItems: 'center',
-  },
-  statValue: {
-    ...typography.title2,
-    marginBottom: 2,
-  },
-  statLabel: {
-    ...typography.caption2,
-    color: colors.textSecondary,
-    textAlign: 'center',
-    lineHeight: 14,
-  },
-  summaryBar: {
-    flexDirection: 'row',
-    backgroundColor: colors.surfaceVariant,
-    borderRadius: radius.lg,
-    paddingVertical: spacing.md,
-  },
-  summaryItem: {
-    flex: 1,
-    alignItems: 'center',
-  },
-  summaryValue: {
-    ...typography.headline,
-    color: colors.text,
-    marginBottom: 2,
-  },
-  summaryLabel: {
-    ...typography.caption2,
-    color: colors.textSecondary,
-  },
-  summaryDivider: {
-    width: StyleSheet.hairlineWidth,
-    backgroundColor: colors.border,
-    marginVertical: spacing.xs,
-  },
-});
+const createStyles = (colors: Theme) =>
+  StyleSheet.create({
+    container: {
+      margin: spacing.lg,
+      backgroundColor: colors.glass,
+      borderRadius: radius.xxl,
+      padding: spacing.xl,
+      borderWidth: 1,
+      borderColor: colors.glassBorder,
+      overflow: 'hidden',
+    },
+    greetingSection: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'flex-start',
+      marginBottom: spacing.xl,
+    },
+    greetingLeft: {
+      flex: 1,
+    },
+    greeting: {
+      ...typography.title2,
+      color: colors.text,
+      marginBottom: spacing.xs,
+    },
+    dateText: {
+      ...typography.subhead,
+      color: colors.textSecondary,
+    },
+    logoCircle: {
+      width: 44,
+      height: 44,
+      borderRadius: 14,
+      backgroundColor: colors.primary,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    logoImage: {
+      width: 26,
+      height: 26,
+      tintColor: '#FFFFFF',
+    },
+    statsRow: {
+      flexDirection: 'row',
+      gap: spacing.sm,
+      marginBottom: spacing.lg,
+    },
+    statCard: {
+      flex: 1,
+      backgroundColor: colors.surfaceVariant,
+      borderRadius: radius.lg,
+      padding: spacing.md,
+      alignItems: 'center',
+    },
+    statValue: {
+      ...typography.title2,
+      marginBottom: 2,
+    },
+    statLabel: {
+      ...typography.caption2,
+      color: colors.textSecondary,
+      textAlign: 'center',
+      lineHeight: 14,
+    },
+    summaryBar: {
+      flexDirection: 'row',
+      backgroundColor: colors.surfaceVariant,
+      borderRadius: radius.lg,
+      paddingVertical: spacing.md,
+    },
+    summaryItem: {
+      flex: 1,
+      alignItems: 'center',
+    },
+    summaryValue: {
+      ...typography.headline,
+      color: colors.text,
+      marginBottom: 2,
+    },
+    summaryLabel: {
+      ...typography.caption2,
+      color: colors.textSecondary,
+    },
+    summaryDivider: {
+      width: StyleSheet.hairlineWidth,
+      backgroundColor: colors.border,
+      marginVertical: spacing.xs,
+    },
+  });
 
 export default React.memo(HeroSection);

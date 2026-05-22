@@ -51,7 +51,9 @@ const SettingsPage: React.FC<SettingsPageProps> = ({ onNavigate, userId, userEma
 
   const fetchUserData = async () => {
     try {
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (user) {
         const { data: profile } = await supabase
           .from('profiles')
@@ -77,7 +79,9 @@ const SettingsPage: React.FC<SettingsPageProps> = ({ onNavigate, userId, userEma
   const handleSaveProfile = async () => {
     setIsSaving(true);
     try {
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (user) {
         const { error } = await supabase
           .from('profiles')
@@ -109,7 +113,16 @@ const SettingsPage: React.FC<SettingsPageProps> = ({ onNavigate, userId, userEma
     }
   }, [onNavigate]);
 
-  const SettingRow = ({ icon, label, value, onPress, trailing, editable, onChangeText, keyboardType = 'default' }: {
+  const SettingRow = ({
+    icon,
+    label,
+    value,
+    onPress,
+    trailing,
+    editable,
+    onChangeText,
+    keyboardType = 'default',
+  }: {
     icon: any;
     label: string;
     value?: string;
@@ -123,8 +136,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({ onNavigate, userId, userEma
       style={styles.settingRow}
       onPress={onPress}
       activeOpacity={onPress ? 0.6 : 1}
-      disabled={!onPress && !editable}
-    >
+      disabled={!onPress && !editable}>
       <Ionicons name={icon} size={20} color={colors.textSecondary} style={{ marginRight: 16 }} />
       <View style={styles.settingContent}>
         <Text style={styles.settingLabel}>{label}</Text>
@@ -137,11 +149,12 @@ const SettingsPage: React.FC<SettingsPageProps> = ({ onNavigate, userId, userEma
             placeholderTextColor={colors.textTertiary}
             keyboardType={keyboardType}
           />
-        ) : (
-          value ? <Text style={styles.settingValue}>{value}</Text> : null
-        )}
+        ) : value ? (
+          <Text style={styles.settingValue}>{value}</Text>
+        ) : null}
       </View>
-      {trailing || (onPress && <Ionicons name="chevron-forward" size={20} color={colors.textTertiary} />)}
+      {trailing ||
+        (onPress && <Ionicons name="chevron-forward" size={20} color={colors.textTertiary} />)}
     </TouchableOpacity>
   );
 
@@ -149,8 +162,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({ onNavigate, userId, userEma
     <TouchableOpacity
       style={[styles.toggle, value && styles.toggleActive]}
       onPress={onToggle}
-      activeOpacity={0.7}
-    >
+      activeOpacity={0.7}>
       <View style={[styles.toggleKnob, value && styles.toggleKnobActive]} />
     </TouchableOpacity>
   );
@@ -159,7 +171,10 @@ const SettingsPage: React.FC<SettingsPageProps> = ({ onNavigate, userId, userEma
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => onNavigate('Dashboard')} style={styles.backButton} activeOpacity={0.6}>
+        <TouchableOpacity
+          onPress={() => onNavigate('Dashboard')}
+          style={styles.backButton}
+          activeOpacity={0.6}>
           <Ionicons name="arrow-back" size={24} color={colors.text} />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Settings</Text>
@@ -169,7 +184,16 @@ const SettingsPage: React.FC<SettingsPageProps> = ({ onNavigate, userId, userEma
       <View style={styles.profileCard}>
         <View style={styles.avatar}>
           <Text style={styles.avatarText}>
-            {userData.name ? userData.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2) : <Ionicons name="person" size={32} color="#FFFFFF" />}
+            {userData.name ? (
+              userData.name
+                .split(' ')
+                .map((n) => n[0])
+                .join('')
+                .toUpperCase()
+                .slice(0, 2)
+            ) : (
+              <Ionicons name="person" size={32} color="#FFFFFF" />
+            )}
           </Text>
         </View>
         <View style={styles.profileInfo}>
@@ -238,12 +262,19 @@ const SettingsPage: React.FC<SettingsPageProps> = ({ onNavigate, userId, userEma
           <SettingRow
             icon="notifications"
             label="Notifications"
-            trailing={<ToggleSwitch value={notifications} onToggle={() => setNotifications(v => !v)} />}
+            trailing={
+              <ToggleSwitch value={notifications} onToggle={() => setNotifications((v) => !v)} />
+            }
           />
           <SettingRow
             icon="location"
             label="Location Services"
-            trailing={<ToggleSwitch value={locationServices} onToggle={() => setLocationServices(v => !v)} />}
+            trailing={
+              <ToggleSwitch
+                value={locationServices}
+                onToggle={() => setLocationServices((v) => !v)}
+              />
+            }
           />
         </View>
       </View>
@@ -252,9 +283,9 @@ const SettingsPage: React.FC<SettingsPageProps> = ({ onNavigate, userId, userEma
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Data</Text>
         <View style={styles.sectionCard}>
-          <SettingRow icon="sync" label="Sync Frequency" value="Real-time" onPress={() => { }} />
-          <SettingRow icon="save" label="Offline Data" value="23 MB" onPress={() => { }} />
-          <SettingRow icon="stats-chart" label="Export Reports" onPress={() => { }} />
+          <SettingRow icon="sync" label="Sync Frequency" value="Real-time" onPress={() => {}} />
+          <SettingRow icon="save" label="Offline Data" value="23 MB" onPress={() => {}} />
+          <SettingRow icon="stats-chart" label="Export Reports" onPress={() => {}} />
         </View>
       </View>
 
@@ -262,9 +293,9 @@ const SettingsPage: React.FC<SettingsPageProps> = ({ onNavigate, userId, userEma
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Support</Text>
         <View style={styles.sectionCard}>
-          <SettingRow icon="help-circle" label="Help Center" onPress={() => { }} />
-          <SettingRow icon="bug" label="Report an Issue" onPress={() => { }} />
-          <SettingRow icon="information-circle" label="About" value="v1.0.0" onPress={() => { }} />
+          <SettingRow icon="help-circle" label="Help Center" onPress={() => {}} />
+          <SettingRow icon="bug" label="Report an Issue" onPress={() => {}} />
+          <SettingRow icon="information-circle" label="About" value="v1.0.0" onPress={() => {}} />
         </View>
       </View>
 
@@ -272,15 +303,18 @@ const SettingsPage: React.FC<SettingsPageProps> = ({ onNavigate, userId, userEma
       <TouchableOpacity
         style={styles.logoutButton}
         onPress={() => setShowLogoutModal(true)}
-        activeOpacity={0.7}
-      >
+        activeOpacity={0.7}>
         <Text style={styles.logoutText}>Sign Out</Text>
       </TouchableOpacity>
 
       <View style={styles.bottomSpacer} />
 
       {/* Logout Modal */}
-      <Modal visible={showLogoutModal} transparent animationType="fade" onRequestClose={() => setShowLogoutModal(false)}>
+      <Modal
+        visible={showLogoutModal}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setShowLogoutModal(false)}>
         <View style={styles.modalOverlay}>
           <View style={styles.modalContainer}>
             <Text style={styles.modalTitle}>Sign Out</Text>
@@ -289,15 +323,13 @@ const SettingsPage: React.FC<SettingsPageProps> = ({ onNavigate, userId, userEma
               <TouchableOpacity
                 style={styles.modalCancelButton}
                 onPress={() => setShowLogoutModal(false)}
-                activeOpacity={0.7}
-              >
+                activeOpacity={0.7}>
                 <Text style={styles.modalCancelText}>Cancel</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.modalConfirmButton}
                 onPress={handleLogout}
-                activeOpacity={0.7}
-              >
+                activeOpacity={0.7}>
                 <Text style={styles.modalConfirmText}>Sign Out</Text>
               </TouchableOpacity>
             </View>

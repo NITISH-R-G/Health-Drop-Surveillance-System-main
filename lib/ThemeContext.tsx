@@ -109,7 +109,7 @@ export const themes = {
     },
     alert: '#FF3B30',
     campaign: '#0066CC',
-  } as Theme,
+  },
   dark: {
     background: '#000000',
     surface: 'rgba(28, 28, 30, 0.65)',
@@ -146,7 +146,7 @@ export const themes = {
     },
     alert: '#FF453A',
     campaign: '#2997FF',
-  } as Theme,
+  },
 };
 
 interface ThemeContextType {
@@ -173,7 +173,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
 
   const toggleTheme = useCallback(() => {
-    setTheme(prev => prev === 'light' ? 'dark' : 'light');
+    setTheme((prev) => (prev === 'light' ? 'dark' : 'light'));
   }, []);
 
   const value: ThemeContextType = {
@@ -182,9 +182,5 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     toggleTheme,
   };
 
-  return (
-    <ThemeContext.Provider value={value}>
-      {children}
-    </ThemeContext.Provider>
-  );
+  return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
 };
