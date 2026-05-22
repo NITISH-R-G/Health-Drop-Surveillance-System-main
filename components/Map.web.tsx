@@ -20,7 +20,7 @@ if (isWeb) {
 
 const mapContainerStyle = {
   width: '100%',
-  height: '100%'
+  height: '100%',
 };
 
 // Will fall back to a development warning if empty, but still renders
@@ -36,9 +36,10 @@ const MapView = ({ children, style, initialRegion, ...props }: any) => {
     ? { lat: initialRegion.latitude, lng: initialRegion.longitude }
     : { lat: 20.5937, lng: 78.9629 };
 
-  const zoomFactor = initialRegion && initialRegion.latitudeDelta
-    ? Math.round(Math.log(360 / initialRegion.latitudeDelta) / Math.LN2)
-    : 5;
+  const zoomFactor =
+    initialRegion && initialRegion.latitudeDelta
+      ? Math.round(Math.log(360 / initialRegion.latitudeDelta) / Math.LN2)
+      : 5;
 
   return (
     <View style={style}>
@@ -49,9 +50,8 @@ const MapView = ({ children, style, initialRegion, ...props }: any) => {
           zoom={zoomFactor || 5}
           options={{
             disableDefaultUI: true,
-            zoomControl: true
-          }}
-        >
+            zoomControl: true,
+          }}>
           {children}
         </GoogleMap>
       </LoadScript>
@@ -70,8 +70,7 @@ export const Marker = ({ coordinate, title, description, onPress, children }: an
       onClick={() => {
         setIsOpen(true);
         if (onPress) onPress();
-      }}
-    >
+      }}>
       {isOpen && InfoWindowF && (
         <InfoWindowF onCloseClick={() => setIsOpen(false)}>
           <div style={{ fontFamily: 'sans-serif', minWidth: 100, color: '#333' }}>
@@ -89,7 +88,7 @@ export const Circle = ({ center, radius, fillColor, strokeColor, strokeWidth }: 
   if (!isWeb || !CircleF) return null;
 
   // Convert rgba(...) to hex + opacity for google maps or just pass it through
-  // Google Maps accepts hex colors, and handles opacity separately, 
+  // Google Maps accepts hex colors, and handles opacity separately,
   // but it can sometimes parse rgba values properly if passed correctly.
 
   return (

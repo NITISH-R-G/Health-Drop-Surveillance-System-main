@@ -29,7 +29,9 @@ export default function ProfileSetup({ userId, onProfileComplete }: ProfileSetup
 
   useEffect(() => {
     const getUserData = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (user?.user_metadata) {
         setFullName(user.user_metadata.full_name || '');
         setRole(user.user_metadata.role || 'volunteer');
@@ -79,9 +81,10 @@ export default function ProfileSetup({ userId, onProfileComplete }: ProfileSetup
   return (
     <KeyboardAvoidingView
       style={styles.container}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-    >
-      <ScrollView contentContainerStyle={styles.scrollContainer} showsVerticalScrollIndicator={false}>
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+      <ScrollView
+        contentContainerStyle={styles.scrollContainer}
+        showsVerticalScrollIndicator={false}>
         <View style={styles.formContainer}>
           <Text style={styles.title}>Complete Your Profile</Text>
           <Text style={styles.subtitle}>Please provide your details to get started</Text>
@@ -109,15 +112,18 @@ export default function ProfileSetup({ userId, onProfileComplete }: ProfileSetup
                     role === roleOption.value && styles.roleButtonSelected,
                   ]}
                   onPress={() => setRole(roleOption.value)}
-                  activeOpacity={0.7}
-                >
-                  <Ionicons name={roleOption.icon as any} size={16} color={role === roleOption.value ? '#007AFF' : '#636366'} style={styles.roleIcon} />
+                  activeOpacity={0.7}>
+                  <Ionicons
+                    name={roleOption.icon as any}
+                    size={16}
+                    color={role === roleOption.value ? '#007AFF' : '#636366'}
+                    style={styles.roleIcon}
+                  />
                   <Text
                     style={[
                       styles.roleButtonText,
                       role === roleOption.value && styles.roleButtonTextSelected,
-                    ]}
-                  >
+                    ]}>
                     {roleOption.label}
                   </Text>
                 </TouchableOpacity>
@@ -153,8 +159,7 @@ export default function ProfileSetup({ userId, onProfileComplete }: ProfileSetup
             style={[styles.button, loading && styles.buttonDisabled]}
             onPress={handleSubmit}
             disabled={loading}
-            activeOpacity={0.8}
-          >
+            activeOpacity={0.8}>
             {loading ? (
               <ActivityIndicator size="small" color="#FFFFFF" />
             ) : (
