@@ -1,11 +1,5 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  Alert,
-} from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { supabase } from '../lib/supabase';
 
 interface HelloWorldProps {
@@ -14,20 +8,16 @@ interface HelloWorldProps {
 
 export default function HelloWorld({ userEmail }: HelloWorldProps) {
   const handleLogout = async () => {
-    Alert.alert(
-      'Logout',
-      'Are you sure you want to logout?',
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Logout',
-          style: 'destructive',
-          onPress: async () => {
-            await supabase.auth.signOut();
-          },
+    Alert.alert('Logout', 'Are you sure you want to logout?', [
+      { text: 'Cancel', style: 'cancel' },
+      {
+        text: 'Logout',
+        style: 'destructive',
+        onPress: async () => {
+          await supabase.auth.signOut();
         },
-      ]
-    );
+      },
+    ]);
   };
 
   return (
@@ -35,7 +25,7 @@ export default function HelloWorld({ userEmail }: HelloWorldProps) {
       <Text style={styles.title}>Hello World! 🌍</Text>
       <Text style={styles.subtitle}>Welcome to Health Drop</Text>
       <Text style={styles.userInfo}>Logged in as: {userEmail}</Text>
-      
+
       <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
         <Text style={styles.logoutButtonText}>Logout</Text>
       </TouchableOpacity>
