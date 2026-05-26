@@ -6,6 +6,7 @@ module.exports = {
   setupFilesAfterEnv: [
     "@testing-library/jest-native/extend-expect"
   ],
+  setupFiles: ["<rootDir>/jest.setup.js"],
   collectCoverage: true,
   collectCoverageFrom: [
     "**/*.{ts,tsx}",

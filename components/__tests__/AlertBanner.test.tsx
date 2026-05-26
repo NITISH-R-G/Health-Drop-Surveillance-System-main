@@ -3,6 +3,14 @@ import { render } from '@testing-library/react-native';
 import AlertBanner from '../AlertBanner';
 import { AlertItem } from '../../lib/mockData';
 
+// Mock Expo vector icons to avoid warnings during testing
+jest.mock('@expo/vector-icons', () => {
+  const { View } = require('react-native');
+  return {
+    Ionicons: () => <View testID="mock-ionicons" />,
+  };
+});
+
 // Mock the ThemeContext
 jest.mock('../../lib/ThemeContext', () => ({
   useTheme: () => ({
