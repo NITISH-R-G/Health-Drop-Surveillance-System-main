@@ -6,15 +6,13 @@
   - Use of modern UI design ("Liquid Glass") with Context API theming (light/dark modes).
   - Structure utilizes typed React Native mapping capabilities.
   - Good initial CI setup with GitHub Actions (.github/workflows/ci.yml).
+  - Testing setup is now working.
+  - Code linting setup modernized to use ESLint flat config.
 * **Weaknesses:**
-  - `eslint` setup relies on deprecated tools causing lint warnings.
-  - Test suites lacked a proper setup to avoid crashing with `jest-expo` and polyfill issues.
   - Missing complete backend implementations (Supabase integration is present but incomplete/mocked).
 * **Risks:**
-  - High degree of dependency coupling with older Expo/RN packages.
   - Lack of adequate e2e and unit test coverage.
 * **Opportunities:**
-  - Upgrade dependencies and ESLint configurations to meet Modern JS/TS Standards.
   - Enhance Test Coverage and CI stability to ensure smoother deployments and maintainability.
 
 ## Competitor Analysis
@@ -31,26 +29,23 @@
   - Push for 100% test coverage and implement a strict clean architecture structure.
 
 ## Priority Improvements
-1. Fix test environment (Jest config, mocking, dependency conflicts). *(Highest Impact, Low Complexity, Completed)*
-2. Update tooling (ESLint to v9, Prettier).
-3. Introduce offline-first database synchronization.
-4. Scale abstractions and implement proper backend APIs instead of mock data.
+1. Introduce offline-first database synchronization.
+2. Scale abstractions and implement proper backend APIs instead of mock data.
+3. Improve test coverage.
 
 ## Sprint Plan
-* **Sprint Goal:** Stabilize the foundation by repairing CI test pipelines and modernizing testing/linting configurations.
+* **Sprint Goal:** Stabilize the foundation by modernizing the linting configuration.
 * **Tasks:**
-  - Configure `jest-expo` and `cross-fetch` polyfills to repair unit tests.
-  - Fix Native Module mock errors breaking CI pipelines.
-  - Add missing baseline mappings.
-  - Output initial analysis report for continuous improvement process.
-* **Implementation Roadmap:** Addressed dependency issues -> Updated Jest Setup -> Repaired Mock Tests -> Formulated Report.
-* **Expected Outcomes:** A clean test pipeline (0 errors) allowing for confident refactoring in subsequent sprints.
+  - Upgrade eslint to v9.
+  - Migrate away from `.eslintrc.json` to flat config `eslint.config.mjs`.
+  - Ensure `npm run lint` passes without errors.
+* **Implementation Roadmap:** Update eslint and plugins to latest compatible versions -> Write flat config handling global definitions properly -> Validate `npm run lint`.
+* **Expected Outcomes:** A clean test pipeline (0 errors) allowing for confident refactoring in subsequent sprints and removing warning messages about deprecated eslint configs.
 
 ## Technical Improvements
-* **Testing:** Fixed broken unit tests by setting up proper Jest configurations for Expo, polyfilling fetch logic, and mocking complex native modules (e.g. `expo-modules-core`, `expo-blur`).
-* **DevOps:** Dependency optimization via legacy-peer-deps resolution, stabilizing package requirements.
+* **DevOps/Linting:** Upgraded ESLint to v9 and migrated configuration to a flat config format (`eslint.config.mjs`) to align with modern ESLint standards.
+* **Dependencies:** Cleaned up linting dependencies.
 
 ## Metrics Improved
-* **Code Quality Gains:** Resolved 3 fatal testing crashes causing the CI pipeline to fail.
-* **Coverage Improvements:** Restored ability to calculate baseline coverage properly.
-* **Developer Productivity Improvements:** Subsequent tests will run without environment setup errors, removing friction.
+* **Code Quality Gains:** Resolved warnings about deprecated `.eslintrc.json`. `npm run lint` is now fully operational and standard compliant.
+* **Developer Productivity Improvements:** Subsequent development will run with modern linting, removing friction and future-proofing the configuration.
