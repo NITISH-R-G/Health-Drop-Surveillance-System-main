@@ -65,25 +65,25 @@ describe('AlertBanner', () => {
   });
 
   it('renders high severity alert correctly', () => {
-      const alerts: AlertItem[] = [
-        {
-          id: 1,
-          title: 'Contaminated Water',
-          message: 'Do not drink tap water in Region A',
-          severity: 'high',
-          timestamp: '2023-10-27T10:00:00Z',
-          regionId: 'reg-a',
-          region: 'Region A',
-          isRead: false,
-          category: 'water',
-        },
-      ];
+    const alerts: AlertItem[] = [
+      {
+        id: 1,
+        title: 'Contaminated Water',
+        message: 'Do not drink tap water in Region A',
+        severity: 'high',
+        timestamp: '2023-10-27T10:00:00Z',
+        regionId: 'reg-a',
+        region: 'Region A',
+        isRead: false,
+        category: 'water',
+      },
+    ];
 
-      const { getByText } = render(<AlertBanner alerts={alerts} />);
+    const { getByText } = render(<AlertBanner alerts={alerts} />);
 
-      expect(getByText('Contaminated Water')).toBeTruthy();
-      expect(getByText('Do not drink tap water in Region A')).toBeTruthy();
-    });
+    expect(getByText('Contaminated Water')).toBeTruthy();
+    expect(getByText('Do not drink tap water in Region A')).toBeTruthy();
+  });
 
   it('does not render read alerts', () => {
     const alerts: AlertItem[] = [

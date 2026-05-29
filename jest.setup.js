@@ -13,8 +13,8 @@ if (typeof global.Headers === 'undefined') {
 jest.mock('expo-modules-core', () => {
   return {
     requireNativeModule: () => ({
-      NativeResponse: class NativeResponse {}
+      NativeResponse: class NativeResponse {},
     }),
-    requireNativeViewManager: () => () => null
+    requireNativeViewManager: () => () => null,
   };
 });

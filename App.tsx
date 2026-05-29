@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
@@ -7,12 +7,18 @@ import AuthScreen from './components/AuthScreen';
 import ProfileSetup from './components/ProfileSetup';
 import IndexPage from './pages/IndexPage';
 import { Profile } from './types/profile';
+import { syncData } from './lib/sync';
 
 function AppContent() {
   const { theme, colors } = useTheme();
   // Dummy session state
   const [session, setSession] = useState<any>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
+
+  useEffect(() => {
+    // Initial sync of local database on app mount
+    syncData();
+  }, []);
 
   const handleAuthSuccess = (dummyData?: any) => {
     const email = dummyData?.email || 'demo@healthdrop.app';
