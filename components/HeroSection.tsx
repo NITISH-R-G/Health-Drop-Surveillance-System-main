@@ -2,7 +2,8 @@ import React, { useMemo } from 'react';
 import { View, Text, StyleSheet, Image } from 'react-native';
 import { BlurView } from 'expo-blur';
 import { useTheme, Theme, typography, spacing, radius } from '../lib/ThemeContext';
-import { dashboardStats } from '../lib/mockData';
+import * as mockData from '../lib/mockData';
+import { useSyncData } from '../lib/sync';
 
 interface HeroSectionProps {
   userName: string;
@@ -12,6 +13,7 @@ interface HeroSectionProps {
 const HeroSection: React.FC<HeroSectionProps> = ({ userName, selectedRegion }) => {
   const { colors } = useTheme();
   const styles = useMemo(() => createStyles(colors), [colors]);
+  const { data: dashboardStats } = useSyncData('dashboardStats', mockData.dashboardStats);
 
   const currentHour = new Date().getHours();
   const getGreeting = () => {
