@@ -31,7 +31,7 @@ import AdvisoriesPanel from '../components/AdvisoriesPanel';
 import HealthCertificate from '../components/HealthCertificate';
 import FieldWorkerLogistics from '../components/FieldWorkerLogistics';
 import * as mockData from '../lib/mockData';
-import { preventionCampaigns, alerts, filterByRegion } from '../lib/mockData';
+import { filterByRegion } from '../lib/mockData';
 import { useSyncData } from '../lib/sync';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -86,6 +86,11 @@ const IndexPageContent: React.FC<IndexPageProps> = ({
     'predictionInsights',
     mockData.predictionInsights
   );
+  const { data: preventionCampaigns } = useSyncData(
+    'preventionCampaigns',
+    mockData.preventionCampaigns
+  );
+  const { data: alerts } = useSyncData('alerts', mockData.alerts);
 
   useEffect(() => {
     setTimeout(() => {

@@ -45,6 +45,8 @@ export const syncData = async (): Promise<void> => {
     await saveLocalData('diseaseTrendData', mockData.diseaseTrendData);
     await saveLocalData('waterQualityTrendData', mockData.waterQualityTrendData);
     await saveLocalData('predictionInsights', mockData.predictionInsights);
+    await saveLocalData('preventionCampaigns', mockData.preventionCampaigns);
+    await saveLocalData('alerts', mockData.alerts);
 
     console.log('Data synchronization complete.');
   } catch (error) {
