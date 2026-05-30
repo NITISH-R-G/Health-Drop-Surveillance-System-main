@@ -2,7 +2,8 @@ import React, { useMemo } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { BlurView } from 'expo-blur';
 import { useTheme, Theme, typography, spacing, radius } from '../lib/ThemeContext';
-import { regions as allRegions, waterQualityAlerts } from '../lib/mockData';
+import * as mockData from '../lib/mockData';
+import { useSyncData } from '../lib/sync';
 import MapView, { Circle, Marker } from './Map';
 
 interface RiskHeatmapProps {
@@ -36,8 +37,13 @@ const contaminationCoordinates: Record<string, { lat: number; lng: number }> = {
 const RiskHeatmap: React.FC<RiskHeatmapProps> = ({ selectedRegion = 'all' }) => {
   const { colors } = useTheme();
   const styles = useMemo(() => createStyles(colors), [colors]);
+  const { data: regions } = useSyncData('regions', mockData.regions);
+  const { data: waterQualityAlerts } = useSyncData(
+    'waterQualityAlerts',
+    mockData.waterQualityAlerts
+  );
 
-  const displayRegions = allRegions.filter((r) => r.id !== 'all');
+  const displayRegions = regions.filter((r: any) => r.id !== 'all');
 
   const getRiskColor = (level: string, score: number) => {
     if (level === 'critical') return colors.error;

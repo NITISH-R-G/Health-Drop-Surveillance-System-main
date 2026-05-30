@@ -1,7 +1,8 @@
 import React, { useMemo, useState, useRef } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Animated, Easing } from 'react-native';
 import { useTheme, Theme, typography, spacing, radius } from '../lib/ThemeContext';
-import { outbreaks } from '../lib/mockData';
+import * as mockData from '../lib/mockData';
+import { useSyncData } from '../lib/sync';
 
 interface ProximityData {
   radius: string;
@@ -34,6 +35,7 @@ const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: numbe
 const ProximityStats: React.FC<ProximityStatsProps> = ({ userLocation = defaultLocation }) => {
   const { colors } = useTheme();
   const styles = useMemo(() => createStyles(colors), [colors]);
+  const { data: outbreaks } = useSyncData('outbreaks', mockData.outbreaks);
 
   const data = useMemo(() => {
     const rings = [
@@ -73,7 +75,7 @@ const ProximityStats: React.FC<ProximityStatsProps> = ({ userLocation = defaultL
     });
 
     return aggregatedData;
-  }, [userLocation]);
+  }, [userLocation, outbreaks]);
 
   const [selectedIndex, setSelectedIndex] = useState<number>(data.length - 1);
   const fadeAnim = useRef(new Animated.Value(1)).current;
