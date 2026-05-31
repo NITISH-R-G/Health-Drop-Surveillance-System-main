@@ -30,7 +30,6 @@ import TestingLabs from '../components/TestingLabs';
 import AdvisoriesPanel from '../components/AdvisoriesPanel';
 import HealthCertificate from '../components/HealthCertificate';
 import FieldWorkerLogistics from '../components/FieldWorkerLogistics';
-import * as mockData from '../lib/mockData';
 import { filterByRegion } from '../lib/mockData';
 import { useSyncData } from '../lib/sync';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -71,26 +70,14 @@ const IndexPageContent: React.FC<IndexPageProps> = ({
     { id: 3, title: 'Sanitation Basics', duration: '10 min', points: 100, completed: false },
   ]);
 
-  const { data: regions } = useSyncData('regions', mockData.regions);
-  const { data: outbreaks } = useSyncData('outbreaks', mockData.outbreaks);
-  const { data: waterQualityAlerts } = useSyncData(
-    'waterQualityAlerts',
-    mockData.waterQualityAlerts
-  );
-  const { data: diseaseTrendData } = useSyncData('diseaseTrendData', mockData.diseaseTrendData);
-  const { data: waterQualityTrendData } = useSyncData(
-    'waterQualityTrendData',
-    mockData.waterQualityTrendData
-  );
-  const { data: predictionInsights } = useSyncData(
-    'predictionInsights',
-    mockData.predictionInsights
-  );
-  const { data: preventionCampaigns } = useSyncData(
-    'preventionCampaigns',
-    mockData.preventionCampaigns
-  );
-  const { data: alerts } = useSyncData('alerts', mockData.alerts);
+  const { data: regions } = useSyncData('regions');
+  const { data: outbreaks } = useSyncData('outbreaks');
+  const { data: waterQualityAlerts } = useSyncData('waterQualityAlerts');
+  const { data: diseaseTrendData } = useSyncData('diseaseTrendData');
+  const { data: waterQualityTrendData } = useSyncData('waterQualityTrendData');
+  const { data: predictionInsights } = useSyncData('predictionInsights');
+  const { data: preventionCampaigns } = useSyncData('preventionCampaigns');
+  const { data: alerts } = useSyncData('alerts');
 
   useEffect(() => {
     setTimeout(() => {

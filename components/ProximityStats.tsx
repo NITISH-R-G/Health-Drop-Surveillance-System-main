@@ -1,7 +1,6 @@
 import React, { useMemo, useState, useRef } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Animated, Easing } from 'react-native';
 import { useTheme, Theme, typography, spacing, radius } from '../lib/ThemeContext';
-import * as mockData from '../lib/mockData';
 import { useSyncData } from '../lib/sync';
 
 interface ProximityData {
@@ -35,7 +34,7 @@ const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: numbe
 const ProximityStats: React.FC<ProximityStatsProps> = ({ userLocation = defaultLocation }) => {
   const { colors } = useTheme();
   const styles = useMemo(() => createStyles(colors), [colors]);
-  const { data: outbreaks } = useSyncData('outbreaks', mockData.outbreaks);
+  const { data: outbreaks } = useSyncData('outbreaks');
 
   const data = useMemo(() => {
     const rings = [
