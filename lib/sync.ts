@@ -57,8 +57,10 @@ export const syncData = async (): Promise<void> => {
 /**
  * A hook to use data that prioritizes local storage and syncs in the background.
  */
-export function useSyncData<T>(key: string, initialData: T) {
-  const [data, setData] = useState<T>(initialData);
+export function useSyncData<K extends keyof typeof mockData>(key: K) {
+  // Use the type and value from mockData for initialization and fallback
+  const initialData = mockData[key];
+  const [data, setData] = useState<typeof initialData>(initialData);
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
@@ -77,7 +79,7 @@ export function useSyncData<T>(key: string, initialData: T) {
     };
 
     loadData();
-  }, [key]);
+  }, [key, initialData]);
 
   return { data, loading, setData };
 }
