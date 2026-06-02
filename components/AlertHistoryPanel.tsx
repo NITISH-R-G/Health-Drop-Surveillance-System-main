@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { BlurView } from 'expo-blur';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme, Theme, typography, spacing, radius } from '../lib/ThemeContext';
-import { AlertItem } from '../lib/mockData';
+import { AlertItem } from '../types/models';
 
 interface AlertHistoryPanelProps {
   alerts: AlertItem[];
@@ -79,7 +79,7 @@ const AlertHistoryPanel: React.FC<AlertHistoryPanelProps> = ({ alerts, maxItems 
             <View style={styles.alertLeft}>
               <View style={[styles.severityDot, { backgroundColor: severityColor }]} />
               <Ionicons
-                name={getCategoryIcon(alert.category)}
+                name={getCategoryIcon(alert.category || 'system')}
                 size={16}
                 color={colors.text}
                 style={styles.categoryIcon}

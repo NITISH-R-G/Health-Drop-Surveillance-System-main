@@ -30,7 +30,7 @@ import TestingLabs from '../components/TestingLabs';
 import AdvisoriesPanel from '../components/AdvisoriesPanel';
 import HealthCertificate from '../components/HealthCertificate';
 import FieldWorkerLogistics from '../components/FieldWorkerLogistics';
-import { filterByRegion } from '../lib/mockData';
+import { filterByRegion } from '../lib/utils';
 import { useSyncData } from '../lib/sync';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
