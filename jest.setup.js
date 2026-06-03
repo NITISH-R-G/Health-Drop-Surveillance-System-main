@@ -16,6 +16,14 @@ jest.mock('expo-modules-core', () => {
       NativeResponse: class NativeResponse {},
     }),
     requireNativeViewManager: () => () => null,
+    requireOptionalNativeModule: () => null,
+  };
+});
+
+jest.mock('@expo/vector-icons', () => {
+  const { View } = require('react-native');
+  return {
+    Ionicons: View,
   };
 });
 

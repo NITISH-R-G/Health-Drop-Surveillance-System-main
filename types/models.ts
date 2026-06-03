@@ -56,14 +56,21 @@ export interface AlertItem {
   isRead?: boolean;
 }
 
+export interface PredictionInsightFactor {
+  name: string;
+  impact: number;
+  direction: string;
+}
+
 export interface PredictionInsight {
   id: number;
   region: string;
   disease: string;
   probability: number;
   timeframe: string;
-  factors: string[];
-  recommendation: string;
+  confidence: number;
+  factors: PredictionInsightFactor[];
+  reasoning: string;
 }
 
 export interface EnvironmentalData {

@@ -6,37 +6,39 @@
   - Good test coverage over existing utilities (`lib/sync.ts`) and main UI components.
   - Modern tools setup utilizing ESLint 9 and type checking hooks.
 * **Weaknesses:**
-  - Missing complete backend integrations to eventually pull true data instead of utilizing `mockData`.
+  - Mock data structures often had duplicated types which created maintenance liabilities.
 * **Risks:**
-  - Lingering component imports to localized files where a scalable global provider context might perform better.
+  - UI Components hardcoding values instead of responding to data streams limits feature flexibility.
 * **Opportunities:**
-  - Enhance Test Coverage specifically concerning edge cases.
-  - Convert remaining parts of UI components directly leveraging global type systems rather than internal properties from mock files.
+  - Refactoring UI components to be purely data-driven improves testability and enables future backend integrations cleanly.
 
 ## Competitor Analysis
 * **Repositories analyzed:** Open-source Health Tracking Apps, Public Health Dashboards.
 * **Advantages discovered:**
-  - Custom data synchronization mechanisms utilizing typed async storage offer a unique and extremely efficient approach vs standard contexts.
+  - Clear separation between models/types and the mock implementation details.
 * **Gaps identified:**
-  - Hard dependencies still existing across mock files limiting pure generic scalability.
+  - Duplication of types (like `PredictionInsight`) between `lib/mockData.ts` and `types/models.ts`.
+  - `ExplainabilityPanel` hardcoded reasoning text.
 * **Opportunities to outperform:**
-  - Create full scale dynamic remote fetching engines that cleanly insert into our `sync.ts` architecture without requiring tight component coupling.
+  - Ensure all components are completely data-driven by utilizing props properly.
 
 ## Priority Improvements
-1. Fully decouple components from the `mockData.ts` file dependency allowing for better flexibility when a true remote backend handles data ingestion.
-2. Provide global generic mappings.
+1. Decouple components from hardcoded text and link them accurately to their props.
+2. Establish a single source of truth for Typescript definitions.
 
 ## Sprint Plan
-* **Sprint Goal:** Refactor the `useSyncData` hook to act cleanly and autonomously without hard dependencies across visual components.
+* **Sprint Goal:** Fix the `ExplainabilityPanel` component to properly consume and display the `PredictionInsight` data and enforce type safety.
 * **Tasks:**
-  - Update `useSyncData` in `lib/sync.ts` using a Typescript generic indexer `K extends keyof typeof mockData` resolving initial data values inherently.
-  - Remove direct static imports to `mockData` across core application pages including `IndexPage.tsx`, `HeroSection.tsx`, `RiskHeatmap.tsx`, and `ProximityStats.tsx`.
-* **Implementation Roadmap:** Addressed hook typings -> Refactored all dependencies within core pages -> Validated Typescript paths -> Validated Test suites -> Committed.
-* **Expected Outcomes:** A cleaner component graph independent from any mock implementation details.
+  - Move `PredictionInsight` definition completely to `types/models.ts`.
+  - Refactor `ExplainabilityPanel` to dynamically render reasons and factors.
+  - Create robust unit tests for `ExplainabilityPanel`.
+* **Implementation Roadmap:** Addressed model typings -> Refactored target component -> Developed UI Unit Tests -> Validated Tests & TypeScript compilation.
+* **Expected Outcomes:** A dynamically driven Explainability UI component fully backed by unit tests.
 
 ## Technical Improvements
-* **Architecture:** Updated `lib/sync.ts` to fully encapsulate default datastores. Visual components now operate purely on derived keys, strictly adhering to clean architecture definitions.
-* **DevOps / Linting:** Type checks passing perfectly, demonstrating safe implementation.
+* **Architecture:** Decoupled `PredictionInsight` from `mockData.ts`, removing type duplication and enforcing standard `types/models.ts` definitions.
+* **Testing:** Added `ExplainabilityPanel.test.tsx` and improved `jest.setup.js` for seamless Expo vector-icons mocking.
 
 ## Metrics Improved
-* **Code Quality Gains:** Removed explicit static `mockData` dependency logic leading to better separation of concerns and DRY compliance. Eliminated roughly 20 lines of redundant parameter assignments.
+* **Code Quality Gains:** Resolved 1 major instance of hardcoded text blocks in UI components. Removed 1 duplicated TypeScript interface.
+* **Coverage Improvements:** Added comprehensive testing suite for `ExplainabilityPanel.tsx`.

@@ -45,6 +45,8 @@ export interface TrendDataPoint {
   value: number;
 }
 
+import { PredictionInsight } from '../types/models';
+
 export interface AlertItem {
   id: number;
   title: string;
@@ -55,17 +57,6 @@ export interface AlertItem {
   region: string;
   isRead: boolean;
   category: 'outbreak' | 'water' | 'prediction' | 'system';
-}
-
-export interface PredictionInsight {
-  id: number;
-  region: string;
-  disease: string;
-  probability: number;
-  timeframe: string;
-  confidence: number;
-  factors: { name: string; impact: number; direction: 'up' | 'down' }[];
-  reasoning: string;
 }
 
 export interface EnvironmentalData {
