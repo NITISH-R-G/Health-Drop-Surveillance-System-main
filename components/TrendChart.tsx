@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { View, Text, StyleSheet, Dimensions, TouchableOpacity, PanResponder } from 'react-native';
 import { useTheme, Theme, typography, spacing, radius } from '../lib/ThemeContext';
-import { TrendDataPoint } from '../lib/mockData';
+import { TrendDataPoint } from '../types/models';
 import Svg, { Polyline, Circle, Line } from 'react-native-svg';
 import { Ionicons } from '@expo/vector-icons';
 

@@ -5,7 +5,7 @@ import { BlurView } from 'expo-blur';
 import { useTheme, Theme, typography, spacing, radius } from '../lib/ThemeContext';
 
 const AnimatedBlurView = Animated.createAnimatedComponent(BlurView);
-import { AlertItem } from '../lib/mockData';
+import { AlertItem } from '../types/models';
 
 interface AlertBannerProps {
   alerts: AlertItem[];

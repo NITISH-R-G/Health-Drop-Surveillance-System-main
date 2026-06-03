@@ -483,7 +483,7 @@ export const dashboardStats = {
 };
 
 // Helper function to filter by region
-export const filterByRegion = <T extends { regionId: string }>(
+export const filterByRegion_DEPRECATED = <T extends { regionId: string }>(
   data: T[],
   regionId: string
 ): T[] => {

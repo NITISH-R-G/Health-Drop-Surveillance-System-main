@@ -10,7 +10,7 @@ import {
   Platform,
 } from 'react-native';
 import { useTheme, Theme, typography, spacing, radius } from '../lib/ThemeContext';
-import { Region } from '../lib/mockData';
+import { Region } from '../types/models';
 
 interface RegionFilterProps {
   regions: Region[];

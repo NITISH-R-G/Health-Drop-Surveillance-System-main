@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from '@testing-library/react-native';
 import AlertBanner from '../AlertBanner';
-import { AlertItem } from '../../lib/mockData';
+import { AlertItem } from '../../types/models';
 
 // Mock Expo vector icons to avoid warnings during testing
 jest.mock('@expo/vector-icons', () => {
