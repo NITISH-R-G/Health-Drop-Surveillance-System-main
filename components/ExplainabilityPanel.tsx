@@ -2,23 +2,39 @@ import React, { useMemo } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { useTheme, Theme, typography, spacing, radius } from '../lib/ThemeContext';
 import { Ionicons } from '@expo/vector-icons';
+import { PredictionInsight, PredictionInsightFactor } from '../types/models';
 
 interface ProximityRiskAnalysisProps {
-  insight?: any; // Assuming PredictionInsight type from mockData
+  insight?: PredictionInsight;
 }
 
 const ExplainabilityPanel: React.FC<ProximityRiskAnalysisProps> = ({ insight }) => {
-  // If insight is provided, use its properties, else default
-  const riskLevel = insight?.riskLevel || 'Severe';
-  const distanceToHotspot = insight?.distanceToHotspot || 1.2;
-  const delay = insight?.delay || 'Data fresh as of 12 mins ago';
   const { colors } = useTheme();
   const styles = useMemo(() => createStyles(colors), [colors]);
+
+  if (!insight) return null;
+
+  const probabilityPercent = Math.round(insight.probability * 100);
+
+  let riskLevel = 'Low';
+  if (probabilityPercent >= 70) riskLevel = 'Severe';
+  else if (probabilityPercent >= 50) riskLevel = 'High';
+  else if (probabilityPercent >= 30) riskLevel = 'Moderate';
 
   const getProbabilityColor = (level: string) => {
     if (level === 'Severe' || level === 'High') return colors.error;
     if (level === 'Moderate') return colors.warning;
     return colors.success;
+  };
+
+  const getDirectionIcon = (direction: string) => {
+    return direction === 'up' ? 'trending-up-outline' : 'trending-down-outline';
+  };
+
+  const getImpactColor = (impact: number) => {
+    if (impact >= 0.3) return colors.error;
+    if (impact >= 0.15) return colors.warning;
+    return colors.primary;
   };
 
   const probColor = getProbabilityColor(riskLevel);
@@ -28,61 +44,41 @@ const ExplainabilityPanel: React.FC<ProximityRiskAnalysisProps> = ({ insight }) 
       {/* Header */}
       <View style={styles.header}>
         <View style={styles.headerLeft}>
-          <Text style={styles.diseaseLabel}>Public Health Advisory</Text>
-          <Text style={styles.regionLabel}>Localized Analysis within 2km radius</Text>
+          <Text style={styles.diseaseLabel}>{insight.disease} Advisory</Text>
+          <Text style={styles.regionLabel}>{insight.region} Analysis</Text>
         </View>
         <View style={styles.headerRight}>
           <Text style={[styles.probability, { color: probColor }]}>{riskLevel} Risk</Text>
-          <Text style={styles.timeframe}>{delay}</Text>
+          <Text style={styles.timeframe}>{insight.timeframe}</Text>
         </View>
       </View>
 
       {/* Analysis Text */}
       <View style={styles.reasoningSection}>
         <Text style={styles.reasoningTitle}>Why does this risk exist?</Text>
-        <Text style={styles.reasoningText}>
-          You are currently located {distanceToHotspot}km from a confirmed water contamination
-          source. During the last 14 days, overlapping environmental factors and verified health
-          records indicate a highly contagious environment for diarrheal diseases in your immediate
-          vicinity.
-        </Text>
+        <Text style={styles.reasoningText}>{insight.reasoning}</Text>
       </View>
 
       {/* Key Contributing Factors */}
       <View style={styles.factorsSection}>
         <Text style={styles.factorsTitle}>Signal Integration</Text>
 
-        <View style={styles.factorRow}>
-          <Ionicons
-            name="cloud-download-outline"
-            size={20}
-            color={colors.warning}
-            style={styles.factorIcon}
-          />
-          <View style={styles.factorTextContainer}>
-            <Text style={styles.factorName}>Environmental Early Warning</Text>
-            <Text style={styles.factorDesc}>
-              85mm of heavy rainfall preceded by 32°C high temperatures created ideal vector
-              breeding grounds and overwhelmed local drainage systems.
-            </Text>
+        {insight.factors?.map((factor: PredictionInsightFactor, index: number) => (
+          <View key={index} style={styles.factorRow}>
+            <Ionicons
+              name={getDirectionIcon(factor.direction)}
+              size={20}
+              color={getImpactColor(factor.impact)}
+              style={styles.factorIcon}
+            />
+            <View style={styles.factorTextContainer}>
+              <Text style={styles.factorName}>{factor.name}</Text>
+              <Text style={styles.factorDesc}>
+                Impact: {Math.round(factor.impact * 100)}% ({factor.direction.toUpperCase()})
+              </Text>
+            </View>
           </View>
-        </View>
-
-        <View style={styles.factorRow}>
-          <Ionicons
-            name="analytics-outline"
-            size={20}
-            color={colors.error}
-            style={styles.factorIcon}
-          />
-          <View style={styles.factorTextContainer}>
-            <Text style={styles.factorName}>Government Ground Truth</Text>
-            <Text style={styles.factorDesc}>
-              Local authorities confirmed 22 active cholera cases linked to the Singanallur water
-              distribution sector adjacent to your location.
-            </Text>
-          </View>
-        </View>
+        ))}
       </View>
 
       {/* Practical Advice */}
@@ -91,9 +87,9 @@ const ExplainabilityPanel: React.FC<ProximityRiskAnalysisProps> = ({ insight }) 
           <Ionicons name="shield-checkmark" size={16} /> Protective Actions
         </Text>
         <Text style={styles.reasoningText}>
-          • Boil all drinking water for at least 3 minutes.
-          {'\n'}• Avoid consuming raw street food or unwashed vegetables.
-          {'\n'}• Immediately report symptoms of dehydration via the Telemedicine portal.
+          • Follow local health guidelines for {insight.disease.toLowerCase()} prevention.
+          {'\n'}• Maintain high hygiene standards in affected areas.
+          {'\n'}• Immediately report symptoms via the Telemedicine portal.
         </Text>
       </View>
     </View>
