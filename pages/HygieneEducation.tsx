@@ -2,14 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet, Alert, Modal } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme, Theme, typography, spacing, radius } from '../lib/ThemeContext';
-
-export interface HygieneModule {
-  id: number;
-  title: string;
-  duration: string;
-  points: number;
-  completed: boolean;
-}
+import { HygieneModule } from '../types/models';
 
 interface HygieneEducationProps {
   onBack: () => void;

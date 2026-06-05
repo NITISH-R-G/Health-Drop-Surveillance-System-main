@@ -84,3 +84,42 @@
 ## Metrics Improved (Update)
 * **Code quality gains:** Fixed 1 fatal ESLint configuration error and 1 unused variable linting error.
 * **Developer productivity improvements:** Unblocked developers from running local code quality checks.
+
+---
+
+## Cycle Update: Architecture & DRY Types Refactoring
+
+## Repository Health Report (Update)
+* **Strengths:**
+  - Strict type checking enables fast, confident refactoring.
+* **Weaknesses:**
+  - Mock data files (`lib/mockData.ts`) contained inline interface definitions that duplicated definitions in `types/models.ts`.
+  - Feature components (`pages/HygieneEducation.tsx`) defined their own local model interfaces (`HygieneModule`) rather than pulling from a centralized location.
+* **Risks:**
+  - Type drift: Duplicate interfaces in different files could diverge over time, breaking assumptions or creating confusing TypeScript errors when data is passed between boundaries.
+* **Opportunities:**
+  - Adhering to the DRY (Don't Repeat Yourself) principle for Typescript interfaces to solidify the architecture and guarantee single-source-of-truth for all data structures.
+
+## Competitor Analysis (Update)
+* **Gaps identified:**
+  - Top-tier open source projects maintain a rigorous separation of models, completely isolating types from mock implementations.
+* **Opportunities to outperform:**
+  - Establishing a pristine `types/models.ts` that acts as the absolute authority for data structures across the entire repository.
+
+## Priority Improvements (Update)
+1. **Highest impact:** Eliminate type duplication in `lib/mockData.ts` and ensure all interfaces are imported from `types/models.ts`.
+2. **Strategic importance:** Centralize the `HygieneModule` interface.
+
+## Sprint Plan (Update)
+* **Sprint Goal:** Consolidate all type definitions into the central `types/models.ts` file, removing duplicates and local definitions.
+* **Tasks:**
+  - Move `HygieneModule` interface from `pages/HygieneEducation.tsx` to `types/models.ts`.
+  - Remove inline definitions of `Region`, `Outbreak`, `WaterQualityReading`, `TrendDataPoint`, `AlertItem`, and `EnvironmentalData` from `lib/mockData.ts` and import them instead.
+* **Expected Outcomes:** Simplified mock data file, centralized type registry, and elimination of the risk of type drift.
+
+## Technical Improvements (Update)
+* **Architecture:** Solidified the codebase architecture by creating a true single source of truth for all primary model interfaces.
+* **Maintainability:** Greatly reduced the lines of code in `mockData.ts` and simplified feature component files.
+
+## Metrics Improved (Update)
+* **Code quality gains:** Eliminated 6 instances of duplicate interface definitions and centralized 1 scattered interface.
