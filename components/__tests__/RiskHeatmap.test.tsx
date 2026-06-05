@@ -43,7 +43,6 @@ jest.mock('../../lib/sync', () => {
 
 // Mock MapView and inner components from react-native-maps as they don't render nicely in simple jest test by default
 jest.mock('../Map', () => {
-  const React = require('react');
   const MapView = ({ children }: any) => <>{children}</>;
   const Marker = () => <></>;
   const Circle = () => <></>;
