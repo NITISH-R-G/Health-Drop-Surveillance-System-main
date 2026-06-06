@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Profile } from '../types/profile';
-import { useTheme, Theme, spacing, radius, typography } from '../lib/ThemeContext';
+import { useTheme, Theme, radius } from '../lib/ThemeContext';
 
 interface AuthScreenProps {
   onAuthSuccess: (data?: any) => void;
