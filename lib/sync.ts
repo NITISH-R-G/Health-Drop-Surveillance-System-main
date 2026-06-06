@@ -37,16 +37,18 @@ export const syncData = async (): Promise<void> => {
     // Simulate network delay
     await new Promise((resolve) => setTimeout(resolve, 500));
 
-    // Save all mock data to the local store
-    await saveLocalData('regions', mockData.regions);
-    await saveLocalData('outbreaks', mockData.outbreaks);
-    await saveLocalData('waterQualityAlerts', mockData.waterQualityAlerts);
-    await saveLocalData('dashboardStats', mockData.dashboardStats);
-    await saveLocalData('diseaseTrendData', mockData.diseaseTrendData);
-    await saveLocalData('waterQualityTrendData', mockData.waterQualityTrendData);
-    await saveLocalData('predictionInsights', mockData.predictionInsights);
-    await saveLocalData('preventionCampaigns', mockData.preventionCampaigns);
-    await saveLocalData('alerts', mockData.alerts);
+    // Save all mock data to the local store concurrently using Promise.all
+    await Promise.all([
+      saveLocalData('regions', mockData.regions),
+      saveLocalData('outbreaks', mockData.outbreaks),
+      saveLocalData('waterQualityAlerts', mockData.waterQualityAlerts),
+      saveLocalData('dashboardStats', mockData.dashboardStats),
+      saveLocalData('diseaseTrendData', mockData.diseaseTrendData),
+      saveLocalData('waterQualityTrendData', mockData.waterQualityTrendData),
+      saveLocalData('predictionInsights', mockData.predictionInsights),
+      saveLocalData('preventionCampaigns', mockData.preventionCampaigns),
+      saveLocalData('alerts', mockData.alerts),
+    ]);
 
     console.log('Data synchronization complete.');
   } catch (error) {
