@@ -27,12 +27,12 @@ async function generateDiagrams() {
     let mermaid = '```mermaid\ngraph TD;\n';
 
     // We'll limit to top level to avoid huge diagrams
-    const nodes = Object.keys(deps).filter(k => k.endsWith('.tsx') || k.endsWith('.ts'));
+    const nodes = Object.keys(deps).filter((k) => k.endsWith('.tsx') || k.endsWith('.ts'));
 
-    nodes.forEach(node => {
+    nodes.forEach((node) => {
       const nodeDeps = deps[node];
       if (nodeDeps && nodeDeps.length > 0) {
-        nodeDeps.forEach(dep => {
+        nodeDeps.forEach((dep) => {
           if (dep.endsWith('.tsx') || dep.endsWith('.ts')) {
             const cleanNode = node.replace(/[^a-zA-Z0-9]/g, '_');
             const cleanDep = dep.replace(/[^a-zA-Z0-9]/g, '_');
@@ -45,7 +45,6 @@ async function generateDiagrams() {
 
     fs.writeFileSync(path.join(outputDir, 'architecture.mermaid'), mermaid);
     console.log('Successfully generated architecture.mermaid');
-
   } catch (error) {
     console.error('Error generating diagrams:', error);
   }
