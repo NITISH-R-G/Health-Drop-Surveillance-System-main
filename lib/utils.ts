@@ -1,7 +1,9 @@
 export const filterByRegion = <T extends { regionId?: string }>(
-  data: T[],
-  regionId: string
+  items: T[],
+  regionId: string | null | undefined
 ): T[] => {
-  if (regionId === 'all') return data;
-  return data.filter((item) => item.regionId === regionId);
+  if (!regionId || regionId === 'all') {
+    return items;
+  }
+  return items.filter(item => item.regionId === regionId);
 };
