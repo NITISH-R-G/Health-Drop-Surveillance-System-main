@@ -20,27 +20,27 @@ async function buildKnowledgeGraph() {
     const dependencies = res.obj();
     const knowledgeGraph = {
       nodes: [],
-      edges: []
+      edges: [],
     };
 
     const addedNodes = new Set();
 
-    Object.keys(dependencies).forEach(module => {
+    Object.keys(dependencies).forEach((module) => {
       if (!addedNodes.has(module)) {
         knowledgeGraph.nodes.push({
           id: module,
           label: path.basename(module),
-          type: getModuleType(module)
+          type: getModuleType(module),
         });
         addedNodes.add(module);
       }
 
-      dependencies[module].forEach(dep => {
+      dependencies[module].forEach((dep) => {
         if (!addedNodes.has(dep)) {
           knowledgeGraph.nodes.push({
             id: dep,
             label: path.basename(dep),
-            type: getModuleType(dep)
+            type: getModuleType(dep),
           });
           addedNodes.add(dep);
         }
@@ -48,7 +48,7 @@ async function buildKnowledgeGraph() {
         knowledgeGraph.edges.push({
           source: module,
           target: dep,
-          type: 'depends_on'
+          type: 'depends_on',
         });
       });
     });

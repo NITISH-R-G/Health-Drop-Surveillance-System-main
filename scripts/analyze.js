@@ -18,14 +18,15 @@ async function analyze() {
     techStack = {
       frameworks: [],
       libraries: [],
-      tools: []
+      tools: [],
     };
 
     if (dependencies['react-native']) techStack.frameworks.push('React Native');
     if (dependencies['expo']) techStack.frameworks.push('Expo');
     if (dependencies['react']) techStack.libraries.push('React');
     if (dependencies['@supabase/supabase-js']) techStack.libraries.push('Supabase');
-    if (dependencies['react-native-maps'] || dependencies['react-leaflet']) techStack.libraries.push('Maps (Leaflet/Google)');
+    if (dependencies['react-native-maps'] || dependencies['react-leaflet'])
+      techStack.libraries.push('Maps (Leaflet/Google)');
     if (devDependencies['typescript']) techStack.tools.push('TypeScript');
     if (devDependencies['jest']) techStack.tools.push('Jest');
     if (devDependencies['eslint']) techStack.tools.push('ESLint');
@@ -50,7 +51,7 @@ async function analyze() {
     dependenciesCount: Object.keys(dependencies).length,
     devDependenciesCount: Object.keys(devDependencies).length,
     environmentVariables: Array.from(envVars),
-    fileCount: files.length
+    fileCount: files.length,
   };
 
   const outputDir = path.join(process.cwd(), '.automation');
@@ -58,10 +59,7 @@ async function analyze() {
     fs.mkdirSync(outputDir);
   }
 
-  fs.writeFileSync(
-    path.join(outputDir, 'analysis.json'),
-    JSON.stringify(analysisResult, null, 2)
-  );
+  fs.writeFileSync(path.join(outputDir, 'analysis.json'), JSON.stringify(analysisResult, null, 2));
 
   console.log('Analysis complete. Results saved to .automation/analysis.json');
 }
