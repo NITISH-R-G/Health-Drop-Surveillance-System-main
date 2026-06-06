@@ -67,7 +67,7 @@ export function useSyncData<K extends keyof typeof mockData>(key: K) {
     const loadData = async () => {
       setLoading(true);
       // Try local storage first
-      const localData = await getLocalData(key);
+      const localData = await getLocalData<typeof initialData>(key);
       if (localData) {
         setData(localData);
       } else {
