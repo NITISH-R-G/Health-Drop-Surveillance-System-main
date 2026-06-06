@@ -1,0 +1,771 @@
+{
+  "nodes": [
+    {
+      "id": "App.tsx",
+      "label": "App.tsx",
+      "type": "entry"
+    },
+    {
+      "id": "components/AuthScreen.tsx",
+      "label": "AuthScreen.tsx",
+      "type": "component"
+    },
+    {
+      "id": "components/ProfileSetup.tsx",
+      "label": "ProfileSetup.tsx",
+      "type": "component"
+    },
+    {
+      "id": "lib/ThemeContext.tsx",
+      "label": "ThemeContext.tsx",
+      "type": "utility"
+    },
+    {
+      "id": "lib/sync.ts",
+      "label": "sync.ts",
+      "type": "utility"
+    },
+    {
+      "id": "pages/IndexPage.tsx",
+      "label": "IndexPage.tsx",
+      "type": "page"
+    },
+    {
+      "id": "types/profile.ts",
+      "label": "profile.ts",
+      "type": "unknown"
+    },
+    {
+      "id": "components/AdvisoriesPanel.tsx",
+      "label": "AdvisoriesPanel.tsx",
+      "type": "component"
+    },
+    {
+      "id": "components/AlertBanner.tsx",
+      "label": "AlertBanner.tsx",
+      "type": "component"
+    },
+    {
+      "id": "types/models.ts",
+      "label": "models.ts",
+      "type": "unknown"
+    },
+    {
+      "id": "components/AlertHistoryPanel.tsx",
+      "label": "AlertHistoryPanel.tsx",
+      "type": "component"
+    },
+    {
+      "id": "components/Card.tsx",
+      "label": "Card.tsx",
+      "type": "component"
+    },
+    {
+      "id": "components/CategorizedMap.tsx",
+      "label": "CategorizedMap.tsx",
+      "type": "component"
+    },
+    {
+      "id": "components/Map.tsx",
+      "label": "Map.tsx",
+      "type": "component"
+    },
+    {
+      "id": "components/EmergencyHelpline.tsx",
+      "label": "EmergencyHelpline.tsx",
+      "type": "component"
+    },
+    {
+      "id": "components/ExplainabilityPanel.tsx",
+      "label": "ExplainabilityPanel.tsx",
+      "type": "component"
+    },
+    {
+      "id": "components/FieldWorkerLogistics.tsx",
+      "label": "FieldWorkerLogistics.tsx",
+      "type": "component"
+    },
+    {
+      "id": "components/HealthCertificate.tsx",
+      "label": "HealthCertificate.tsx",
+      "type": "component"
+    },
+    {
+      "id": "components/HealthStatusBadge.tsx",
+      "label": "HealthStatusBadge.tsx",
+      "type": "component"
+    },
+    {
+      "id": "components/HelloWorld.tsx",
+      "label": "HelloWorld.tsx",
+      "type": "component"
+    },
+    {
+      "id": "lib/supabase.ts",
+      "label": "supabase.ts",
+      "type": "utility"
+    },
+    {
+      "id": "components/HeroSection.tsx",
+      "label": "HeroSection.tsx",
+      "type": "component"
+    },
+    {
+      "id": "components/HotspotMap.tsx",
+      "label": "HotspotMap.tsx",
+      "type": "component"
+    },
+    {
+      "id": "components/Map.web.tsx",
+      "label": "Map.web.tsx",
+      "type": "component"
+    },
+    {
+      "id": "components/Navbar.tsx",
+      "label": "Navbar.tsx",
+      "type": "component"
+    },
+    {
+      "id": "components/ProximityStats.tsx",
+      "label": "ProximityStats.tsx",
+      "type": "component"
+    },
+    {
+      "id": "components/RegionFilter.tsx",
+      "label": "RegionFilter.tsx",
+      "type": "component"
+    },
+    {
+      "id": "components/RiskAnalysisPanel.tsx",
+      "label": "RiskAnalysisPanel.tsx",
+      "type": "component"
+    },
+    {
+      "id": "components/RiskHeatmap.tsx",
+      "label": "RiskHeatmap.tsx",
+      "type": "component"
+    },
+    {
+      "id": "components/SelfAssessment.tsx",
+      "label": "SelfAssessment.tsx",
+      "type": "component"
+    },
+    {
+      "id": "components/Sidebar.tsx",
+      "label": "Sidebar.tsx",
+      "type": "component"
+    },
+    {
+      "id": "components/TestingLabs.tsx",
+      "label": "TestingLabs.tsx",
+      "type": "component"
+    },
+    {
+      "id": "components/TrendChart.tsx",
+      "label": "TrendChart.tsx",
+      "type": "component"
+    },
+    {
+      "id": "components/__tests__/AlertBanner.test.tsx",
+      "label": "AlertBanner.test.tsx",
+      "type": "component"
+    },
+    {
+      "id": "components/__tests__/AuthScreen.test.tsx",
+      "label": "AuthScreen.test.tsx",
+      "type": "component"
+    },
+    {
+      "id": "components/__tests__/Card.test.tsx",
+      "label": "Card.test.tsx",
+      "type": "component"
+    },
+    {
+      "id": "components/__tests__/ExplainabilityPanel.test.tsx",
+      "label": "ExplainabilityPanel.test.tsx",
+      "type": "component"
+    },
+    {
+      "id": "components/__tests__/HeroSection.test.tsx",
+      "label": "HeroSection.test.tsx",
+      "type": "component"
+    },
+    {
+      "id": "components/__tests__/ProximityStats.test.tsx",
+      "label": "ProximityStats.test.tsx",
+      "type": "component"
+    },
+    {
+      "id": "components/__tests__/RiskHeatmap.test.tsx",
+      "label": "RiskHeatmap.test.tsx",
+      "type": "component"
+    },
+    {
+      "id": "lib/__tests__/sync.test.ts",
+      "label": "sync.test.ts",
+      "type": "utility"
+    },
+    {
+      "id": "lib/mockData.ts",
+      "label": "mockData.ts",
+      "type": "utility"
+    },
+    {
+      "id": "lib/ghoApi.ts",
+      "label": "ghoApi.ts",
+      "type": "utility"
+    },
+    {
+      "id": "lib/utils.ts",
+      "label": "utils.ts",
+      "type": "utility"
+    },
+    {
+      "id": "pages/CommunityReport.tsx",
+      "label": "CommunityReport.tsx",
+      "type": "page"
+    },
+    {
+      "id": "pages/HygieneEducation.tsx",
+      "label": "HygieneEducation.tsx",
+      "type": "page"
+    },
+    {
+      "id": "pages/NationalStats.tsx",
+      "label": "NationalStats.tsx",
+      "type": "page"
+    },
+    {
+      "id": "pages/ProfilePage.tsx",
+      "label": "ProfilePage.tsx",
+      "type": "page"
+    },
+    {
+      "id": "pages/SettingsPage.tsx",
+      "label": "SettingsPage.tsx",
+      "type": "page"
+    },
+    {
+      "id": "pages/Telemedicine.tsx",
+      "label": "Telemedicine.tsx",
+      "type": "page"
+    }
+  ],
+  "edges": [
+    {
+      "source": "App.tsx",
+      "target": "components/AuthScreen.tsx",
+      "type": "depends_on"
+    },
+    {
+      "source": "App.tsx",
+      "target": "components/ProfileSetup.tsx",
+      "type": "depends_on"
+    },
+    {
+      "source": "App.tsx",
+      "target": "lib/ThemeContext.tsx",
+      "type": "depends_on"
+    },
+    {
+      "source": "App.tsx",
+      "target": "lib/sync.ts",
+      "type": "depends_on"
+    },
+    {
+      "source": "App.tsx",
+      "target": "pages/IndexPage.tsx",
+      "type": "depends_on"
+    },
+    {
+      "source": "App.tsx",
+      "target": "types/profile.ts",
+      "type": "depends_on"
+    },
+    {
+      "source": "components/AdvisoriesPanel.tsx",
+      "target": "lib/ThemeContext.tsx",
+      "type": "depends_on"
+    },
+    {
+      "source": "components/AlertBanner.tsx",
+      "target": "lib/ThemeContext.tsx",
+      "type": "depends_on"
+    },
+    {
+      "source": "components/AlertBanner.tsx",
+      "target": "types/models.ts",
+      "type": "depends_on"
+    },
+    {
+      "source": "components/AlertHistoryPanel.tsx",
+      "target": "lib/ThemeContext.tsx",
+      "type": "depends_on"
+    },
+    {
+      "source": "components/AlertHistoryPanel.tsx",
+      "target": "types/models.ts",
+      "type": "depends_on"
+    },
+    {
+      "source": "components/AuthScreen.tsx",
+      "target": "lib/ThemeContext.tsx",
+      "type": "depends_on"
+    },
+    {
+      "source": "components/AuthScreen.tsx",
+      "target": "types/profile.ts",
+      "type": "depends_on"
+    },
+    {
+      "source": "components/Card.tsx",
+      "target": "lib/ThemeContext.tsx",
+      "type": "depends_on"
+    },
+    {
+      "source": "components/CategorizedMap.tsx",
+      "target": "components/Map.tsx",
+      "type": "depends_on"
+    },
+    {
+      "source": "components/CategorizedMap.tsx",
+      "target": "lib/ThemeContext.tsx",
+      "type": "depends_on"
+    },
+    {
+      "source": "components/EmergencyHelpline.tsx",
+      "target": "lib/ThemeContext.tsx",
+      "type": "depends_on"
+    },
+    {
+      "source": "components/ExplainabilityPanel.tsx",
+      "target": "lib/ThemeContext.tsx",
+      "type": "depends_on"
+    },
+    {
+      "source": "components/ExplainabilityPanel.tsx",
+      "target": "types/models.ts",
+      "type": "depends_on"
+    },
+    {
+      "source": "components/FieldWorkerLogistics.tsx",
+      "target": "lib/ThemeContext.tsx",
+      "type": "depends_on"
+    },
+    {
+      "source": "components/HealthCertificate.tsx",
+      "target": "lib/ThemeContext.tsx",
+      "type": "depends_on"
+    },
+    {
+      "source": "components/HealthStatusBadge.tsx",
+      "target": "lib/ThemeContext.tsx",
+      "type": "depends_on"
+    },
+    {
+      "source": "components/HelloWorld.tsx",
+      "target": "lib/supabase.ts",
+      "type": "depends_on"
+    },
+    {
+      "source": "components/HeroSection.tsx",
+      "target": "lib/ThemeContext.tsx",
+      "type": "depends_on"
+    },
+    {
+      "source": "components/HeroSection.tsx",
+      "target": "lib/sync.ts",
+      "type": "depends_on"
+    },
+    {
+      "source": "components/HotspotMap.tsx",
+      "target": "components/Map.tsx",
+      "type": "depends_on"
+    },
+    {
+      "source": "components/HotspotMap.tsx",
+      "target": "lib/ThemeContext.tsx",
+      "type": "depends_on"
+    },
+    {
+      "source": "components/Navbar.tsx",
+      "target": "lib/ThemeContext.tsx",
+      "type": "depends_on"
+    },
+    {
+      "source": "components/ProfileSetup.tsx",
+      "target": "lib/supabase.ts",
+      "type": "depends_on"
+    },
+    {
+      "source": "components/ProfileSetup.tsx",
+      "target": "types/profile.ts",
+      "type": "depends_on"
+    },
+    {
+      "source": "components/ProximityStats.tsx",
+      "target": "lib/ThemeContext.tsx",
+      "type": "depends_on"
+    },
+    {
+      "source": "components/ProximityStats.tsx",
+      "target": "lib/sync.ts",
+      "type": "depends_on"
+    },
+    {
+      "source": "components/RegionFilter.tsx",
+      "target": "lib/ThemeContext.tsx",
+      "type": "depends_on"
+    },
+    {
+      "source": "components/RegionFilter.tsx",
+      "target": "types/models.ts",
+      "type": "depends_on"
+    },
+    {
+      "source": "components/RiskAnalysisPanel.tsx",
+      "target": "lib/ThemeContext.tsx",
+      "type": "depends_on"
+    },
+    {
+      "source": "components/RiskHeatmap.tsx",
+      "target": "components/Map.tsx",
+      "type": "depends_on"
+    },
+    {
+      "source": "components/RiskHeatmap.tsx",
+      "target": "lib/ThemeContext.tsx",
+      "type": "depends_on"
+    },
+    {
+      "source": "components/RiskHeatmap.tsx",
+      "target": "lib/sync.ts",
+      "type": "depends_on"
+    },
+    {
+      "source": "components/SelfAssessment.tsx",
+      "target": "lib/ThemeContext.tsx",
+      "type": "depends_on"
+    },
+    {
+      "source": "components/Sidebar.tsx",
+      "target": "lib/ThemeContext.tsx",
+      "type": "depends_on"
+    },
+    {
+      "source": "components/TestingLabs.tsx",
+      "target": "lib/ThemeContext.tsx",
+      "type": "depends_on"
+    },
+    {
+      "source": "components/TrendChart.tsx",
+      "target": "lib/ThemeContext.tsx",
+      "type": "depends_on"
+    },
+    {
+      "source": "components/TrendChart.tsx",
+      "target": "types/models.ts",
+      "type": "depends_on"
+    },
+    {
+      "source": "components/__tests__/AlertBanner.test.tsx",
+      "target": "components/AlertBanner.tsx",
+      "type": "depends_on"
+    },
+    {
+      "source": "components/__tests__/AlertBanner.test.tsx",
+      "target": "types/models.ts",
+      "type": "depends_on"
+    },
+    {
+      "source": "components/__tests__/AuthScreen.test.tsx",
+      "target": "components/AuthScreen.tsx",
+      "type": "depends_on"
+    },
+    {
+      "source": "components/__tests__/AuthScreen.test.tsx",
+      "target": "lib/ThemeContext.tsx",
+      "type": "depends_on"
+    },
+    {
+      "source": "components/__tests__/Card.test.tsx",
+      "target": "components/Card.tsx",
+      "type": "depends_on"
+    },
+    {
+      "source": "components/__tests__/Card.test.tsx",
+      "target": "lib/ThemeContext.tsx",
+      "type": "depends_on"
+    },
+    {
+      "source": "components/__tests__/ExplainabilityPanel.test.tsx",
+      "target": "components/ExplainabilityPanel.tsx",
+      "type": "depends_on"
+    },
+    {
+      "source": "components/__tests__/ExplainabilityPanel.test.tsx",
+      "target": "lib/ThemeContext.tsx",
+      "type": "depends_on"
+    },
+    {
+      "source": "components/__tests__/ExplainabilityPanel.test.tsx",
+      "target": "types/models.ts",
+      "type": "depends_on"
+    },
+    {
+      "source": "components/__tests__/HeroSection.test.tsx",
+      "target": "components/HeroSection.tsx",
+      "type": "depends_on"
+    },
+    {
+      "source": "components/__tests__/HeroSection.test.tsx",
+      "target": "lib/ThemeContext.tsx",
+      "type": "depends_on"
+    },
+    {
+      "source": "components/__tests__/HeroSection.test.tsx",
+      "target": "lib/sync.ts",
+      "type": "depends_on"
+    },
+    {
+      "source": "components/__tests__/ProximityStats.test.tsx",
+      "target": "components/ProximityStats.tsx",
+      "type": "depends_on"
+    },
+    {
+      "source": "components/__tests__/ProximityStats.test.tsx",
+      "target": "lib/ThemeContext.tsx",
+      "type": "depends_on"
+    },
+    {
+      "source": "components/__tests__/ProximityStats.test.tsx",
+      "target": "lib/sync.ts",
+      "type": "depends_on"
+    },
+    {
+      "source": "components/__tests__/RiskHeatmap.test.tsx",
+      "target": "components/RiskHeatmap.tsx",
+      "type": "depends_on"
+    },
+    {
+      "source": "components/__tests__/RiskHeatmap.test.tsx",
+      "target": "lib/ThemeContext.tsx",
+      "type": "depends_on"
+    },
+    {
+      "source": "components/__tests__/RiskHeatmap.test.tsx",
+      "target": "lib/sync.ts",
+      "type": "depends_on"
+    },
+    {
+      "source": "lib/__tests__/sync.test.ts",
+      "target": "lib/mockData.ts",
+      "type": "depends_on"
+    },
+    {
+      "source": "lib/__tests__/sync.test.ts",
+      "target": "lib/sync.ts",
+      "type": "depends_on"
+    },
+    {
+      "source": "lib/mockData.ts",
+      "target": "types/models.ts",
+      "type": "depends_on"
+    },
+    {
+      "source": "lib/sync.ts",
+      "target": "lib/mockData.ts",
+      "type": "depends_on"
+    },
+    {
+      "source": "pages/CommunityReport.tsx",
+      "target": "lib/ThemeContext.tsx",
+      "type": "depends_on"
+    },
+    {
+      "source": "pages/HygieneEducation.tsx",
+      "target": "lib/ThemeContext.tsx",
+      "type": "depends_on"
+    },
+    {
+      "source": "pages/HygieneEducation.tsx",
+      "target": "types/models.ts",
+      "type": "depends_on"
+    },
+    {
+      "source": "pages/IndexPage.tsx",
+      "target": "components/AdvisoriesPanel.tsx",
+      "type": "depends_on"
+    },
+    {
+      "source": "pages/IndexPage.tsx",
+      "target": "components/AlertBanner.tsx",
+      "type": "depends_on"
+    },
+    {
+      "source": "pages/IndexPage.tsx",
+      "target": "components/AlertHistoryPanel.tsx",
+      "type": "depends_on"
+    },
+    {
+      "source": "pages/IndexPage.tsx",
+      "target": "components/Card.tsx",
+      "type": "depends_on"
+    },
+    {
+      "source": "pages/IndexPage.tsx",
+      "target": "components/CategorizedMap.tsx",
+      "type": "depends_on"
+    },
+    {
+      "source": "pages/IndexPage.tsx",
+      "target": "components/EmergencyHelpline.tsx",
+      "type": "depends_on"
+    },
+    {
+      "source": "pages/IndexPage.tsx",
+      "target": "components/ExplainabilityPanel.tsx",
+      "type": "depends_on"
+    },
+    {
+      "source": "pages/IndexPage.tsx",
+      "target": "components/FieldWorkerLogistics.tsx",
+      "type": "depends_on"
+    },
+    {
+      "source": "pages/IndexPage.tsx",
+      "target": "components/HealthCertificate.tsx",
+      "type": "depends_on"
+    },
+    {
+      "source": "pages/IndexPage.tsx",
+      "target": "components/HealthStatusBadge.tsx",
+      "type": "depends_on"
+    },
+    {
+      "source": "pages/IndexPage.tsx",
+      "target": "components/HeroSection.tsx",
+      "type": "depends_on"
+    },
+    {
+      "source": "pages/IndexPage.tsx",
+      "target": "components/Navbar.tsx",
+      "type": "depends_on"
+    },
+    {
+      "source": "pages/IndexPage.tsx",
+      "target": "components/ProximityStats.tsx",
+      "type": "depends_on"
+    },
+    {
+      "source": "pages/IndexPage.tsx",
+      "target": "components/RegionFilter.tsx",
+      "type": "depends_on"
+    },
+    {
+      "source": "pages/IndexPage.tsx",
+      "target": "components/RiskAnalysisPanel.tsx",
+      "type": "depends_on"
+    },
+    {
+      "source": "pages/IndexPage.tsx",
+      "target": "components/RiskHeatmap.tsx",
+      "type": "depends_on"
+    },
+    {
+      "source": "pages/IndexPage.tsx",
+      "target": "components/SelfAssessment.tsx",
+      "type": "depends_on"
+    },
+    {
+      "source": "pages/IndexPage.tsx",
+      "target": "components/Sidebar.tsx",
+      "type": "depends_on"
+    },
+    {
+      "source": "pages/IndexPage.tsx",
+      "target": "components/TestingLabs.tsx",
+      "type": "depends_on"
+    },
+    {
+      "source": "pages/IndexPage.tsx",
+      "target": "components/TrendChart.tsx",
+      "type": "depends_on"
+    },
+    {
+      "source": "pages/IndexPage.tsx",
+      "target": "lib/ThemeContext.tsx",
+      "type": "depends_on"
+    },
+    {
+      "source": "pages/IndexPage.tsx",
+      "target": "lib/sync.ts",
+      "type": "depends_on"
+    },
+    {
+      "source": "pages/IndexPage.tsx",
+      "target": "lib/utils.ts",
+      "type": "depends_on"
+    },
+    {
+      "source": "pages/IndexPage.tsx",
+      "target": "pages/CommunityReport.tsx",
+      "type": "depends_on"
+    },
+    {
+      "source": "pages/IndexPage.tsx",
+      "target": "pages/HygieneEducation.tsx",
+      "type": "depends_on"
+    },
+    {
+      "source": "pages/IndexPage.tsx",
+      "target": "pages/NationalStats.tsx",
+      "type": "depends_on"
+    },
+    {
+      "source": "pages/IndexPage.tsx",
+      "target": "pages/ProfilePage.tsx",
+      "type": "depends_on"
+    },
+    {
+      "source": "pages/IndexPage.tsx",
+      "target": "pages/SettingsPage.tsx",
+      "type": "depends_on"
+    },
+    {
+      "source": "pages/IndexPage.tsx",
+      "target": "pages/Telemedicine.tsx",
+      "type": "depends_on"
+    },
+    {
+      "source": "pages/NationalStats.tsx",
+      "target": "lib/ThemeContext.tsx",
+      "type": "depends_on"
+    },
+    {
+      "source": "pages/NationalStats.tsx",
+      "target": "lib/ghoApi.ts",
+      "type": "depends_on"
+    },
+    {
+      "source": "pages/ProfilePage.tsx",
+      "target": "lib/ThemeContext.tsx",
+      "type": "depends_on"
+    },
+    {
+      "source": "pages/SettingsPage.tsx",
+      "target": "lib/ThemeContext.tsx",
+      "type": "depends_on"
+    },
+    {
+      "source": "pages/SettingsPage.tsx",
+      "target": "lib/supabase.ts",
+      "type": "depends_on"
+    },
+    {
+      "source": "pages/Telemedicine.tsx",
+      "target": "lib/ThemeContext.tsx",
+      "type": "depends_on"
+    }
+  ]
+}

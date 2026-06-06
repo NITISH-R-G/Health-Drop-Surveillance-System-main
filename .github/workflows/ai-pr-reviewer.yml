@@ -1,0 +1,42 @@
+name: AI PR Reviewer and Arch Checker
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  pull-requests: write
+  contents: read
+
+jobs:
+  ai-review:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 18.x
+        cache: 'npm'
+
+    - name: Install system dependencies
+      run: sudo apt-get update && sudo apt-get install -y graphviz
+
+    - name: Install Node Dependencies
+      run: npm ci --legacy-peer-deps
+
+    - name: Run analysis to check for architectural drift
+      env:
+        GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        PR_NUMBER: ${{ github.event.pull_request.number }}
+        CI: true
+      run: |
+        npm run analyze
+        node scripts/ai-agent.js
+
+        # Post the result as a comment to PR (Mocking step for completeness)
+        echo "AI Agent analysis complete for PR."
