@@ -215,10 +215,10 @@ const TestingLabs: React.FC<TestingLabsProps> = ({ labs = defaultLabs }) => {
   const [userLoc, setUserLoc] = useState<Location.LocationObject | null>(null);
   const [isLocating, setIsLocating] = useState(false);
 
-  const filteredLabs = filter === 'all' ? labs : labs.filter((l) => l.type === filter);
-  const sortedLabs = [...filteredLabs].sort(
-    (a, b) => parseFloat(a.distance) - parseFloat(b.distance)
-  );
+  const sortedLabs = useMemo(() => {
+    const filteredLabs = filter === 'all' ? labs : labs.filter((l) => l.type === filter);
+    return [...filteredLabs].sort((a, b) => parseFloat(a.distance) - parseFloat(b.distance));
+  }, [labs, filter]);
 
   const handleCall = (phone: string) => {
     Linking.openURL(`tel:${phone}`);
