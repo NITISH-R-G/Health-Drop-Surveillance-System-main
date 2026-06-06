@@ -80,3 +80,11 @@ export interface EnvironmentalData {
   humidity: number;
   waterLevel: number;
 }
+
+export interface HygieneModule {
+  id: number;
+  title: string;
+  duration: string;
+  points: number;
+  completed: boolean;
+}

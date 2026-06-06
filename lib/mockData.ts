@@ -1,71 +1,14 @@
 // Comprehensive mock data for the HealthDrop Surveillance System
 
-export interface Region {
-  id: string;
-  name: string;
-  district: string;
-  population: number;
-  riskLevel: 'low' | 'medium' | 'high' | 'critical';
-  riskScore: number;
-  activeCases?: number; // Added for proportional circle sizing
-}
-
-export interface Outbreak {
-  id: number;
-  title: string;
-  description: string;
-  location: string;
-  regionId: string;
-  date: string;
-  type: 'outbreak' | 'water_quality' | 'prevention' | 'alert';
-  severity: 'critical' | 'high' | 'medium' | 'low';
-  caseCount?: number;
-  status: 'active' | 'contained' | 'resolved';
-  coordinates?: {
-    latitude: number;
-    longitude: number;
-  };
-}
-
-export interface WaterQualityReading {
-  id: number;
-  sourceId: string;
-  sourceName: string;
-  location: string;
-  regionId: string;
-  date: string;
-  ph: number;
-  turbidity: number;
-  bacterialCount: number;
-  status: 'safe' | 'warning' | 'danger';
-}
-
-export interface TrendDataPoint {
-  label: string;
-  value: number;
-}
-
-import { PredictionInsight } from '../types/models';
-
-export interface AlertItem {
-  id: number;
-  title: string;
-  message: string;
-  severity: 'critical' | 'high' | 'medium' | 'low';
-  timestamp: string;
-  regionId: string;
-  region: string;
-  isRead: boolean;
-  category: 'outbreak' | 'water' | 'prediction' | 'system';
-}
-
-export interface EnvironmentalData {
-  regionId: string;
-  rainfall: number;
-  temperature: number;
-  humidity: number;
-  waterLevel: number;
-}
+import {
+  Region,
+  Outbreak,
+  WaterQualityReading,
+  TrendDataPoint,
+  AlertItem,
+  EnvironmentalData,
+  PredictionInsight,
+} from '../types/models';
 
 // Regions
 export const regions: Region[] = [
