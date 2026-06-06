@@ -31,12 +31,9 @@ app.get('/api/who/:indicator', async (req, res) => {
     if (cache.has(targetUrl)) {
       const cachedData = cache.get(targetUrl);
       if (Date.now() - cachedData.timestamp < CACHE_DURATION_MS) {
-        console.log(`[Cache Hit] ${targetUrl}`);
         return res.json(cachedData.data);
       }
     }
-
-    console.log(`[Proxy] Fetching: ${targetUrl}`);
 
     // Fetch from WHO API with a timeout
     const response = await axios.get(targetUrl, {
