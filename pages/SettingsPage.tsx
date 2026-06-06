@@ -9,6 +9,7 @@ import {
   Modal,
   Alert,
   ActivityIndicator,
+  KeyboardTypeOptions,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { supabase } from '../lib/supabase';
@@ -123,14 +124,14 @@ const SettingsPage: React.FC<SettingsPageProps> = ({ onNavigate, userId, userEma
     onChangeText,
     keyboardType = 'default',
   }: {
-    icon: any;
+    icon: keyof typeof Ionicons.glyphMap;
     label: string;
     value?: string;
     onPress?: () => void;
     trailing?: React.ReactNode;
     editable?: boolean;
     onChangeText?: (text: string) => void;
-    keyboardType?: any;
+    keyboardType?: KeyboardTypeOptions;
   }) => (
     <TouchableOpacity
       style={styles.settingRow}
