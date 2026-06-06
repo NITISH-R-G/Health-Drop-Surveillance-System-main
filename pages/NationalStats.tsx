@@ -10,7 +10,7 @@ import {
 import { BlurView } from 'expo-blur';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme, Theme, typography, spacing, radius } from '../lib/ThemeContext';
-import { fetchCholeraCases, fetchCholeraDeaths, GhoDataPoint } from '../lib/ghoApi';
+import { fetchCholeraCases, fetchCholeraDeaths } from '../lib/ghoApi';
 
 interface StateData {
   name: string;
