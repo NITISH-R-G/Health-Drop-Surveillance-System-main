@@ -3,7 +3,7 @@ import { View, StyleSheet } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { ThemeProvider, useTheme } from './lib/ThemeContext';
-import AuthScreen from './components/AuthScreen';
+import AuthScreen, { AuthData } from './components/AuthScreen';
 import ProfileSetup from './components/ProfileSetup';
 import IndexPage from './pages/IndexPage';
 import { Profile } from './types/profile';
@@ -20,7 +20,7 @@ function AppContent() {
     syncData();
   }, []);
 
-  const handleAuthSuccess = (dummyData?: any) => {
+  const handleAuthSuccess = (dummyData?: AuthData) => {
     const email = dummyData?.email || 'demo@healthdrop.app';
     const fullName = dummyData?.fullName || 'Demo Worker';
     const role = dummyData?.role || 'volunteer';

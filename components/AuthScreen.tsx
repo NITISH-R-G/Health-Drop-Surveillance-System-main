@@ -16,8 +16,16 @@ import { Ionicons } from '@expo/vector-icons';
 import { Profile } from '../types/profile';
 import { useTheme, Theme, spacing, radius, typography } from '../lib/ThemeContext';
 
+export interface AuthData {
+  email: string;
+  fullName: string;
+  role: Profile['role'];
+  organization: string;
+  location: string;
+}
+
 interface AuthScreenProps {
-  onAuthSuccess: (data?: any) => void;
+  onAuthSuccess: (data?: AuthData) => void;
 }
 
 export default function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
