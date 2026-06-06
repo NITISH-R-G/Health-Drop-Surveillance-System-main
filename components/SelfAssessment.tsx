@@ -144,7 +144,7 @@ const SelfAssessment: React.FC<SelfAssessmentProps> = ({ onComplete, onClose }) 
   const [answers, setAnswers] = useState<Record<string, number>>({});
   const [showResult, setShowResult] = useState(false);
 
-  const totalScore = Object.values(answers).reduce((a, b) => a + b, 0);
+  const totalScore = useMemo(() => Object.values(answers).reduce((a, b) => a + b, 0), [answers]);
   const result = getRiskResult(totalScore);
   const progress = (currentStep / questions.length) * 100;
 
@@ -180,7 +180,7 @@ const SelfAssessment: React.FC<SelfAssessmentProps> = ({ onComplete, onClose }) 
   }, []);
 
   if (showResult) {
-    const finalResult = getRiskResult(Object.values(answers).reduce((a, b) => a + b, 0));
+    const finalResult = getRiskResult(totalScore);
     return (
       <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
         <View style={styles.header}>
@@ -202,9 +202,7 @@ const SelfAssessment: React.FC<SelfAssessmentProps> = ({ onComplete, onClose }) 
           <Text style={[styles.resultTitle, { color: finalResult.color }]}>
             {finalResult.title}
           </Text>
-          <Text style={styles.resultScore}>
-            Risk Score: {Object.values(answers).reduce((a, b) => a + b, 0)}/24
-          </Text>
+          <Text style={styles.resultScore}>Risk Score: {totalScore}/24</Text>
           <View style={styles.adviceCard}>
             <Text style={styles.adviceTitle}>Recommendation</Text>
             <Text style={styles.adviceText}>{finalResult.advice}</Text>
