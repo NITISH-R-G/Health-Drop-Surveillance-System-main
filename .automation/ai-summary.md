@@ -1,0 +1,1 @@
+This project leverages React Native, Expo for a robust mobile application architecture. It integrates with maps and Supabase for a complete end-to-end health tracking solution.

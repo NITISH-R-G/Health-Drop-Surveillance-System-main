@@ -1,0 +1,28 @@
+{
+  "timestamp": "2026-06-06T07:46:45.846Z",
+  "techStack": {
+    "frameworks": [
+      "React Native",
+      "Expo"
+    ],
+    "libraries": [
+      "React",
+      "Supabase",
+      "Maps (Leaflet/Google)"
+    ],
+    "tools": [
+      "TypeScript",
+      "Jest",
+      "ESLint"
+    ]
+  },
+  "dependenciesCount": 25,
+  "devDependenciesCount": 33,
+  "environmentVariables": [
+    "CI",
+    "GEMINI_API_KEY",
+    "PORT",
+    "EXPO_PUBLIC_GOOGLE_MAPS_API_KEY"
+  ],
+  "fileCount": 62
+}
