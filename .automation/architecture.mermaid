@@ -67,6 +67,7 @@ graph TD;
   lib_sync_ts["sync.ts"] --> lib_mockData_ts["mockData.ts"];
   pages_CommunityReport_tsx["CommunityReport.tsx"] --> lib_ThemeContext_tsx["ThemeContext.tsx"];
   pages_HygieneEducation_tsx["HygieneEducation.tsx"] --> lib_ThemeContext_tsx["ThemeContext.tsx"];
+  pages_HygieneEducation_tsx["HygieneEducation.tsx"] --> lib_sync_ts["sync.ts"];
   pages_HygieneEducation_tsx["HygieneEducation.tsx"] --> types_models_ts["models.ts"];
   pages_IndexPage_tsx["IndexPage.tsx"] --> components_AdvisoriesPanel_tsx["AdvisoriesPanel.tsx"];
   pages_IndexPage_tsx["IndexPage.tsx"] --> components_AlertBanner_tsx["AlertBanner.tsx"];
@@ -103,4 +104,6 @@ graph TD;
   pages_SettingsPage_tsx["SettingsPage.tsx"] --> lib_ThemeContext_tsx["ThemeContext.tsx"];
   pages_SettingsPage_tsx["SettingsPage.tsx"] --> lib_supabase_ts["supabase.ts"];
   pages_Telemedicine_tsx["Telemedicine.tsx"] --> lib_ThemeContext_tsx["ThemeContext.tsx"];
+  pages___tests___HygieneEducation_test_tsx["HygieneEducation.test.tsx"] --> lib_ThemeContext_tsx["ThemeContext.tsx"];
+  pages___tests___HygieneEducation_test_tsx["HygieneEducation.test.tsx"] --> pages_HygieneEducation_tsx["HygieneEducation.tsx"];
 ```

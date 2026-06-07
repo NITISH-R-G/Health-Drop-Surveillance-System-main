@@ -249,6 +249,11 @@
       "id": "pages/Telemedicine.tsx",
       "label": "Telemedicine.tsx",
       "type": "page"
+    },
+    {
+      "id": "pages/__tests__/HygieneEducation.test.tsx",
+      "label": "HygieneEducation.test.tsx",
+      "type": "page"
     }
   ],
   "edges": [
@@ -589,6 +594,11 @@
     },
     {
       "source": "pages/HygieneEducation.tsx",
+      "target": "lib/sync.ts",
+      "type": "depends_on"
+    },
+    {
+      "source": "pages/HygieneEducation.tsx",
       "target": "types/models.ts",
       "type": "depends_on"
     },
@@ -765,6 +775,16 @@
     {
       "source": "pages/Telemedicine.tsx",
       "target": "lib/ThemeContext.tsx",
+      "type": "depends_on"
+    },
+    {
+      "source": "pages/__tests__/HygieneEducation.test.tsx",
+      "target": "lib/ThemeContext.tsx",
+      "type": "depends_on"
+    },
+    {
+      "source": "pages/__tests__/HygieneEducation.test.tsx",
+      "target": "pages/HygieneEducation.tsx",
       "type": "depends_on"
     }
   ]
