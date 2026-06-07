@@ -8,6 +8,7 @@ import {
   AlertItem,
   EnvironmentalData,
   PredictionInsight,
+  HygieneModule,
 } from '../types/models';
 
 // Regions
@@ -431,3 +432,61 @@ export const leaderboardData = [
   { id: '4', name: 'Priya D.', score: 390, avatar: '👩‍🏫', isUser: false },
   { id: '5', name: 'Amit B.', score: 310, avatar: '👨‍🔧', isUser: false },
 ];
+
+export const hygieneModules: HygieneModule[] = [
+  {
+    id: 1,
+    title: 'Hand Washing 101',
+    duration: '5 min',
+    points: 50,
+    completed: true,
+    description:
+      'Learn the core principles of hand washing 101 to protect yourself and your family from water-borne diseases like Cholera and Typhoid.',
+    quizQuestion:
+      'Which of the following is the most effective way to purify water at home during an outbreak?',
+    quizOptions: [
+      'Using a clean cloth filter',
+      'Boiling water for at least 3 minutes',
+      'Adding salt and sugar',
+      'Leaving it in the sun for an hour',
+    ],
+    correctAnswerIndex: 1,
+  },
+  {
+    id: 2,
+    title: 'Safe Water Storage',
+    duration: '8 min',
+    points: 80,
+    completed: false,
+    description:
+      'Learn the core principles of safe water storage to protect yourself and your family from water-borne diseases like Cholera and Typhoid.',
+    quizQuestion: 'How should drinking water be stored to prevent contamination?',
+    quizOptions: [
+      'In an open container',
+      'In a clean, covered container',
+      'In a container previously used for chemicals',
+      'Outside in direct sunlight without a lid',
+    ],
+    correctAnswerIndex: 1,
+  },
+  {
+    id: 3,
+    title: 'Sanitation Basics',
+    duration: '10 min',
+    points: 100,
+    completed: false,
+    description:
+      'Learn the core principles of sanitation basics to protect yourself and your family from water-borne diseases like Cholera and Typhoid.',
+    quizQuestion:
+      'What is a critical practice to maintain proper sanitation and prevent disease spread?',
+    quizOptions: [
+      'Washing hands with soap after using the toilet',
+      'Disposing of waste near water sources',
+      'Sharing personal hygiene items',
+      'Ignoring proper waste disposal guidelines',
+    ],
+    correctAnswerIndex: 0,
+  },
+];
+
+export const hygieneScore: number = 350;

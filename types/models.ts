@@ -87,6 +87,10 @@ export interface HygieneModule {
   duration: string;
   points: number;
   completed: boolean;
+  description: string;
+  quizQuestion: string;
+  quizOptions: string[];
+  correctAnswerIndex: number;
 }
 
 export interface LeaderboardEntry {
