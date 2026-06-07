@@ -34,7 +34,7 @@ async function runAIAgent() {
       const prompt = `Analyze this project tech stack: ${JSON.stringify(analysis.techStack)}. Generate a short 2 sentence architecture summary for the README.`;
       const response = await ai.models.generateContent({
         model: 'gemini-2.5-flash',
-        contents: prompt
+        contents: prompt,
       });
       summary = response.text;
     } catch (err) {

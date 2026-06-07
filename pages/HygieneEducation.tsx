@@ -2,7 +2,8 @@ import React, { useMemo, useState } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet, Alert, Modal } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme, Theme, typography, spacing, radius } from '../lib/ThemeContext';
-import { HygieneModule } from '../types/models';
+import { HygieneModule, LeaderboardEntry } from '../types/models';
+import { useSyncData } from '../lib/sync';
 
 interface HygieneEducationProps {
   onBack: () => void;
@@ -47,6 +48,8 @@ const HygieneEducation: React.FC<HygieneEducationProps> = ({
     ? ((score - currentBadge.threshold) / (nextBadge.threshold - currentBadge.threshold)) * 100
     : 100;
 
+  const { data: leaderboardDataSync } = useSyncData('leaderboardData');
+
   const handleModulePress = (mod: HygieneModule) => {
     if (mod.completed) {
       Alert.alert(
@@ -74,19 +77,20 @@ const HygieneEducation: React.FC<HygieneEducationProps> = ({
   };
 
   const renderLeaderboard = () => {
-    const leaderboardData = [
+    const leaderboardDataList: LeaderboardEntry[] = leaderboardDataSync
+      ? [...leaderboardDataSync]
+      : [];
+
+    const combinedLeaderboard = [
       { id: 'user', name: 'You', score: score, avatar: '👤', isUser: true },
-      { id: '2', name: 'Sarah K.', score: 450, avatar: '👩‍⚕️', isUser: false },
-      { id: '3', name: 'Rajesh M.', score: 420, avatar: '👨‍🌾', isUser: false },
-      { id: '4', name: 'Priya D.', score: 390, avatar: '👩‍🏫', isUser: false },
-      { id: '5', name: 'Amit B.', score: 310, avatar: '👨‍🔧', isUser: false },
+      ...leaderboardDataList,
     ].sort((a, b) => b.score - a.score);
 
     return (
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Community Leaderboard</Text>
         <View style={styles.leaderboardCard}>
-          {leaderboardData.map((item, index) => (
+          {combinedLeaderboard.map((item, index) => (
             <View
               key={item.id}
               style={[styles.leaderboardRow, item.isUser && styles.leaderboardRowActive]}>

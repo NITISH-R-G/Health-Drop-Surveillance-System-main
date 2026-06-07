@@ -88,3 +88,11 @@ export interface HygieneModule {
   points: number;
   completed: boolean;
 }
+
+export interface LeaderboardEntry {
+  id: string;
+  name: string;
+  score: number;
+  avatar: string;
+  isUser: boolean;
+}

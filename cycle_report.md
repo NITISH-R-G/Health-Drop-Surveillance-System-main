@@ -123,3 +123,44 @@
 
 ## Metrics Improved (Update)
 * **Code quality gains:** Eliminated 6 instances of duplicate interface definitions and centralized 1 scattered interface.
+
+---
+
+## Cycle Update: UI Hardcoding & Coverage Refactoring
+
+## Repository Health Report (Update)
+* **Strengths:**
+  - Robust offline synchronization infrastructure in place.
+* **Weaknesses:**
+  - `pages/HygieneEducation.tsx` had hardcoded state for Leaderboard metrics.
+* **Risks:**
+  - Hardcoded components cannot accurately represent dynamic state, causing product inconsistencies when syncing data.
+* **Opportunities:**
+  - Leveraging the existing `useSyncData` pattern for the `HygieneEducation` component.
+
+## Competitor Analysis (Update)
+* **Gaps identified:**
+  - Best-in-class repositories never hardcode domain-specific arrays directly inside view components.
+* **Opportunities to outperform:**
+  - Fully dynamic, synced leaderboards providing true offline-first capability.
+
+## Priority Improvements (Update)
+1. **Highest impact:** Extract Leaderboard data to `lib/mockData.ts` and interface `LeaderboardEntry` to `types/models.ts`.
+2. **Strategic importance:** Refactor `HygieneEducation` to use `useSyncData('leaderboardData')`.
+
+## Sprint Plan (Update)
+* **Sprint Goal:** Remove hardcoded leaderboard data from `pages/HygieneEducation.tsx` and fetch it dynamically.
+* **Tasks:**
+  - Add `LeaderboardEntry` interface.
+  - Move mock data to `lib/mockData.ts`.
+  - Refactor `renderLeaderboard` in `HygieneEducation`.
+  - Write test to verify data rendering.
+* **Expected Outcomes:** A dynamically driven leaderboard component fully backed by unit tests.
+
+## Technical Improvements (Update)
+* **Architecture:** Decoupled `leaderboardData` from `HygieneEducation.tsx`, enforcing the offline-first data model.
+* **Testing:** Added `HygieneEducation.test.tsx` coverage to ensure the component leverages the dynamic hook.
+
+## Metrics Improved (Update)
+* **Code quality gains:** Eliminated 1 hardcoded data block in a UI component.
+* **Coverage Improvements:** Added test coverage for the `HygieneEducation.tsx` view and its Leaderboard tab.

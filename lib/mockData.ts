@@ -424,3 +424,10 @@ export const filterByRegion_DEPRECATED = <T extends { regionId: string }>(
   if (regionId === 'all') return data;
   return data.filter((item) => item.regionId === regionId);
 };
+
+export const leaderboardData = [
+  { id: '2', name: 'Sarah K.', score: 450, avatar: '👩‍⚕️', isUser: false },
+  { id: '3', name: 'Rajesh M.', score: 420, avatar: '👨‍🌾', isUser: false },
+  { id: '4', name: 'Priya D.', score: 390, avatar: '👩‍🏫', isUser: false },
+  { id: '5', name: 'Amit B.', score: 310, avatar: '👨‍🔧', isUser: false },
+];
