@@ -63,12 +63,8 @@ const IndexPageContent: React.FC<IndexPageProps> = ({
   const [userLocation, setUserLocation] = useState<string>('Locating...');
 
   // Persistent State for Hygiene Education
-  const [hygieneScore, setHygieneScore] = useState(350);
-  const [hygieneModules, setHygieneModules] = useState([
-    { id: 1, title: 'Hand Washing 101', duration: '5 min', points: 50, completed: true },
-    { id: 2, title: 'Safe Water Storage', duration: '8 min', points: 80, completed: false },
-    { id: 3, title: 'Sanitation Basics', duration: '10 min', points: 100, completed: false },
-  ]);
+  const { data: hygieneScore, setData: setHygieneScore } = useSyncData('hygieneScore');
+  const { data: hygieneModules, setData: setHygieneModules } = useSyncData('hygieneModules');
 
   const { data: regions } = useSyncData('regions');
   const { data: outbreaks } = useSyncData('outbreaks');
@@ -101,10 +97,15 @@ const IndexPageContent: React.FC<IndexPageProps> = ({
     []
   );
 
-  const handleHygieneUpdate = useCallback((id: number, points: number) => {
-    setHygieneScore((prev) => prev + points);
-    setHygieneModules((prev) => prev.map((m) => (m.id === id ? { ...m, completed: true } : m)));
-  }, []);
+  const handleHygieneUpdate = useCallback(
+    (id: number, points: number) => {
+      setHygieneScore((prev: number) => prev + points);
+      setHygieneModules((prev: any[]) =>
+        prev.map((m) => (m.id === id ? { ...m, completed: true } : m))
+      );
+    },
+    [setHygieneScore, setHygieneModules]
+  );
 
   const filteredOutbreaks = useMemo(
     () => filterByRegion(outbreaks, selectedRegion),

@@ -61,10 +61,9 @@ const HygieneEducation: React.FC<HygieneEducationProps> = ({
   };
 
   const handleAnswerSubmit = () => {
-    if (selectedAnswer === 1) {
-      // 1 is the hardcoded correct answer index for this mock
+    if (activeModule && selectedAnswer === activeModule.correctAnswerIndex) {
       Alert.alert('Correct! 🎉', `You earned ${activeModule?.points} XP and a new badge!`);
-      if (activeModule && !activeModule.completed) {
+      if (!activeModule.completed) {
         onUpdateModule(activeModule.id, activeModule.points);
       }
       setActiveModule(null);
@@ -236,10 +235,7 @@ const HygieneEducation: React.FC<HygieneEducationProps> = ({
             <Ionicons name="play-circle" size={80} color={colors.primary} />
             <Text style={styles.videoText}>Interactive Presentation Playing...</Text>
           </View>
-          <Text style={styles.lessonDescription}>
-            Learn the core principles of {activeModule?.title.toLowerCase()} to protect yourself and
-            your family from water-borne diseases like Cholera and Typhoid.
-          </Text>
+          <Text style={styles.lessonDescription}>{activeModule?.description}</Text>
 
           <TouchableOpacity style={styles.primaryButton} onPress={() => setQuizMode(true)}>
             <Text style={styles.primaryButtonText}>I've finished reading ➔ Take Quiz</Text>
@@ -247,17 +243,9 @@ const HygieneEducation: React.FC<HygieneEducationProps> = ({
         </View>
       ) : (
         <View style={styles.learningContent}>
-          <Text style={styles.quizQuestion}>
-            Which of the following is the most effective way to purify water at home during an
-            outbreak?
-          </Text>
+          <Text style={styles.quizQuestion}>{activeModule?.quizQuestion}</Text>
 
-          {[
-            'Using a clean cloth filter',
-            'Boiling water for at least 3 minutes',
-            'Adding salt and sugar',
-            'Leaving it in the sun for an hour',
-          ].map((ans, index) => (
+          {activeModule?.quizOptions.map((ans, index) => (
             <TouchableOpacity
               key={index}
               style={[
