@@ -42,7 +42,7 @@ describe('TestingLabs', () => {
     const waterFilter = getByText('Water Testing');
     fireEvent.press(waterFilter);
 
-    expect(getByText('TWAD Board Water Testing Lab')).toBeTruthy();
+    expect(getByText('Micro Labs & Diagnostics')).toBeTruthy();
     expect(queryByText('PSG Hospitals Laboratory')).toBeNull();
   });
 });
