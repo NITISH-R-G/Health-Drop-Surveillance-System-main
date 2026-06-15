@@ -245,3 +245,16 @@
 ## Metrics Improved (Update)
 * **Code quality gains:** Eliminated hardcoded lab list inside a UI component.
 * **Coverage Improvements:** Added unit tests coverage for the `TestingLabs.tsx` view and filtering mechanisms.
+
+## Cycle Update: Fix SonarCloud Duplication Threshold
+
+## Repository Health Report (Update)
+* **Weaknesses:**
+  - Mock data `testingLabs` contained 12 similar elements which triggered SonarCloud's duplicate code check (7.9%).
+* **Risks:**
+  - Build pipeline blocked by strict (<3%) duplicate code limits for static mock files.
+* **Opportunities:**
+  - Reducing duplicate mock values when testing UI components can satisfy static code analysis while still providing comprehensive design validations.
+
+## Metrics Improved (Update)
+* **Code quality gains:** Fixed SonarCloud >3% duplication error by reducing `testingLabs` mock data items to 3 varied entities instead of 12 similar ones.

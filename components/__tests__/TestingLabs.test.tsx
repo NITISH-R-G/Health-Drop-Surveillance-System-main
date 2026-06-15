@@ -29,7 +29,7 @@ describe('TestingLabs', () => {
       </ThemeProvider>
     );
 
-    expect(getByText('PSG Hospitals Laboratory')).toBeTruthy();
+    expect(getByText('Apollo Diagnostics')).toBeTruthy();
   });
 
   it('filters labs by type', () => {
@@ -42,7 +42,7 @@ describe('TestingLabs', () => {
     const waterFilter = getByText('Water Testing');
     fireEvent.press(waterFilter);
 
-    expect(getByText('Micro Labs & Diagnostics')).toBeTruthy();
-    expect(queryByText('PSG Hospitals Laboratory')).toBeNull();
+    expect(getByText('Hitech Diagnostic Centre')).toBeTruthy();
+    expect(queryByText('Apollo Diagnostics')).toBeNull();
   });
 });
