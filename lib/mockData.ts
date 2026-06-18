@@ -9,6 +9,8 @@ import {
   EnvironmentalData,
   PredictionInsight,
   HygieneModule,
+  Doctor,
+  IssueType,
 } from '../types/models';
 
 // Regions
@@ -490,3 +492,18 @@ export const hygieneModules: HygieneModule[] = [
 ];
 
 export const hygieneScore: number = 350;
+
+export const doctors: Doctor[] = [
+  { id: 1, name: 'Dr. Anjali Gupta', spec: 'General Physician', exp: '8 years', online: true },
+  { id: 2, name: 'Dr. Rajesh Kumar', spec: 'Epidemiologist', exp: '12 years', online: false },
+  { id: 3, name: 'Dr. Sarah Khan', spec: 'Pediatrician', exp: '5 years', online: true },
+];
+
+export const issueTypes: IssueType[] = [
+  { id: 'leak', label: 'Broken Pipe', icon: 'water' },
+  { id: 'stagnant', label: 'Stagnant Water', icon: 'cloud' },
+  { id: 'drain', label: 'Open Drain', icon: 'alert-circle' },
+  { id: 'smell', label: 'Foul Smell', icon: 'skull' },
+  { id: 'dirty', label: 'Contamination', icon: 'color-fill' },
+  { id: 'no_water', label: 'No Supply', icon: 'close-circle' },
+];
