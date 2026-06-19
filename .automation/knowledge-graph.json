@@ -463,6 +463,16 @@
       "type": "depends_on"
     },
     {
+      "source": "components/TestingLabs.tsx",
+      "target": "lib/sync.ts",
+      "type": "depends_on"
+    },
+    {
+      "source": "components/TestingLabs.tsx",
+      "target": "types/models.ts",
+      "type": "depends_on"
+    },
+    {
       "source": "components/TrendChart.tsx",
       "target": "lib/ThemeContext.tsx",
       "type": "depends_on"
