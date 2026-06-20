@@ -3,6 +3,7 @@ import { render } from '@testing-library/react-native';
 import TestingLabs from '../TestingLabs';
 import { ThemeProvider } from '../../lib/ThemeContext';
 import { useSyncData } from '../../lib/sync';
+import { testingLabs } from '../../lib/mockData';
 
 // Mock the useSyncData hook
 jest.mock('../../lib/sync', () => ({
@@ -19,37 +20,6 @@ jest.mock('expo-location', () => ({
     },
   }),
 }));
-
-const mockTestingLabsData = [
-  {
-    id: '1',
-    name: 'PSG Hospitals Laboratory',
-    type: 'both',
-    address: 'Peelamedu, Coimbatore - 641004',
-    phone: '0422-2570170',
-    email: 'psghospitals@yahoo.co.in',
-    timings: '24 Hours',
-    isOpen: true,
-    distance: '2.5 km',
-    accredited: true,
-    services: ['Pathology', 'Microbiology', 'Water testing'],
-    coordinates: { lat: 11.018611, lng: 77.006944 },
-  },
-  {
-    id: '2',
-    name: 'KMCH Central Laboratory',
-    type: 'both',
-    address: 'Avinashi Road, Coimbatore - 641014',
-    phone: '0422-4323800',
-    email: 'info@kmchhospitals.com',
-    timings: '24 Hours',
-    isOpen: true,
-    distance: '4.2 km',
-    accredited: true,
-    services: ['Full panel testing', 'Biochemistry', 'Clinical Pathology'],
-    coordinates: { lat: 11.042607, lng: 77.040607 },
-  },
-];
 
 describe('TestingLabs', () => {
   beforeEach(() => {
@@ -75,7 +45,7 @@ describe('TestingLabs', () => {
 
   it('renders the fetched testing labs data correctly', () => {
     (useSyncData as jest.Mock).mockReturnValue({
-      data: mockTestingLabsData,
+      data: testingLabs,
       loading: false,
       setData: jest.fn(),
     });
