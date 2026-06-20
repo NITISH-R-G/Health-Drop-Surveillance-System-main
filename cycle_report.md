@@ -205,3 +205,45 @@
 ## Metrics Improved (Update)
 * **Code quality gains:** Eliminated 3 major hardcoded text elements in `HygieneEducation.tsx`.
 * **Coverage Improvements:** Wrote testing coverage to validate the new dynamic quiz submissions in `HygieneEducation.test.tsx`.
+
+---
+
+## Cycle Update: TestingLabs Component Refactoring
+
+## Repository Health Report (Update)
+* **Strengths:**
+  - Robust offline synchronization infrastructure (`lib/sync.ts`) is well-established and easy to integrate with new components.
+* **Weaknesses:**
+  - The `TestingLabs` component contained hardcoded mock data directly within the component file, violating the separation of concerns and limiting scalability.
+* **Risks:**
+  - Hardcoded data in UI components makes it difficult to implement dynamic updates or connect to a real backend API in the future.
+* **Opportunities:**
+  - Refactoring `TestingLabs` to use the `useSyncData` hook improves maintainability and aligns the component with the app's offline-first architecture.
+
+## Competitor Analysis (Update)
+* **Gaps identified:**
+  - Competitor apps typically fetch location-based data (like testing labs) from a dynamic API rather than relying on hardcoded arrays.
+* **Opportunities to outperform:**
+  - By leveraging `useSyncData`, the app ensures that lab data can be seamlessly synchronized and cached offline, providing a more robust user experience even in low-connectivity areas.
+
+## Priority Improvements (Update)
+1. **Highest impact:** Extract the `Lab` interface and mock data from `components/TestingLabs.tsx` to `types/models.ts` and `lib/mockData.ts`, respectively.
+2. **Strategic importance:** Refactor `TestingLabs` to fetch data dynamically using `useSyncData('testingLabs')`.
+
+## Sprint Plan (Update)
+* **Sprint Goal:** Decouple data from the `TestingLabs` component and integrate it with the offline synchronization system.
+* **Tasks:**
+  - Move `Lab` interface to `types/models.ts`.
+  - Move `defaultLabs` data to `lib/mockData.ts` as `testingLabs`.
+  - Update `TestingLabs` to use `useSyncData` and handle loading/empty states.
+  - Add comprehensive unit tests for `TestingLabs`.
+* **Expected Outcomes:** A cleaner, more maintainable component that dynamically loads data and is fully tested.
+
+## Technical Improvements (Update)
+* **Architecture:** Extracted the `Lab` model to the central types file and the mock data to the central data file, enforcing the separation of concerns.
+* **Performance:** The component now handles loading states gracefully, improving the perceived performance.
+* **Testing:** Added `TestingLabs.test.tsx` to ensure the component renders correctly under various data states (loading, populated, empty).
+
+## Metrics Improved (Update)
+* **Code quality gains:** Removed a massive block of hardcoded data from a UI component, reducing file size and improving readability.
+* **Coverage Improvements:** Added unit tests for the previously untested `TestingLabs` component.

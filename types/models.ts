@@ -1,3 +1,18 @@
+export interface Lab {
+  id: string;
+  name: string;
+  type: 'water' | 'pathology' | 'both';
+  address: string;
+  phone: string;
+  distance: string;
+  accredited: boolean;
+  services: string[];
+  coordinates: { lat: number; lng: number };
+  email?: string;
+  timings?: string;
+  isOpen?: boolean;
+}
+
 export interface Region {
   id: string;
   name: string;
