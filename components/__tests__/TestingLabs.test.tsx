@@ -63,7 +63,7 @@ describe('TestingLabs', () => {
       setData: jest.fn(),
     });
 
-    const { getByTestId, UNSAFE_getByType } = render(
+    const { UNSAFE_getByType } = render(
       <ThemeProvider>
         <TestingLabs />
       </ThemeProvider>
