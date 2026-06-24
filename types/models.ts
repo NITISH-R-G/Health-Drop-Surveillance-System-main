@@ -100,3 +100,12 @@ export interface LeaderboardEntry {
   avatar: string;
   isUser: boolean;
 }
+
+export interface HelplineContact {
+  id: string;
+  name: string;
+  number: string;
+  category: 'emergency' | 'health' | 'water' | 'government';
+  description: string;
+  available: string;
+}

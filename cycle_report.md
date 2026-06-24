@@ -205,3 +205,45 @@
 ## Metrics Improved (Update)
 * **Code quality gains:** Eliminated 3 major hardcoded text elements in `HygieneEducation.tsx`.
 * **Coverage Improvements:** Wrote testing coverage to validate the new dynamic quiz submissions in `HygieneEducation.test.tsx`.
+
+---
+
+## Cycle Update: Emergency Helpline Hardcoding Refactoring
+
+## Repository Health Report (Update)
+* **Strengths:**
+  - Standardized offline-first `useSyncData` synchronization infrastructure handles model extraction seamlessly.
+* **Weaknesses:**
+  - `components/EmergencyHelpline.tsx` contained hardcoded array `defaultContacts` and internal models, instead of pulling from the centralized domain.
+* **Risks:**
+  - If a public health emergency occurs, updating helpline numbers would require an app compilation rather than dynamic syncing.
+* **Opportunities:**
+  - Migrating the static contact list to remote mock data enables dynamic updating via the network/storage layer.
+
+## Competitor Analysis (Update)
+* **Gaps identified:**
+  - High-reliability applications always decouple emergency resources from UI components to enable dynamic OTA (Over The Air) updates via sync or CMS integrations.
+* **Opportunities to outperform:**
+  - Making helpline numbers completely data-driven guarantees that accurate routing occurs regardless of build cycles.
+
+## Priority Improvements (Update)
+1. **Highest impact:** Extract `HelplineContact` to `types/models.ts` to ensure consistency.
+2. **Strategic importance:** Wire `helplineContacts` through `lib/mockData.ts`, `lib/sync.ts`, and `pages/IndexPage.tsx` using `useSyncData`.
+
+## Sprint Plan (Update)
+* **Sprint Goal:** Complete the data-driven refactor for `EmergencyHelpline` by moving its contacts to mock data and updating the `useSyncData` infrastructure.
+* **Tasks:**
+  - Extract `HelplineContact` interface to `types/models.ts`.
+  - Extract `defaultContacts` from `EmergencyHelpline.tsx` into `lib/mockData.ts` as `helplineContacts`.
+  - Wire `helplineContacts` to `lib/sync.ts`.
+  - Refactor `IndexPage.tsx` to pass `helplineContacts` dynamically to `EmergencyHelpline.tsx`.
+  - Add unit tests for `EmergencyHelpline.tsx`.
+* **Expected Outcomes:** A dynamically driven emergency helpline component with full test coverage and type-safety.
+
+## Technical Improvements (Update)
+* **Architecture:** Decoupled `helplineContacts` completely from `EmergencyHelpline.tsx` component state, utilizing the synchronization architecture.
+* **Maintainability:** Standardized `HelplineContact` schema into the central type definitions file.
+
+## Metrics Improved (Update)
+* **Code quality gains:** Eliminated 1 major hardcoded array from `EmergencyHelpline.tsx` and centralized 1 scattered interface.
+* **Coverage Improvements:** Added test coverage for `EmergencyHelpline.test.tsx` verifying empty states, grouping, and click actions.

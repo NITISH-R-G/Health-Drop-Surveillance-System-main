@@ -181,6 +181,16 @@
       "type": "component"
     },
     {
+      "id": "components/__tests__/EmergencyHelpline.test.tsx",
+      "label": "EmergencyHelpline.test.tsx",
+      "type": "component"
+    },
+    {
+      "id": "lib/mockData.ts",
+      "label": "mockData.ts",
+      "type": "utility"
+    },
+    {
       "id": "components/__tests__/ExplainabilityPanel.test.tsx",
       "label": "ExplainabilityPanel.test.tsx",
       "type": "component"
@@ -203,11 +213,6 @@
     {
       "id": "lib/__tests__/sync.test.ts",
       "label": "sync.test.ts",
-      "type": "utility"
-    },
-    {
-      "id": "lib/mockData.ts",
-      "label": "mockData.ts",
       "type": "utility"
     },
     {
@@ -340,6 +345,11 @@
     {
       "source": "components/EmergencyHelpline.tsx",
       "target": "lib/ThemeContext.tsx",
+      "type": "depends_on"
+    },
+    {
+      "source": "components/EmergencyHelpline.tsx",
+      "target": "types/models.ts",
       "type": "depends_on"
     },
     {
@@ -500,6 +510,21 @@
     {
       "source": "components/__tests__/Card.test.tsx",
       "target": "lib/ThemeContext.tsx",
+      "type": "depends_on"
+    },
+    {
+      "source": "components/__tests__/EmergencyHelpline.test.tsx",
+      "target": "components/EmergencyHelpline.tsx",
+      "type": "depends_on"
+    },
+    {
+      "source": "components/__tests__/EmergencyHelpline.test.tsx",
+      "target": "lib/ThemeContext.tsx",
+      "type": "depends_on"
+    },
+    {
+      "source": "components/__tests__/EmergencyHelpline.test.tsx",
+      "target": "lib/mockData.ts",
       "type": "depends_on"
     },
     {

@@ -2,87 +2,12 @@ import React, { useMemo } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Linking } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme, Theme, typography, spacing, radius } from '../lib/ThemeContext';
-
-interface HelplineContact {
-  id: string;
-  name: string;
-  number: string;
-  category: 'emergency' | 'health' | 'water' | 'government';
-  description: string;
-  available: string;
-}
+import { HelplineContact } from '../types/models';
 
 interface EmergencyHelplineProps {
   contacts?: HelplineContact[];
   onClose?: () => void;
 }
-
-const defaultContacts: HelplineContact[] = [
-  {
-    id: '1',
-    name: 'Emergency Ambulance',
-    number: '108',
-    category: 'emergency',
-    description: 'National ambulance service',
-    available: '24/7',
-  },
-  {
-    id: '2',
-    name: 'Health Helpline',
-    number: '104',
-    category: 'health',
-    description: 'National health information helpline',
-    available: '24/7',
-  },
-  {
-    id: '3',
-    name: 'Water Quality Complaints',
-    number: '1916',
-    category: 'water',
-    description: 'Municipal water complaints',
-    available: '8AM–8PM',
-  },
-  {
-    id: '4',
-    name: 'Disaster Management',
-    number: '1078',
-    category: 'emergency',
-    description: 'National Disaster Response Force',
-    available: '24/7',
-  },
-  {
-    id: '5',
-    name: 'District Health Office',
-    number: '011-23063273',
-    category: 'government',
-    description: 'Report disease outbreaks',
-    available: '9AM–5PM',
-  },
-  {
-    id: '6',
-    name: 'Jal Shakti Ministry',
-    number: '011-23714487',
-    category: 'water',
-    description: 'Water supply & sanitation',
-    available: '9AM–5PM',
-  },
-  {
-    id: '7',
-    name: 'ICMR Helpline',
-    number: '011-26588980',
-    category: 'health',
-    description: 'Lab testing information',
-    available: '9AM–6PM',
-  },
-  {
-    id: '8',
-    name: 'Poison Control',
-    number: '1800-116-117',
-    category: 'emergency',
-    description: 'Poison information center',
-    available: '24/7',
-  },
-];
 
 const categoryConfig = {
   emergency: { icon: 'warning', color: '#FF3B30' },
@@ -91,10 +16,7 @@ const categoryConfig = {
   government: { icon: 'business', color: '#8E8E93' },
 };
 
-const EmergencyHelpline: React.FC<EmergencyHelplineProps> = ({
-  contacts = defaultContacts,
-  onClose,
-}) => {
+const EmergencyHelpline: React.FC<EmergencyHelplineProps> = ({ contacts = [], onClose }) => {
   const { colors } = useTheme();
   const styles = useMemo(() => createStyles(colors), [colors]);
 

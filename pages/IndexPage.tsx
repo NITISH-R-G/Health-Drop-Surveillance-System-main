@@ -74,6 +74,7 @@ const IndexPageContent: React.FC<IndexPageProps> = ({
   const { data: predictionInsights } = useSyncData('predictionInsights');
   const { data: preventionCampaigns } = useSyncData('preventionCampaigns');
   const { data: alerts } = useSyncData('alerts');
+  const { data: helplineContacts } = useSyncData('helplineContacts');
 
   useEffect(() => {
     setTimeout(() => {
@@ -171,7 +172,10 @@ const IndexPageContent: React.FC<IndexPageProps> = ({
               <Text style={styles.screenTitle}>Emergency Helpline</Text>
             </View>
             <View style={styles.section}>
-              <EmergencyHelpline onClose={() => handleNavigation('Dashboard')} />
+              <EmergencyHelpline
+                contacts={helplineContacts}
+                onClose={() => handleNavigation('Dashboard')}
+              />
             </View>
           </ScrollView>
         );
