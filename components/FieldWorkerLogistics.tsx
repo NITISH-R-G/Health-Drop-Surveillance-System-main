@@ -1,73 +1,16 @@
-import React, { useState, useMemo } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import React, { useState, useMemo, useEffect } from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+  ActivityIndicator,
+} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme, Theme, typography, spacing, radius } from '../lib/ThemeContext';
-
-interface DispatchMission {
-  id: string;
-  title: string;
-  location: string;
-  priority: 'high' | 'medium' | 'low';
-  requires: string[];
-  status: 'pending' | 'in-progress' | 'completed';
-}
-
-interface InventoryItem {
-  id: string;
-  name: string;
-  stock: number;
-  unit: string;
-  reorderLevel: number;
-  icon: string;
-}
-
-const defaultInventory: InventoryItem[] = [
-  { id: '1', name: 'ORS Packets', stock: 1250, unit: 'pkts', reorderLevel: 500, icon: 'medical' },
-  {
-    id: '2',
-    name: 'Chlorine Tablets',
-    stock: 450,
-    unit: 'btls',
-    reorderLevel: 1000,
-    icon: 'water',
-  },
-  { id: '3', name: 'IV Fluids (RL)', stock: 85, unit: 'bags', reorderLevel: 200, icon: 'flask' },
-  {
-    id: '4',
-    name: 'Rapid Test Kits',
-    stock: 320,
-    unit: 'kits',
-    reorderLevel: 150,
-    icon: 'eyedrop',
-  },
-];
-
-const defaultMissions: DispatchMission[] = [
-  {
-    id: 'm1',
-    title: 'Containment Line Setup',
-    location: 'Singanallur (Ward 12)',
-    priority: 'high',
-    requires: ['ORS Packets', 'Chlorine Tablets'],
-    status: 'pending',
-  },
-  {
-    id: 'm2',
-    title: 'Water Source Testing',
-    location: 'Ukkadam Tank',
-    priority: 'high',
-    requires: ['Rapid Test Kits'],
-    status: 'in-progress',
-  },
-  {
-    id: 'm3',
-    title: 'Routine Clinic Supply',
-    location: 'City General (RS Puram)',
-    priority: 'medium',
-    requires: ['IV Fluids (RL)'],
-    status: 'pending',
-  },
-];
+import { useSyncData, saveLocalData } from '../lib/sync';
+import { DispatchMission, InventoryItem } from '../types/models';
 
 const priorityColors = {
   high: '#FF3B30',
@@ -79,33 +22,48 @@ const FieldWorkerLogistics: React.FC = () => {
   const { colors } = useTheme();
   const styles = useMemo(() => createStyles(colors), [colors]);
 
-  const [missions, setMissions] = useState<DispatchMission[]>(defaultMissions);
+  const { data: remoteMissions, loading: missionsLoading } = useSyncData('dispatchMissions');
+  const { data: inventoryData, loading: inventoryLoading } = useSyncData('inventoryData');
+
+  const [localMissions, setLocalMissions] = useState<DispatchMission[] | null>(null);
+
+  const missions = localMissions || remoteMissions || [];
 
   const handleAction = (missionId: string, currentStatus: string) => {
-    setMissions((prev) =>
-      prev.map((m) => {
-        if (m.id === missionId) {
-          if (currentStatus === 'pending') {
-            return { ...m, status: 'in-progress' };
-          } else if (currentStatus === 'in-progress') {
-            return { ...m, status: 'completed' };
-          }
+    const updatedMissions = missions.map((m) => {
+      if (m.id === missionId) {
+        if (currentStatus === 'pending') {
+          return { ...m, status: 'in-progress' as const };
+        } else if (currentStatus === 'in-progress') {
+          return { ...m, status: 'completed' as const };
         }
-        return m;
-      })
-    );
+      }
+      return m;
+    });
+    setLocalMissions(updatedMissions);
+    saveLocalData('dispatchMissions', updatedMissions);
   };
 
   const handleAutoDispatch = () => {
-    setMissions((prev) =>
-      prev.map((m) => {
-        if (m.status === 'pending') {
-          return { ...m, status: 'in-progress' };
-        }
-        return m;
-      })
-    );
+    const updatedMissions = missions.map((m) => {
+      if (m.status === 'pending') {
+        return { ...m, status: 'in-progress' as const };
+      }
+      return m;
+    });
+    setLocalMissions(updatedMissions);
+    saveLocalData('dispatchMissions', updatedMissions);
   };
+
+  if (inventoryLoading || missionsLoading) {
+    return (
+      <View style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
+        <ActivityIndicator size="large" color={colors.primary} />
+      </View>
+    );
+  }
+
+  const safeInventoryData = inventoryData || [];
 
   return (
     <View style={styles.container}>
@@ -114,7 +72,7 @@ const FieldWorkerLogistics: React.FC = () => {
         <Text style={styles.sectionTitle}>Critical Supplies Inventory</Text>
         <Text style={styles.sectionSubtitle}>Real-time stock across district warehouses</Text>
         <View style={styles.inventoryGrid}>
-          {defaultInventory.map((item) => {
+          {safeInventoryData.map((item) => {
             const isLow = item.stock <= item.reorderLevel;
             return (
               <View

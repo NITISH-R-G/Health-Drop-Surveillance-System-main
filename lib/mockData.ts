@@ -9,6 +9,8 @@ import {
   EnvironmentalData,
   PredictionInsight,
   HygieneModule,
+  InventoryItem,
+  DispatchMission,
 } from '../types/models';
 
 // Regions
@@ -490,3 +492,58 @@ export const hygieneModules: HygieneModule[] = [
 ];
 
 export const hygieneScore: number = 350;
+
+export const inventoryData: InventoryItem[] = [
+  { id: '1', name: 'ORS Packets', stock: 1250, unit: 'pkts', reorderLevel: 500, icon: 'medical' },
+  {
+    id: '2',
+    name: 'Chlorine Tablets',
+    stock: 450,
+    unit: 'btls',
+    reorderLevel: 500,
+    icon: 'water',
+  },
+  {
+    id: '3',
+    name: 'Rapid Test Kits',
+    stock: 85,
+    unit: 'kits',
+    reorderLevel: 200,
+    icon: 'flask',
+  },
+  {
+    id: '4',
+    name: 'IV Fluids (RL)',
+    stock: 320,
+    unit: 'bags',
+    reorderLevel: 150,
+    icon: 'water',
+  },
+];
+
+export const dispatchMissions: DispatchMission[] = [
+  {
+    id: 'm1',
+    title: 'Containment Line Setup',
+    location: 'Singanallur (Ward 12)',
+    priority: 'high',
+    requires: ['ORS Packets', 'Chlorine Tablets'],
+    status: 'pending',
+  },
+  {
+    id: 'm2',
+    title: 'Water Source Testing',
+    location: 'Ukkadam Tank',
+    priority: 'high',
+    requires: ['Rapid Test Kits'],
+    status: 'in-progress',
+  },
+  {
+    id: 'm3',
+    title: 'Routine Clinic Supply',
+    location: 'City General (RS Puram)',
+    priority: 'medium',
+    requires: ['IV Fluids (RL)'],
+    status: 'pending',
+  },
+];
