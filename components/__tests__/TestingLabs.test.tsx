@@ -27,7 +27,7 @@ describe('TestingLabs Component', () => {
   });
 
   it('renders a loading indicator when data is fetching', () => {
-    useSyncDataMock.mockReturnValue({ data: null, loading: true, setData: jest.fn() });
+    useSyncDataMock.mockReturnValue({ data: null as any, loading: true, setData: jest.fn() });
 
     const { getByTestId } = render(
       <ThemeProvider>
