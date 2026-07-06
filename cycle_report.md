@@ -205,3 +205,45 @@
 ## Metrics Improved (Update)
 * **Code quality gains:** Eliminated 3 major hardcoded text elements in `HygieneEducation.tsx`.
 * **Coverage Improvements:** Wrote testing coverage to validate the new dynamic quiz submissions in `HygieneEducation.test.tsx`.
+
+---
+
+## Cycle Update: Field Worker Logistics Refactoring
+
+## Repository Health Report (Update)
+* **Strengths:**
+  - Clear progression of UI components towards a fully unified, offline-first data synchronization model using `useSyncData`.
+* **Weaknesses:**
+  - `components/FieldWorkerLogistics.tsx` had hardcoded `defaultInventory` and `defaultMissions` logic and state instead of drawing from models.
+* **Risks:**
+  - Keeping data decoupled across feature components prevents global reporting, creates inconsistent caching, and breaks the "offline-first" single source of truth.
+* **Opportunities:**
+  - Moving logistics logic into the existing synchronization structure will unify the application's entire data model into `mockData.ts` preparing for the Supabase backend migration.
+
+## Competitor Analysis (Update)
+* **Gaps identified:**
+  - Top tier applications ensure all features depend on generic API/storage hooks, allowing centralized monitoring and logging, while this application allowed local UI states.
+* **Opportunities to outperform:**
+  - Fully synced logistics views enable powerful real-time collaboration scenarios between offline health workers.
+
+## Priority Improvements (Update)
+1. **Highest impact:** Lift the state of `inventory` and `missions` from React state into `lib/mockData.ts` to connect it to the `useSyncData` hook.
+2. **Strategic importance:** Export `DispatchMission` and `InventoryItem` interfaces to `types/models.ts` to be used by the rest of the application.
+
+## Sprint Plan (Update)
+* **Sprint Goal:** Complete the data-driven refactor for `FieldWorkerLogistics` by making its inventory and active dispatch lists fully dynamic.
+* **Tasks:**
+  - Move interface definitions to `types/models.ts`.
+  - Move mock data out of `FieldWorkerLogistics.tsx` to `lib/mockData.ts`.
+  - Wire mock data up to `useSyncData` in `sync.ts`.
+  - Refactor `FieldWorkerLogistics.tsx` component state to use sync hooks.
+  - Create robust unit tests to check the loading states and status modifications.
+* **Expected Outcomes:** A Field Worker Logistics view that draws all its configuration straight from the simulated offline storage API.
+
+## Technical Improvements (Update)
+* **Architecture:** Decoupled `missions` and `inventory` completely from `FieldWorkerLogistics.tsx` component state, utilizing the synchronization architecture.
+* **Maintainability:** Standardized interactive models properties into the central data schema.
+
+## Metrics Improved (Update)
+* **Code quality gains:** Eliminated 2 major hardcoded arrays in `FieldWorkerLogistics.tsx`.
+* **Coverage Improvements:** Added a comprehensive test suite for `FieldWorkerLogistics.tsx`.

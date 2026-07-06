@@ -100,3 +100,21 @@ export interface LeaderboardEntry {
   avatar: string;
   isUser: boolean;
 }
+
+export interface DispatchMission {
+  id: string;
+  title: string;
+  location: string;
+  priority: 'high' | 'medium' | 'low';
+  requires: string[];
+  status: 'pending' | 'in-progress' | 'completed';
+}
+
+export interface InventoryItem {
+  id: string;
+  name: string;
+  stock: number;
+  unit: string;
+  reorderLevel: number;
+  icon: string;
+}
