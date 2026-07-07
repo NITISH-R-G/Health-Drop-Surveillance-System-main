@@ -20,6 +20,45 @@ jest.mock('@expo/vector-icons', () => {
   };
 });
 
+const mockTestingLabsData = [
+  {
+    id: '1',
+    name: 'PSG Hospitals Laboratory',
+    type: 'both',
+    address: 'Peelamedu, Coimbatore - 641004',
+    phone: '0422-2570170',
+    email: 'psghospitals@yahoo.co.in',
+    timings: '24 Hours',
+    isOpen: true,
+    distance: '2.5 km',
+    accredited: true,
+    services: ['Pathology', 'Microbiology', 'Water testing'],
+    coordinates: { lat: 11.018611, lng: 77.006944 },
+  },
+  {
+    id: '2',
+    name: 'Ganga Hospital Lab',
+    type: 'pathology',
+    address: 'Ramnagar, Coimbatore - 641009',
+    phone: '0422-2485000',
+    email: 'info@gangahospital.com',
+    timings: '24 Hours',
+    isOpen: true,
+    distance: '3.2 km',
+    accredited: true,
+    services: ['Clinical Pathology', 'Biochemistry', 'Hematology'],
+    coordinates: { lat: 11.008453, lng: 76.958215 },
+  },
+];
+
+jest.mock('./lib/sync', () => ({
+  useSyncData: jest.fn().mockReturnValue({
+    data: mockTestingLabsData,
+    loading: false,
+    setData: jest.fn(),
+  }),
+}));
+
 describe('TestingLabs Benchmark', () => {
   it('renders multiple times to benchmark', () => {
     const numRenders = 1000;
