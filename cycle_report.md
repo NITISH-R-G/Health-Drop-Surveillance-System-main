@@ -9,8 +9,10 @@
   - Mock data structures often had duplicated types which created maintenance liabilities.
 * **Risks:**
   - UI Components hardcoding values instead of responding to data streams limits feature flexibility.
+  - React Native components rendering long lists using `.map()` inside standard Views, causing poor performance and frame drops during scrolling.
 * **Opportunities:**
   - Refactoring UI components to be purely data-driven improves testability and enables future backend integrations cleanly.
+  - Optimizing list renders with `<FlatList>` and `React.memo` for enhanced UI performance.
 
 ## Competitor Analysis
 * **Repositories analyzed:** Open-source Health Tracking Apps, Public Health Dashboards.
@@ -21,27 +23,33 @@
   - `ExplainabilityPanel` hardcoded reasoning text.
 * **Opportunities to outperform:**
   - Ensure all components are completely data-driven by utilizing props properly.
+  - Improve UI responsiveness by replacing naive array mappings with virtualized lists.
 
 ## Priority Improvements
 1. Decouple components from hardcoded text and link them accurately to their props.
 2. Establish a single source of truth for Typescript definitions.
+3. Replace `.map()` list renders with `<FlatList>` in `TestingLabs` to boost rendering performance.
 
 ## Sprint Plan
-* **Sprint Goal:** Fix the `ExplainabilityPanel` component to properly consume and display the `PredictionInsight` data and enforce type safety.
+* **Sprint Goal:** Fix the `ExplainabilityPanel` component to properly consume and display the `PredictionInsight` data and enforce type safety. Also, optimize list rendering in `TestingLabs` component.
 * **Tasks:**
   - Move `PredictionInsight` definition completely to `types/models.ts`.
   - Refactor `ExplainabilityPanel` to dynamically render reasons and factors.
-  - Create robust unit tests for `ExplainabilityPanel`.
-* **Implementation Roadmap:** Addressed model typings -> Refactored target component -> Developed UI Unit Tests -> Validated Tests & TypeScript compilation.
-* **Expected Outcomes:** A dynamically driven Explainability UI component fully backed by unit tests.
+  - Refactor `TestingLabs` to use `FlatList` instead of `.map()`.
+  - Extract `TestingLabItem` and wrap it with `React.memo()`.
+  - Create robust unit tests for `ExplainabilityPanel` and `TestingLabs`.
+* **Implementation Roadmap:** Addressed model typings -> Refactored target component -> Developed UI Unit Tests -> Validated Tests & TypeScript compilation -> Applied Virtualized Lists to `TestingLabs`.
+* **Expected Outcomes:** A dynamically driven Explainability UI component fully backed by unit tests, and a highly performant TestingLabs UI.
 
 ## Technical Improvements
 * **Architecture:** Decoupled `PredictionInsight` from `mockData.ts`, removing type duplication and enforcing standard `types/models.ts` definitions.
 * **Testing:** Added `ExplainabilityPanel.test.tsx` and improved `jest.setup.js` for seamless Expo vector-icons mocking.
+* **Performance:** Extracted `TestingLabItem` using `React.memo()` and replaced `.map()` array renders with `<FlatList>` to improve scroll performance and rendering efficiency, reducing benchmark times.
 
 ## Metrics Improved
 * **Code Quality Gains:** Resolved 1 major instance of hardcoded text blocks in UI components. Removed 1 duplicated TypeScript interface.
 * **Coverage Improvements:** Added comprehensive testing suite for `ExplainabilityPanel.tsx`.
+* **Performance Gains:** Improved `TestingLabs` rendering benchmark times by replacing inefficient list mapping with a `FlatList` virtualized implementation.
 
 ---
 
@@ -196,7 +204,7 @@
   - Move mock data out of `IndexPage.tsx`.
   - Wire mock data up to `useSyncData` in `IndexPage.tsx` and `sync.ts`.
   - Refactor `HygieneEducation.tsx` and `handleAnswerSubmit` logic.
-* **Expected Outcomes:** An interactive education view that draws all its configuration, including logical answer checks, straight from mock backend data.
+* **Expected Outcomes:** An interactive education view that draws all configuration, including logical answer checks, straight from mock backend data.
 
 ## Technical Improvements (Update)
 * **Architecture:** Decoupled `hygieneModules` and `hygieneScore` completely from `IndexPage.tsx` component state, utilizing the synchronization architecture.
