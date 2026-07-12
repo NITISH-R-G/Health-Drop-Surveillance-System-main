@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-07-12T02:32:28.097Z",
+  "timestamp": "2026-07-12T21:40:16.962Z",
   "techStack": {
     "frameworks": [
       "React Native",
@@ -19,9 +19,9 @@
   "dependenciesCount": 25,
   "devDependenciesCount": 33,
   "environmentVariables": [
+    "PORT",
     "CI",
     "GEMINI_API_KEY",
-    "PORT",
     "EXPO_PUBLIC_GOOGLE_MAPS_API_KEY"
   ],
   "fileCount": 66
