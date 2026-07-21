@@ -9,7 +9,6 @@ import {
   Alert,
   ActivityIndicator,
   FlatList,
-  ListRenderItem,
 } from 'react-native';
 import * as Location from 'expo-location';
 import { Ionicons } from '@expo/vector-icons';
@@ -317,9 +316,9 @@ const TestingLabs: React.FC<TestingLabsProps> = ({ labs = defaultLabs }) => {
     return [...filteredLabs].sort((a, b) => parseFloat(a.distance) - parseFloat(b.distance));
   }, [labs, filter]);
 
-  const handleCall = (phone: string) => {
+  const handleCall = React.useCallback((phone: string) => {
     Linking.openURL(`tel:${phone}`);
-  };
+  }, []);
 
   const handleGetLocation = async () => {
     setIsLocating(true);
@@ -342,167 +341,99 @@ const TestingLabs: React.FC<TestingLabsProps> = ({ labs = defaultLabs }) => {
     }
   };
 
-  const handleDirections = (name: string, address: string) => {
-    const query = encodeURIComponent(`${name}, ${address}`);
-    if (userLoc) {
-      const { latitude, longitude } = userLoc.coords;
-      Linking.openURL(
-        `https://www.google.com/maps/dir/?api=1&origin=${latitude},${longitude}&destination=${query}`
-      );
-    } else {
-      Linking.openURL(`https://www.google.com/maps/search/?api=1&query=${query}`);
-    }
-  };
+  const handleDirections = React.useCallback(
+    (name: string, address: string) => {
+      const query = encodeURIComponent(`${name}, ${address}`);
+      if (userLoc) {
+        const { latitude, longitude } = userLoc.coords;
+        Linking.openURL(
+          `https://www.google.com/maps/dir/?api=1&origin=${latitude},${longitude}&destination=${query}`
+        );
+      } else {
+        Linking.openURL(`https://www.google.com/maps/search/?api=1&query=${query}`);
+      }
+    },
+    [userLoc]
+  );
 
-  return (
-    <View style={styles.container}>
-      {/* Filter chips */}
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.filterRow}>
+  const renderHeader = () => (
+    <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.filterRow}>
+      <TouchableOpacity
+        style={[
+          styles.filterChip,
+          userLoc && { backgroundColor: `${colors.success}15`, borderColor: colors.success },
+        ]}
+        onPress={handleGetLocation}
+        activeOpacity={0.7}
+        disabled={isLocating}>
+        {isLocating ? (
+          <ActivityIndicator size="small" color={colors.primary} style={{ marginRight: 6 }} />
+        ) : (
+          <Ionicons
+            name="navigate"
+            size={14}
+            color={userLoc ? colors.success : colors.textSecondary}
+            style={{ marginRight: 6 }}
+          />
+        )}
+        <Text style={[styles.filterLabel, userLoc && { color: colors.success, fontWeight: '600' }]}>
+          {userLoc ? 'Location Found' : 'Find My Location'}
+        </Text>
+      </TouchableOpacity>
+      {[
+        { key: 'all', label: 'All Labs', icon: 'business' },
+        { key: 'water', label: 'Water Testing', icon: 'water' },
+        { key: 'pathology', label: 'Pathology', icon: 'flask' },
+        { key: 'both', label: 'Full Service', icon: 'medkit' },
+      ].map((f) => (
         <TouchableOpacity
-          style={[
-            styles.filterChip,
-            userLoc && { backgroundColor: `${colors.success}15`, borderColor: colors.success },
-          ]}
-          onPress={handleGetLocation}
-          activeOpacity={0.7}
-          disabled={isLocating}>
-          {isLocating ? (
-            <ActivityIndicator size="small" color={colors.primary} style={{ marginRight: 6 }} />
-          ) : (
-            <Ionicons
-              name="navigate"
-              size={14}
-              color={userLoc ? colors.success : colors.textSecondary}
-              style={{ marginRight: 6 }}
-            />
-          )}
-          <Text
-            style={[styles.filterLabel, userLoc && { color: colors.success, fontWeight: '600' }]}>
-            {userLoc ? 'Location Found' : 'Find My Location'}
+          key={f.key}
+          style={[styles.filterChip, filter === f.key && styles.filterChipActive]}
+          onPress={() => setFilter(f.key as typeof filter)}
+          activeOpacity={0.7}>
+          <Ionicons
+            name={f.icon as any}
+            size={14}
+            color={filter === f.key ? '#FFFFFF' : colors.textSecondary}
+            style={{ marginRight: 6 }}
+          />
+          <Text style={[styles.filterLabel, filter === f.key && styles.filterLabelActive]}>
+            {f.label}
           </Text>
         </TouchableOpacity>
-        {[
-          { key: 'all', label: 'All Labs', icon: 'business' },
-          { key: 'water', label: 'Water Testing', icon: 'water' },
-          { key: 'pathology', label: 'Pathology', icon: 'flask' },
-          { key: 'both', label: 'Full Service', icon: 'medkit' },
-        ].map((f) => (
-          <TouchableOpacity
-            key={f.key}
-            style={[styles.filterChip, filter === f.key && styles.filterChipActive]}
-            onPress={() => setFilter(f.key as typeof filter)}
-            activeOpacity={0.7}>
-            <Ionicons
-              name={f.icon as any}
-              size={14}
-              color={filter === f.key ? '#FFFFFF' : colors.textSecondary}
-              style={{ marginRight: 6 }}
-            />
-            <Text style={[styles.filterLabel, filter === f.key && styles.filterLabelActive]}>
-              {f.label}
-            </Text>
-          </TouchableOpacity>
-        ))}
-      </ScrollView>
+      ))}
+    </ScrollView>
+  );
 
-      {/* Lab List */}
-      {sortedLabs.map((lab) => {
-        const cfg = typeConfig[lab.type];
-        return (
-          <View key={lab.id} style={styles.labCard}>
-            <View style={styles.labHeader}>
-              <View style={[styles.labTypeIcon, { backgroundColor: `${cfg.color}15` }]}>
-                <Ionicons name={cfg.icon as any} size={20} color={cfg.color} />
-              </View>
-              <View style={styles.labInfo}>
-                <View style={styles.labNameRow}>
-                  <Text style={styles.labName}>{lab.name}</Text>
-                  {lab.accredited && (
-                    <View style={styles.accreditedBadge}>
-                      <Text style={styles.accreditedText}>✓ Approved</Text>
-                    </View>
-                  )}
-                </View>
-                <Text style={styles.labAddress}>{lab.address}</Text>
-
-                <View style={styles.contactRow}>
-                  <View style={styles.contactItemWrapper}>
-                    <Ionicons name="time-outline" size={12} color={colors.textTertiary} />
-                    <Text style={styles.contactItemInfo}>{lab.timings || 'Contact to verify'}</Text>
-                  </View>
-                  <View
-                    style={[
-                      styles.statusBadge,
-                      { backgroundColor: lab.isOpen ? `${colors.success}15` : `${colors.error}15` },
-                    ]}>
-                    <Text
-                      style={[
-                        styles.statusText,
-                        { color: lab.isOpen ? colors.success : colors.error },
-                      ]}>
-                      {lab.isOpen ? 'Open Now' : 'Closed'}
-                    </Text>
-                  </View>
-                </View>
-
-                {lab.email && (
-                  <View style={styles.contactItemWrapper}>
-                    <Ionicons name="mail" size={12} color={colors.textTertiary} />
-                    <Text style={styles.contactItemInfo}>{lab.email}</Text>
-                  </View>
-                )}
-
-                <Text style={styles.labDistance}>
-                  <Ionicons name="location" size={12} color={colors.textTertiary} /> {lab.distance}{' '}
-                  from you
-                </Text>
-              </View>
-            </View>
-
-            {/* Services */}
-            <View style={styles.servicesRow}>
-              {lab.services.map((service) => (
-                <View key={service} style={styles.serviceChip}>
-                  <Text style={styles.serviceText}>{service}</Text>
-                </View>
-              ))}
-            </View>
-
-            {/* Actions */}
-            <View style={styles.actionsRow}>
-              <TouchableOpacity
-                style={styles.actionButton}
-                activeOpacity={0.7}
-                onPress={() => handleCall(lab.phone)}>
-                <Text style={styles.actionText}>
-                  <Ionicons name="call" size={12} color={colors.primary} /> Call
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.actionButton}
-                activeOpacity={0.7}
-                onPress={() => handleDirections(lab.name, lab.address)}>
-                <Text style={styles.actionText}>
-                  <Ionicons name="map" size={12} color={colors.primary} /> Directions
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        );
-      })}
-
-      {sortedLabs.length === 0 && (
-        <View style={styles.emptyState}>
-          <Ionicons
-            name="flask"
-            size={48}
-            color={colors.textSecondary}
-            style={{ marginBottom: 16 }}
-          />
-          <Text style={styles.emptyText}>No labs found for this filter</Text>
-        </View>
+  return (
+    <FlatList
+      style={styles.container}
+      data={sortedLabs}
+      keyExtractor={(item) => item.id}
+      ListHeaderComponent={renderHeader()}
+      renderItem={({ item }) => (
+        <LabCardItem
+          lab={item}
+          colors={colors}
+          styles={styles}
+          onCall={handleCall}
+          onDirections={handleDirections}
+        />
       )}
-    </View>
+      ListEmptyComponent={
+        sortedLabs.length === 0 ? (
+          <View style={styles.emptyState}>
+            <Ionicons
+              name="flask"
+              size={48}
+              color={colors.textSecondary}
+              style={{ marginBottom: 16 }}
+            />
+            <Text style={styles.emptyText}>No labs found for this filter</Text>
+          </View>
+        ) : null
+      }
+    />
   );
 };
 
