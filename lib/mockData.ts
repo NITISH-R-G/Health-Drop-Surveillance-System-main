@@ -490,3 +490,12 @@ export const hygieneModules: HygieneModule[] = [
 ];
 
 export const hygieneScore: number = 350;
+
+export const issueTypes: import('../types/models').IssueType[] = [
+  { id: 'leak', label: 'Broken Pipe', icon: 'water' },
+  { id: 'stagnant', label: 'Stagnant Water', icon: 'cloud' },
+  { id: 'drain', label: 'Open Drain', icon: 'alert-circle' },
+  { id: 'smell', label: 'Foul Smell', icon: 'skull' },
+  { id: 'dirty', label: 'Contamination', icon: 'color-fill' },
+  { id: 'no_water', label: 'No Supply', icon: 'close-circle' },
+];
