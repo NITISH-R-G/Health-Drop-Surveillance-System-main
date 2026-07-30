@@ -3,6 +3,7 @@ import { render } from '@testing-library/react-native';
 import TestingLabs from '../TestingLabs';
 import { ThemeProvider } from '../../lib/ThemeContext';
 import * as sync from '../../lib/sync';
+import { Lab } from '../../types/models';
 
 jest.mock('expo-location', () => ({
   requestForegroundPermissionsAsync: jest.fn().mockResolvedValue({ status: 'granted' }),
@@ -22,11 +23,11 @@ jest.mock('@expo/vector-icons', () => {
 });
 
 describe('TestingLabs', () => {
-  const mockLabs = [
+  const mockLabs: Lab[] = [
     {
       id: '1',
       name: 'Test Lab 1',
-      type: 'both',
+      type: 'both' as const,
       address: 'Test Address 1',
       phone: '1234567890',
       distance: '1.0 km',
@@ -37,7 +38,7 @@ describe('TestingLabs', () => {
     {
       id: '2',
       name: 'Test Lab 2',
-      type: 'water',
+      type: 'water' as const,
       address: 'Test Address 2',
       phone: '0987654321',
       distance: '2.0 km',
@@ -54,7 +55,7 @@ describe('TestingLabs', () => {
   it('renders loading state initially', () => {
     jest
       .spyOn(sync, 'useSyncData')
-      .mockReturnValue({ data: null, loading: true, setData: jest.fn() });
+      .mockReturnValue({ data: null as any, loading: true, setData: jest.fn() });
 
     const { getByTestId } = render(
       <ThemeProvider>
