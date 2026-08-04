@@ -140,23 +140,24 @@ const IndexPageContent: React.FC<IndexPageProps> = ({
         );
       case 'TestingLabs':
         return (
-          <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
-            <View style={styles.screenHeader}>
-              <TouchableOpacity
-                onPress={() => handleNavigation('Dashboard')}
-                activeOpacity={0.6}
-                style={{ marginBottom: spacing.md }}>
-                <Ionicons name="arrow-back" size={24} color={colors.text} />
-              </TouchableOpacity>
-              <Text style={styles.screenTitle}>Approved Testing Labs</Text>
-              <Text style={styles.screenSubtitle}>
-                Water testing & pathology facilities near you
-              </Text>
-            </View>
-            <View style={styles.section}>
-              <TestingLabs />
-            </View>
-          </ScrollView>
+          <View style={[styles.content, { flex: 1 }]}>
+            <TestingLabs
+              ListHeaderComponent={
+                <View style={[styles.screenHeader, { marginBottom: spacing.md }]}>
+                  <TouchableOpacity
+                    onPress={() => handleNavigation('Dashboard')}
+                    activeOpacity={0.6}
+                    style={{ marginBottom: spacing.md }}>
+                    <Ionicons name="arrow-back" size={24} color={colors.text} />
+                  </TouchableOpacity>
+                  <Text style={styles.screenTitle}>Approved Testing Labs</Text>
+                  <Text style={styles.screenSubtitle}>
+                    Water testing & pathology facilities near you
+                  </Text>
+                </View>
+              }
+            />
+          </View>
         );
       case 'Helpline':
         return (
