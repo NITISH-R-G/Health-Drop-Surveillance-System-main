@@ -541,23 +541,30 @@ const LeaderboardItem = React.memo(
     const { colors } = useTheme();
     const styles = useMemo(() => createStyles(colors), [colors]);
 
+    // SonarCloud: Avoid inline styles that duplicate logic
+    const borderStyles = useMemo(() => {
+      const base = {
+        borderLeftWidth: 1,
+        borderRightWidth: 1,
+        borderColor: colors.border,
+        borderBottomWidth: 1,
+        borderBottomColor: colors.borderLight,
+      };
+      if (index === 0) {
+        return {
+          ...base,
+          borderTopLeftRadius: radius.lg,
+          borderTopRightRadius: radius.lg,
+          borderTopWidth: 1,
+        };
+      }
+      return base;
+    }, [index, colors.border, colors.borderLight]);
+
     return (
       <View style={{ paddingHorizontal: spacing.lg }}>
         <View
-          style={[
-            styles.leaderboardRow,
-            item.isUser && styles.leaderboardRowActive,
-            index === 0 && {
-              borderTopLeftRadius: radius.lg,
-              borderTopRightRadius: radius.lg,
-              borderTopWidth: 1,
-              borderLeftWidth: 1,
-              borderRightWidth: 1,
-              borderColor: colors.border,
-            },
-            { borderLeftWidth: 1, borderRightWidth: 1, borderColor: colors.border },
-            { borderBottomWidth: 1, borderBottomColor: colors.borderLight },
-          ]}>
+          style={[styles.leaderboardRow, item.isUser && styles.leaderboardRowActive, borderStyles]}>
           <Text style={[styles.rankText, item.isUser && styles.textActive]}>{index + 1}</Text>
           <View style={styles.avatarCircle}>
             <Text style={{ fontSize: 20 }}>{item.avatar || '👤'}</Text>
