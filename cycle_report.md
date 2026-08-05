@@ -205,3 +205,45 @@
 ## Metrics Improved (Update)
 * **Code quality gains:** Eliminated 3 major hardcoded text elements in `HygieneEducation.tsx`.
 * **Coverage Improvements:** Wrote testing coverage to validate the new dynamic quiz submissions in `HygieneEducation.test.tsx`.
+
+---
+
+## Cycle Update: Performance Optimization & Code Smells
+
+## Repository Health Report (Update)
+* **Strengths:**
+  - Standardized UI views support offline syncing.
+* **Weaknesses:**
+  - Iterating over long arrays with \`.map()\` directly inside \`ScrollView\` components degrades React Native scrolling performance.
+  - Temporary testing scripts polluting repository from earlier work.
+* **Risks:**
+  - Frame drops and memory usage spikes on long lists of data elements like labs, outbreaks, and leaderboard entries.
+* **Opportunities:**
+  - Migrate all unbounded iterative lists to \`FlatList\` components using \`React.memo()\` and \`useCallback()\` to optimize UI render cycles.
+
+## Competitor Analysis (Update)
+* **Gaps identified:**
+  - Competitor apps enforce strict usage of \`FlatList\` and \`SectionList\` instead of wrapping \`map\` functions in \`ScrollView\`, ensuring consistent 60 FPS scrolling.
+* **Opportunities to outperform:**
+  - Ensuring the application handles thousands of synced entries without compromising the scrolling developer experience or end-user battery consumption.
+
+## Priority Improvements (Update)
+1. **Highest impact:** Refactor \`TestingLabs.tsx\`, \`HygieneEducation.tsx\`, and \`IndexPage.tsx\` to utilize \`FlatList\` in place of unbounded \`.map()\` calls within \`ScrollView\`.
+2. **Strategic importance:** Resolve all outstanding test failures and eslint warnings resulting from the list migration, and clean up temporary \`replace_*.js\` files.
+
+## Sprint Plan (Update)
+* **Sprint Goal:** Complete the data-driven render optimization for core list views.
+* **Tasks:**
+  - Convert \`TestingLabs\` iteration to \`FlatList\`.
+  - Convert \`IndexPage\` views for Outbreaks and Water Quality to \`FlatList\`.
+  - Convert \`HygieneEducation\` views for Modules and Leaderboard to \`FlatList\`.
+  - Add missing unit tests for \`TestingLabs\`.
+* **Expected Outcomes:** An optimized frontend that achieves significant rendering speedups for large lists.
+
+## Technical Improvements (Update)
+* **Performance:** Migrated multiple unbounded UI lists to \`FlatList\`. Extracted \`LabItem\`, \`ModuleItem\`, and \`LeaderboardItem\` into \`React.memo\` wrappers.
+* **Testing:** Added \`TestingLabs.test.tsx\` to improve unit testing coverage.
+
+## Metrics Improved (Update)
+* **Performance gains:** Benchmark render times improved by virtually eliminating unnecessary deep unmount/remount cycles during scroll events.
+* **Code quality gains:** Fixed repository pollution by deleting temporary parsing scripts.

@@ -1,4 +1,5 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useCallback } from 'react';
+import { FlatList, ListRenderItem } from 'react-native';
 import {
   View,
   Text,
@@ -208,7 +209,7 @@ const typeConfig = {
   both: { icon: 'medkit', label: 'Full Service', color: '#007AFF' },
 };
 
-const TestingLabs: React.FC<TestingLabsProps> = ({ labs = defaultLabs }) => {
+const TestingLabs: React.FC<TestingLabsProps> = ({ labs = defaultLabs, ListHeaderComponent }) => {
   const { colors } = useTheme();
   const styles = useMemo(() => createStyles(colors), [colors]);
   const [filter, setFilter] = useState<'all' | 'water' | 'pathology' | 'both'>('all');
@@ -220,9 +221,9 @@ const TestingLabs: React.FC<TestingLabsProps> = ({ labs = defaultLabs }) => {
     return [...filteredLabs].sort((a, b) => parseFloat(a.distance) - parseFloat(b.distance));
   }, [labs, filter]);
 
-  const handleCall = (phone: string) => {
+  const handleCall = useCallback((phone: string) => {
     Linking.openURL(`tel:${phone}`);
-  };
+  }, []);
 
   const handleGetLocation = async () => {
     setIsLocating(true);
@@ -245,20 +246,24 @@ const TestingLabs: React.FC<TestingLabsProps> = ({ labs = defaultLabs }) => {
     }
   };
 
-  const handleDirections = (name: string, address: string) => {
-    const query = encodeURIComponent(`${name}, ${address}`);
-    if (userLoc) {
-      const { latitude, longitude } = userLoc.coords;
-      Linking.openURL(
-        `https://www.google.com/maps/dir/?api=1&origin=${latitude},${longitude}&destination=${query}`
-      );
-    } else {
-      Linking.openURL(`https://www.google.com/maps/search/?api=1&query=${query}`);
-    }
-  };
+  const handleDirections = useCallback(
+    (name: string, address: string) => {
+      const query = encodeURIComponent(`${name}, ${address}`);
+      if (userLoc) {
+        const { latitude, longitude } = userLoc.coords;
+        Linking.openURL(
+          `https://www.google.com/maps/dir/?api=1&origin=${latitude},${longitude}&destination=${query}`
+        );
+      } else {
+        Linking.openURL(`https://www.google.com/maps/search/?api=1&query=${query}`);
+      }
+    },
+    [userLoc]
+  );
 
-  return (
-    <View style={styles.container}>
+  const renderHeader = () => (
+    <View>
+      {ListHeaderComponent}
       {/* Filter chips */}
       <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.filterRow}>
         <TouchableOpacity
@@ -307,107 +312,128 @@ const TestingLabs: React.FC<TestingLabsProps> = ({ labs = defaultLabs }) => {
           </TouchableOpacity>
         ))}
       </ScrollView>
+    </View>
+  );
 
-      {/* Lab List */}
-      {sortedLabs.map((lab) => {
-        const cfg = typeConfig[lab.type];
-        return (
-          <View key={lab.id} style={styles.labCard}>
-            <View style={styles.labHeader}>
-              <View style={[styles.labTypeIcon, { backgroundColor: `${cfg.color}15` }]}>
-                <Ionicons name={cfg.icon as any} size={20} color={cfg.color} />
-              </View>
-              <View style={styles.labInfo}>
-                <View style={styles.labNameRow}>
-                  <Text style={styles.labName}>{lab.name}</Text>
-                  {lab.accredited && (
-                    <View style={styles.accreditedBadge}>
-                      <Text style={styles.accreditedText}>✓ Approved</Text>
-                    </View>
-                  )}
-                </View>
-                <Text style={styles.labAddress}>{lab.address}</Text>
+  const renderEmpty = () => (
+    <View style={styles.emptyState}>
+      <Ionicons name="flask" size={48} color={colors.textSecondary} style={{ marginBottom: 16 }} />
+      <Text style={styles.emptyText}>No labs found for this filter</Text>
+    </View>
+  );
 
-                <View style={styles.contactRow}>
-                  <View style={styles.contactItemWrapper}>
-                    <Ionicons name="time-outline" size={12} color={colors.textTertiary} />
-                    <Text style={styles.contactItemInfo}>{lab.timings || 'Contact to verify'}</Text>
-                  </View>
-                  <View
-                    style={[
-                      styles.statusBadge,
-                      { backgroundColor: lab.isOpen ? `${colors.success}15` : `${colors.error}15` },
-                    ]}>
-                    <Text
-                      style={[
-                        styles.statusText,
-                        { color: lab.isOpen ? colors.success : colors.error },
-                      ]}>
-                      {lab.isOpen ? 'Open Now' : 'Closed'}
-                    </Text>
-                  </View>
-                </View>
+  const renderItem: ListRenderItem<TestingLab> = useCallback(
+    ({ item: lab }) => (
+      <LabItem lab={lab} handleCall={handleCall} handleDirections={handleDirections} />
+    ),
+    [handleCall, handleDirections]
+  );
 
-                {lab.email && (
-                  <View style={styles.contactItemWrapper}>
-                    <Ionicons name="mail" size={12} color={colors.textTertiary} />
-                    <Text style={styles.contactItemInfo}>{lab.email}</Text>
-                  </View>
-                )}
-
-                <Text style={styles.labDistance}>
-                  <Ionicons name="location" size={12} color={colors.textTertiary} /> {lab.distance}{' '}
-                  from you
-                </Text>
-              </View>
-            </View>
-
-            {/* Services */}
-            <View style={styles.servicesRow}>
-              {lab.services.map((service) => (
-                <View key={service} style={styles.serviceChip}>
-                  <Text style={styles.serviceText}>{service}</Text>
-                </View>
-              ))}
-            </View>
-
-            {/* Actions */}
-            <View style={styles.actionsRow}>
-              <TouchableOpacity
-                style={styles.actionButton}
-                activeOpacity={0.7}
-                onPress={() => handleCall(lab.phone)}>
-                <Text style={styles.actionText}>
-                  <Ionicons name="call" size={12} color={colors.primary} /> Call
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.actionButton}
-                activeOpacity={0.7}
-                onPress={() => handleDirections(lab.name, lab.address)}>
-                <Text style={styles.actionText}>
-                  <Ionicons name="map" size={12} color={colors.primary} /> Directions
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        );
-      })}
-
-      {sortedLabs.length === 0 && (
-        <View style={styles.emptyState}>
-          <Ionicons
-            name="flask"
-            size={48}
-            color={colors.textSecondary}
-            style={{ marginBottom: 16 }}
-          />
-          <Text style={styles.emptyText}>No labs found for this filter</Text>
-        </View>
-      )}
+  return (
+    <View style={styles.container}>
+      <FlatList
+        data={sortedLabs}
+        keyExtractor={(item) => item.id}
+        renderItem={renderItem}
+        ListHeaderComponent={renderHeader()}
+        ListEmptyComponent={renderEmpty}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.listContent}
+      />
     </View>
   );
 };
+
+interface LabItemProps {
+  lab: TestingLab;
+  handleCall: (phone: string) => void;
+  handleDirections: (name: string, address: string) => void;
+}
+
+const LabItem = React.memo(({ lab, handleCall, handleDirections }: LabItemProps) => {
+  const { colors } = useTheme();
+  const styles = useMemo(() => createStyles(colors), [colors]);
+  const cfg = typeConfig[lab.type];
+
+  return (
+    <View style={styles.labCard}>
+      <View style={styles.labHeader}>
+        <View style={[styles.labTypeIcon, { backgroundColor: `${cfg.color}15` }]}>
+          <Ionicons name={cfg.icon as any} size={20} color={cfg.color} />
+        </View>
+        <View style={styles.labInfo}>
+          <View style={styles.labNameRow}>
+            <Text style={styles.labName}>{lab.name}</Text>
+            {lab.accredited && (
+              <View style={styles.accreditedBadge}>
+                <Text style={styles.accreditedText}>✓ Approved</Text>
+              </View>
+            )}
+          </View>
+          <Text style={styles.labAddress}>{lab.address}</Text>
+
+          <View style={styles.contactRow}>
+            <View style={styles.contactItemWrapper}>
+              <Ionicons name="time-outline" size={12} color={colors.textTertiary} />
+              <Text style={styles.contactItemInfo}>{lab.timings || 'Contact to verify'}</Text>
+            </View>
+            <View
+              style={[
+                styles.statusBadge,
+                { backgroundColor: lab.isOpen ? `${colors.success}15` : `${colors.error}15` },
+              ]}>
+              <Text
+                style={[styles.statusText, { color: lab.isOpen ? colors.success : colors.error }]}>
+                {lab.isOpen ? 'Open Now' : 'Closed'}
+              </Text>
+            </View>
+          </View>
+
+          {lab.email && (
+            <View style={styles.contactItemWrapper}>
+              <Ionicons name="mail" size={12} color={colors.textTertiary} />
+              <Text style={styles.contactItemInfo}>{lab.email}</Text>
+            </View>
+          )}
+
+          <Text style={styles.labDistance}>
+            <Ionicons name="location" size={12} color={colors.textTertiary} /> {lab.distance} from
+            you
+          </Text>
+        </View>
+      </View>
+
+      {/* Services */}
+      <View style={styles.servicesRow}>
+        {lab.services.map((service) => (
+          <View key={service} style={styles.serviceChip}>
+            <Text style={styles.serviceText}>{service}</Text>
+          </View>
+        ))}
+      </View>
+
+      {/* Actions */}
+      <View style={styles.actionsRow}>
+        <TouchableOpacity
+          style={styles.actionButton}
+          activeOpacity={0.7}
+          onPress={() => handleCall(lab.phone)}>
+          <Text style={styles.actionText}>
+            <Ionicons name="call" size={12} color={colors.primary} /> Call
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.actionButton}
+          activeOpacity={0.7}
+          onPress={() => handleDirections(lab.name, lab.address)}>
+          <Text style={styles.actionText}>
+            <Ionicons name="map" size={12} color={colors.primary} /> Directions
+          </Text>
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
+});
 
 const createStyles = (colors: Theme) =>
   StyleSheet.create({
