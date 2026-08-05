@@ -1,6 +1,14 @@
 import React, { useMemo, useState, useCallback } from 'react';
-import { FlatList } from 'react-native';
-import { View, Text, ScrollView, TouchableOpacity, StyleSheet, Alert, Modal } from 'react-native';
+import {
+  FlatList,
+  View,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+  StyleSheet,
+  Alert,
+  Modal,
+} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme, Theme, typography, spacing, radius } from '../lib/ThemeContext';
 import { HygieneModule, LeaderboardEntry } from '../types/models';

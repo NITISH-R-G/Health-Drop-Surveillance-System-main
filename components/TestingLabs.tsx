@@ -1,6 +1,7 @@
 import React, { useMemo, useState, useCallback } from 'react';
-import { FlatList, ListRenderItem } from 'react-native';
 import {
+  FlatList,
+  ListRenderItem,
   View,
   Text,
   StyleSheet,
