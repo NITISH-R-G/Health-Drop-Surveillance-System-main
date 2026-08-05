@@ -251,7 +251,7 @@ const IndexPageContent: React.FC<IndexPageProps> = ({
           <View style={{ flex: 1 }}>
             <FlatList
               data={filteredOutbreaks}
-              keyExtractor={(item) => item.id}
+              keyExtractor={(item) => String(item.id)}
               showsVerticalScrollIndicator={false}
               contentContainerStyle={{ paddingBottom: 100 }}
               ListHeaderComponent={

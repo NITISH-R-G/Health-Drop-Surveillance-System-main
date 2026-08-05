@@ -29,8 +29,23 @@ interface Lab {
   isOpen?: boolean;
 }
 
+interface TestingLab {
+  id: string;
+  name: string;
+  type: 'water' | 'pathology' | 'both';
+  address: string;
+  distance: string;
+  isOpen?: boolean;
+  timings?: string;
+  phone: string;
+  email?: string;
+  services: string[];
+  accredited: boolean;
+}
+
 interface TestingLabsProps {
   labs?: Lab[];
+  ListHeaderComponent?: React.ReactNode;
 }
 
 const defaultLabs: Lab[] = [
@@ -353,7 +368,7 @@ interface LabItemProps {
 const LabItem = React.memo(({ lab, handleCall, handleDirections }: LabItemProps) => {
   const { colors } = useTheme();
   const styles = useMemo(() => createStyles(colors), [colors]);
-  const cfg = typeConfig[lab.type];
+  const cfg = typeConfig[lab.type as keyof typeof typeConfig];
 
   return (
     <View style={styles.labCard}>
@@ -405,7 +420,7 @@ const LabItem = React.memo(({ lab, handleCall, handleDirections }: LabItemProps)
 
       {/* Services */}
       <View style={styles.servicesRow}>
-        {lab.services.map((service) => (
+        {lab.services.map((service: string) => (
           <View key={service} style={styles.serviceChip}>
             <Text style={styles.serviceText}>{service}</Text>
           </View>
@@ -526,6 +541,7 @@ const createStyles = (colors: Theme) =>
     emptyState: { alignItems: 'center', paddingVertical: spacing.xxl },
     emptyIcon: { fontSize: 32, marginBottom: spacing.sm },
     emptyText: { ...typography.subhead, color: colors.textSecondary },
+    listContent: {},
   });
 
 export default React.memo(TestingLabs);

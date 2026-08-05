@@ -558,7 +558,7 @@ const LeaderboardItem = React.memo(
             {item.name}
           </Text>
           <Text style={[styles.leaderboardScore, item.isUser && styles.textActive]}>
-            {item.points} XP
+            {item.score} XP
           </Text>
         </View>
       </View>

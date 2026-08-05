@@ -22,7 +22,6 @@ const mockLinking = {
 };
 jest.mock('react-native/Libraries/Linking/Linking', () => mockLinking);
 
-
 describe('TestingLabs', () => {
   it('renders correctly with default labs', () => {
     const { getByText } = render(
