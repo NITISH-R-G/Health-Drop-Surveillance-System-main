@@ -33,7 +33,7 @@ describe('TestingLabs', () => {
 
   it('shows loading indicator when data is syncing', () => {
     mockSyncData.mockReturnValue({
-      data: null,
+      data: [] as any,
       loading: true,
       setData: jest.fn(),
     });
