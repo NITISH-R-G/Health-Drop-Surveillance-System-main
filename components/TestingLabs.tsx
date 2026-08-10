@@ -100,7 +100,7 @@ const LabItem = React.memo(
 
         {/* Services */}
         <View style={styles.servicesRow}>
-          {lab.services.map((service) => (
+          {lab.services.map((service: string) => (
             <View key={service} style={styles.serviceChip}>
               <Text style={styles.serviceText}>{service}</Text>
             </View>

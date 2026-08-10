@@ -495,7 +495,7 @@ export const testingLabs = [
   {
     id: '1',
     name: 'PSG Hospitals Laboratory',
-    type: 'both',
+    type: 'both' as const,
     address: 'Peelamedu, Coimbatore - 641004',
     phone: '0422-2570170',
     email: 'psghospitals@yahoo.co.in',
@@ -509,7 +509,7 @@ export const testingLabs = [
   {
     id: '2',
     name: 'KMCH Central Laboratory',
-    type: 'both',
+    type: 'both' as const,
     address: 'Avinashi Road, Coimbatore - 641014',
     phone: '0422-4323800',
     email: 'info@kmchhospitals.com',
@@ -523,7 +523,7 @@ export const testingLabs = [
   {
     id: '3',
     name: 'Ganga Hospital Lab',
-    type: 'pathology',
+    type: 'pathology' as const,
     address: 'Mettupalayam Road, Coimbatore - 641043',
     phone: '0422-2485000',
     email: 'info@gangahospital.com',
@@ -537,7 +537,7 @@ export const testingLabs = [
   {
     id: '4',
     name: 'Ramakrishna Hospital Lab',
-    type: 'both',
+    type: 'both' as const,
     address: 'Siddhapudur, Coimbatore - 641044',
     phone: '0422-4500000',
     email: 'info@sriramakrishnahospital.com',
@@ -551,7 +551,7 @@ export const testingLabs = [
   {
     id: '5',
     name: 'Coimbatore Medical College Hospital',
-    type: 'pathology',
+    type: 'pathology' as const,
     address: 'Trichy Road, Coimbatore - 641018',
     phone: '0422-2301393',
     email: 'dean@cmccbe.ac.in',
@@ -565,7 +565,7 @@ export const testingLabs = [
   {
     id: '6',
     name: 'Micro Labs & Diagnostics',
-    type: 'water',
+    type: 'water' as const,
     address: 'R.S. Puram, Coimbatore - 641002',
     phone: '0422-2545678',
     email: 'microlabs@gmail.com',
@@ -579,7 +579,7 @@ export const testingLabs = [
   {
     id: '7',
     name: 'KG Hospital Diagnostic Centre',
-    type: 'both',
+    type: 'both' as const,
     address: 'Arts College Road, Coimbatore - 641018',
     phone: '0422-2212121',
     email: 'kghospital@vsnl.com',
@@ -593,7 +593,7 @@ export const testingLabs = [
   {
     id: '8',
     name: 'Gem Hospital Lab',
-    type: 'pathology',
+    type: 'pathology' as const,
     address: 'Ramanathapuram, Coimbatore - 641045',
     phone: '0422-2325100',
     email: 'info@geminstitute.in',
@@ -607,7 +607,7 @@ export const testingLabs = [
   {
     id: '9',
     name: 'Aravind Eye Hospital Lab',
-    type: 'pathology',
+    type: 'pathology' as const,
     address: 'Avinashi Road, Coimbatore - 641014',
     phone: '0422-4360400',
     email: 'cbe.info@aravind.org',
@@ -621,7 +621,7 @@ export const testingLabs = [
   {
     id: '10',
     name: 'Thyrocare Testing Lab',
-    type: 'pathology',
+    type: 'pathology' as const,
     address: 'Vadavalli, Coimbatore - 641041',
     phone: '9003612345',
     email: 'cbe.thyrocare@gmail.com',
@@ -635,7 +635,7 @@ export const testingLabs = [
   {
     id: '11',
     name: 'Dr. Muthus Hospital Lab',
-    type: 'both',
+    type: 'both' as const,
     address: 'Saravanampatti, Coimbatore - 641035',
     phone: '0422-2666777',
     timings: '24 Hours',
@@ -648,7 +648,7 @@ export const testingLabs = [
   {
     id: '12',
     name: 'Sri Abirami Hospital',
-    type: 'pathology',
+    type: 'pathology' as const,
     address: 'Sundarapuram, Coimbatore - 641024',
     phone: '0422-2672000',
     email: 'info@sriabiramihospital.com',
