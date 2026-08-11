@@ -4,30 +4,212 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
-  Linking,
   ScrollView,
   FlatList,
-  ActivityIndicator,
+  Linking,
   Alert,
+  ActivityIndicator,
 } from 'react-native';
 import * as Location from 'expo-location';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme, Theme, typography, spacing, radius } from '../lib/ThemeContext';
-import { labs } from '../lib/mockData';
 
-const typeConfig = {
-  water: { icon: 'water', label: 'Water Testing', color: '#0EA5E9' },
-  pathology: { icon: 'flask', label: 'Pathology Lab', color: '#8B5CF6' },
-  both: { icon: 'medkit', label: 'Full Service', color: '#10B981' },
-};
-
-type LabType = (typeof labs)[0];
-
-interface TestingLabsProps {
-  labs?: LabType[];
+interface Lab {
+  id: string;
+  name: string;
+  type: 'water' | 'pathology' | 'both';
+  address: string;
+  phone: string;
+  distance: string;
+  accredited: boolean;
+  services: string[];
+  coordinates: { lat: number; lng: number };
+  email?: string;
+  timings?: string;
+  isOpen?: boolean;
 }
 
-const TestingLabs = ({ labs: propLabs = labs || [] }: TestingLabsProps = {}) => {
+interface TestingLabsProps {
+  labs?: Lab[];
+}
+
+const defaultLabs: Lab[] = [
+  {
+    id: '1',
+    name: 'PSG Hospitals Laboratory',
+    type: 'both',
+    address: 'Peelamedu, Coimbatore - 641004',
+    phone: '0422-2570170',
+    email: 'psghospitals@yahoo.co.in',
+    timings: '24 Hours',
+    isOpen: true,
+    distance: '2.5 km',
+    accredited: true,
+    services: ['Pathology', 'Microbiology', 'Water testing'],
+    coordinates: { lat: 11.018611, lng: 77.006944 },
+  },
+  {
+    id: '2',
+    name: 'KMCH Central Laboratory',
+    type: 'both',
+    address: 'Avinashi Road, Coimbatore - 641014',
+    phone: '0422-4323800',
+    email: 'info@kmchhospitals.com',
+    timings: '24 Hours',
+    isOpen: true,
+    distance: '4.2 km',
+    accredited: true,
+    services: ['Full panel testing', 'Biochemistry', 'Clinical Pathology'],
+    coordinates: { lat: 11.042607, lng: 77.040607 },
+  },
+  {
+    id: '3',
+    name: 'Ganga Hospital Lab',
+    type: 'pathology',
+    address: 'Mettupalayam Road, Coimbatore - 641043',
+    phone: '0422-2485000',
+    email: 'info@gangahospital.com',
+    timings: '08:00 AM - 08:00 PM',
+    isOpen: true,
+    distance: '3.1 km',
+    accredited: true,
+    services: ['Blood test', 'Microbiology'],
+    coordinates: { lat: 11.026586, lng: 76.951911 },
+  },
+  {
+    id: '4',
+    name: 'Ramakrishna Hospital Lab',
+    type: 'both',
+    address: 'Siddhapudur, Coimbatore - 641044',
+    phone: '0422-4500000',
+    email: 'info@sriramakrishnahospital.com',
+    timings: '24 Hours',
+    isOpen: true,
+    distance: '1.8 km',
+    accredited: true,
+    services: ['Pathology', 'Chemical analysis', 'Stool culture'],
+    coordinates: { lat: 11.0228, lng: 76.9778 },
+  },
+  {
+    id: '5',
+    name: 'Coimbatore Medical College Hospital',
+    type: 'pathology',
+    address: 'Trichy Road, Coimbatore - 641018',
+    phone: '0422-2301393',
+    email: 'dean@cmccbe.ac.in',
+    timings: '24 Hours',
+    isOpen: true,
+    distance: '5.0 km',
+    accredited: true,
+    services: ['Bacteriological', 'Basic stool test'],
+    coordinates: { lat: 10.99641, lng: 76.97024 },
+  },
+  {
+    id: '6',
+    name: 'Micro Labs & Diagnostics',
+    type: 'water',
+    address: 'R.S. Puram, Coimbatore - 641002',
+    phone: '0422-2545678',
+    email: 'microlabs@gmail.com',
+    timings: '07:00 AM - 09:00 PM',
+    isOpen: false,
+    distance: '6.2 km',
+    accredited: false,
+    services: ['pH testing', 'Turbidity', 'Coliform count'],
+    coordinates: { lat: 11.0099, lng: 76.9482 },
+  },
+  {
+    id: '7',
+    name: 'KG Hospital Diagnostic Centre',
+    type: 'both',
+    address: 'Arts College Road, Coimbatore - 641018',
+    phone: '0422-2212121',
+    email: 'kghospital@vsnl.com',
+    timings: '24 Hours',
+    isOpen: true,
+    distance: '4.8 km',
+    accredited: true,
+    services: ['Clinical Pathology', 'Haematology', 'Microbiology'],
+    coordinates: { lat: 10.998495, lng: 76.970176 },
+  },
+  {
+    id: '8',
+    name: 'Gem Hospital Lab',
+    type: 'pathology',
+    address: 'Ramanathapuram, Coimbatore - 641045',
+    phone: '0422-2325100',
+    email: 'info@geminstitute.in',
+    timings: '09:00 AM - 06:00 PM',
+    isOpen: false,
+    distance: '3.5 km',
+    accredited: true,
+    services: ['Gastroenterology tests', 'Liver panel'],
+    coordinates: { lat: 10.993355, lng: 76.99363 },
+  },
+  {
+    id: '9',
+    name: 'Aravind Eye Hospital Lab',
+    type: 'pathology',
+    address: 'Avinashi Road, Coimbatore - 641014',
+    phone: '0422-4360400',
+    email: 'cbe.info@aravind.org',
+    timings: '07:30 AM - 06:00 PM',
+    isOpen: false,
+    distance: '4.5 km',
+    accredited: true,
+    services: ['Ocular microbiology', 'Blood routine'],
+    coordinates: { lat: 11.036067, lng: 77.037894 },
+  },
+  {
+    id: '10',
+    name: 'Thyrocare Testing Lab',
+    type: 'pathology',
+    address: 'Vadavalli, Coimbatore - 641041',
+    phone: '9003612345',
+    email: 'cbe.thyrocare@gmail.com',
+    timings: '06:00 AM - 08:00 PM',
+    isOpen: true,
+    distance: '8.5 km',
+    accredited: true,
+    services: ['Aarogyam packages', 'Thyroid Profile'],
+    coordinates: { lat: 11.026759, lng: 76.903264 },
+  },
+  {
+    id: '11',
+    name: 'Dr. Muthus Hospital Lab',
+    type: 'both',
+    address: 'Saravanampatti, Coimbatore - 641035',
+    phone: '0422-2666777',
+    timings: '24 Hours',
+    isOpen: true,
+    distance: '10.2 km',
+    accredited: true,
+    services: ['Blood culture', 'Urinalysis', 'Drinking water test'],
+    coordinates: { lat: 11.080516, lng: 76.994269 },
+  },
+  {
+    id: '12',
+    name: 'Sri Abirami Hospital',
+    type: 'pathology',
+    address: 'Sundarapuram, Coimbatore - 641024',
+    phone: '0422-2672000',
+    email: 'info@sriabiramihospital.com',
+    timings: '24 Hours',
+    isOpen: true,
+    distance: '7.8 km',
+    accredited: false,
+    services: ['General Pathology', 'Biochemistry'],
+    coordinates: { lat: 10.941624, lng: 76.974534 },
+  },
+];
+
+const typeConfig = {
+  water: { icon: 'water', label: 'Water Testing', color: '#5AC8FA' },
+  pathology: { icon: 'flask', label: 'Pathology', color: '#AF52DE' },
+  both: { icon: 'medkit', label: 'Full Service', color: '#007AFF' },
+};
+
+const TestingLabs: React.FC<TestingLabsProps> = ({ labs = defaultLabs }) => {
   const { colors } = useTheme();
   const styles = useMemo(() => createStyles(colors), [colors]);
   const [filter, setFilter] = useState<'all' | 'water' | 'pathology' | 'both'>('all');
@@ -35,17 +217,9 @@ const TestingLabs = ({ labs: propLabs = labs || [] }: TestingLabsProps = {}) => 
   const [isLocating, setIsLocating] = useState(false);
 
   const sortedLabs = useMemo(() => {
-    let filtered = propLabs;
-    if (filter !== 'all') {
-      filtered = propLabs.filter((l) => l.type === filter);
-    }
-    // simple string sort based on distance (assumes "x.x km" format)
-    return [...filtered].sort((a, b) => {
-      const distA = parseFloat(a.distance);
-      const distB = parseFloat(b.distance);
-      return distA - distB;
-    });
-  }, [filter, propLabs]);
+    const filteredLabs = filter === 'all' ? labs : labs.filter((l) => l.type === filter);
+    return [...filteredLabs].sort((a, b) => parseFloat(a.distance) - parseFloat(b.distance));
+  }, [labs, filter]);
 
   const handleCall = useCallback((phone: string) => {
     Linking.openURL(`tel:${phone}`);
@@ -88,7 +262,7 @@ const TestingLabs = ({ labs: propLabs = labs || [] }: TestingLabsProps = {}) => 
   );
 
   const renderItem = useCallback(
-    ({ item: lab }: { item: LabType }) => {
+    ({ item: lab }: { item: Lab }) => {
       const cfg = typeConfig[lab.type as keyof typeof typeConfig];
       return (
         <LabCard
@@ -164,7 +338,7 @@ const TestingLabs = ({ labs: propLabs = labs || [] }: TestingLabsProps = {}) => 
     <View style={styles.container}>
       <FlatList
         data={sortedLabs}
-        keyExtractor={(item: LabType) => item.id}
+        keyExtractor={(item) => item.id}
         renderItem={renderItem}
         ListHeaderComponent={renderHeader()}
         ListEmptyComponent={renderEmpty}
@@ -176,7 +350,7 @@ const TestingLabs = ({ labs: propLabs = labs || [] }: TestingLabsProps = {}) => 
 
 const createStyles = (colors: Theme) =>
   StyleSheet.create({
-    container: { flex: 1 },
+    container: {},
     filterRow: { marginBottom: spacing.lg },
     filterChip: {
       flexDirection: 'row',
@@ -268,8 +442,8 @@ const createStyles = (colors: Theme) =>
   });
 
 interface LabCardProps {
-  lab: LabType;
-  cfg: { icon: string; label: string; color: string };
+  lab: Lab;
+  cfg: any;
   colors: Theme;
   styles: ReturnType<typeof createStyles>;
   onCall: (phone: string) => void;
