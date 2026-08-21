@@ -1,7 +1,15 @@
 import React, { useMemo } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
+import {
+  View,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+  StyleSheet,
+  ActivityIndicator,
+} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme, Theme, typography, spacing, radius } from '../lib/ThemeContext';
+import { useSyncData } from '../lib/sync';
 
 interface ProfilePageProps {
   onBack: () => void;
@@ -20,6 +28,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({
 }) => {
   const { colors } = useTheme();
   const styles = useMemo(() => createStyles(colors), [colors]);
+  const { data: profileStats, loading } = useSyncData('profileStats');
 
   const getInitials = (name: string) => {
     return name
@@ -65,25 +74,39 @@ const ProfilePage: React.FC<ProfilePageProps> = ({
         <Text style={styles.userName}>{userName}</Text>
         <Text style={styles.userEmail}>{userEmail}</Text>
         <View style={styles.roleBadge}>
-          <Text style={styles.roleText}>HEALTH WORKER</Text>
+          {loading ? (
+            <ActivityIndicator size="small" color={colors.primary} />
+          ) : (
+            <Text style={styles.roleText}>{profileStats?.role || 'HEALTH WORKER'}</Text>
+          )}
         </View>
       </View>
 
       <View style={styles.statsContainer}>
-        <View style={styles.statBox}>
-          <Text style={styles.statValue}>156</Text>
-          <Text style={styles.statLabel}>Reports</Text>
-        </View>
-        <View style={styles.divider} />
-        <View style={styles.statBox}>
-          <Text style={styles.statValue}>32</Text>
-          <Text style={styles.statLabel}>Regions</Text>
-        </View>
-        <View style={styles.divider} />
-        <View style={styles.statBox}>
-          <Text style={styles.statValue}>4</Text>
-          <Text style={styles.statLabel}>Badges</Text>
-        </View>
+        {loading ? (
+          <ActivityIndicator
+            size="small"
+            color={colors.primary}
+            style={{ flex: 1, paddingVertical: spacing.md }}
+          />
+        ) : (
+          <>
+            <View style={styles.statBox}>
+              <Text style={styles.statValue}>{profileStats?.reports || 0}</Text>
+              <Text style={styles.statLabel}>Reports</Text>
+            </View>
+            <View style={styles.divider} />
+            <View style={styles.statBox}>
+              <Text style={styles.statValue}>{profileStats?.regions || 0}</Text>
+              <Text style={styles.statLabel}>Regions</Text>
+            </View>
+            <View style={styles.divider} />
+            <View style={styles.statBox}>
+              <Text style={styles.statValue}>{profileStats?.badges || 0}</Text>
+              <Text style={styles.statLabel}>Badges</Text>
+            </View>
+          </>
+        )}
       </View>
 
       <View style={styles.section}>
