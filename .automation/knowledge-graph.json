@@ -201,6 +201,11 @@
       "type": "component"
     },
     {
+      "id": "components/__tests__/TestingLabs.test.tsx",
+      "label": "TestingLabs.test.tsx",
+      "type": "component"
+    },
+    {
       "id": "lib/__tests__/sync.test.ts",
       "label": "sync.test.ts",
       "type": "utility"
@@ -463,6 +468,16 @@
       "type": "depends_on"
     },
     {
+      "source": "components/TestingLabs.tsx",
+      "target": "lib/sync.ts",
+      "type": "depends_on"
+    },
+    {
+      "source": "components/TestingLabs.tsx",
+      "target": "types/models.ts",
+      "type": "depends_on"
+    },
+    {
       "source": "components/TrendChart.tsx",
       "target": "lib/ThemeContext.tsx",
       "type": "depends_on"
@@ -559,6 +574,21 @@
     },
     {
       "source": "components/__tests__/RiskHeatmap.test.tsx",
+      "target": "lib/sync.ts",
+      "type": "depends_on"
+    },
+    {
+      "source": "components/__tests__/TestingLabs.test.tsx",
+      "target": "components/TestingLabs.tsx",
+      "type": "depends_on"
+    },
+    {
+      "source": "components/__tests__/TestingLabs.test.tsx",
+      "target": "lib/ThemeContext.tsx",
+      "type": "depends_on"
+    },
+    {
+      "source": "components/__tests__/TestingLabs.test.tsx",
       "target": "lib/sync.ts",
       "type": "depends_on"
     },
