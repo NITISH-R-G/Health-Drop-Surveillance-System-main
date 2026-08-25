@@ -139,7 +139,7 @@ const TestingLabs: React.FC<TestingLabsProps> = (props) => {
 
       {/* Lab List */}
       {sortedLabs.map((lab) => {
-        const cfg = typeConfig[lab.type];
+        const cfg = typeConfig[lab.type as keyof typeof typeConfig];
         return (
           <View key={lab.id} style={styles.labCard}>
             <View style={styles.labHeader}>
