@@ -100,3 +100,11 @@ export interface LeaderboardEntry {
   avatar: string;
   isUser: boolean;
 }
+
+export interface Doctor {
+  id: number;
+  name: string;
+  spec: string;
+  exp: string;
+  online: boolean;
+}
