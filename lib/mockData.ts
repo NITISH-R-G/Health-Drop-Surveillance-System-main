@@ -490,3 +490,10 @@ export const hygieneModules: HygieneModule[] = [
 ];
 
 export const hygieneScore: number = 350;
+
+export const profileStats = {
+  reports: 156,
+  regions: 32,
+  badges: 4,
+  role: 'HEALTH WORKER',
+};

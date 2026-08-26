@@ -205,3 +205,45 @@
 ## Metrics Improved (Update)
 * **Code quality gains:** Eliminated 3 major hardcoded text elements in `HygieneEducation.tsx`.
 * **Coverage Improvements:** Wrote testing coverage to validate the new dynamic quiz submissions in `HygieneEducation.test.tsx`.
+
+---
+
+## Cycle Update: Decoupling Profile Data
+
+## Repository Health Report
+* **Strengths:**
+  - Robust offline synchronization pattern via `useSyncData` well-established across components.
+* **Weaknesses:**
+  - Hardcoded profile statistics (Reports, Regions, Badges) and role ("HEALTH WORKER") in `ProfilePage.tsx`.
+* **Risks:**
+  - Prevents the profile view from dynamically reflecting user data and behavior, misaligning with the offline-first strategy.
+* **Opportunities:**
+  - Integrating `ProfilePage.tsx` into the offline data sync lifecycle to fully decouple all UI elements.
+
+## Competitor Analysis
+* **Gaps identified:**
+  - Hardcoded metrics degrade the user experience compared to top-tier applications that synchronize personal insights flawlessly.
+* **Opportunities to outperform:**
+  - Expanding the offline-first capability to all user-facing views ensures a cohesive and highly performant experience.
+
+## Priority Improvements
+1. **Highest impact:** Lift the hardcoded stats and role in `ProfilePage.tsx` into `mockData.ts` and interface them via `ProfileStats`.
+2. **Strategic importance:** Refactor `ProfilePage.tsx` to dynamically pull this information using `useSyncData('profileStats')`.
+
+## Sprint Plan
+* **Sprint Goal:** Complete the data-driven refactor for `ProfilePage.tsx` by replacing hardcoded values with dynamically synced properties.
+* **Tasks:**
+  - Add `ProfileStats` interface to `types/models.ts`.
+  - Add `profileStats` object to `mockData.ts`.
+  - Update `lib/sync.ts` and `sync.test.ts`.
+  - Refactor `ProfilePage.tsx`.
+  - Add test coverage.
+* **Expected Outcomes:** A dynamically driven profile view fully backed by unit tests.
+
+## Technical Improvements
+* **Architecture:** Decoupled profile statistics and roles from `ProfilePage.tsx`, leveraging the application's offline-first capabilities.
+* **Testing:** Added `ProfilePage.test.tsx` coverage to ensure the component leverages the dynamic hook and correctly handles loading states.
+
+## Metrics Improved
+* **Code quality gains:** Eliminated 4 instances of hardcoded metrics/roles in `ProfilePage.tsx`.
+* **Coverage Improvements:** Added test coverage for `ProfilePage.tsx`.
