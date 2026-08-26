@@ -1,21 +1,25 @@
 import React, { useMemo } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import {
+  View,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+  StyleSheet,
+  Alert,
+  ActivityIndicator,
+} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme, Theme, typography, spacing, radius } from '../lib/ThemeContext';
+import { useSyncData } from '../lib/sync';
 
 interface TelemedicineProps {
   onBack: () => void;
 }
 
-const doctors = [
-  { id: 1, name: 'Dr. Anjali Gupta', spec: 'General Physician', exp: '8 years', online: true },
-  { id: 2, name: 'Dr. Rajesh Kumar', spec: 'Epidemiologist', exp: '12 years', online: false },
-  { id: 3, name: 'Dr. Sarah Khan', spec: 'Pediatrician', exp: '5 years', online: true },
-];
-
 const Telemedicine: React.FC<TelemedicineProps> = ({ onBack }) => {
   const { colors } = useTheme();
   const styles = useMemo(() => createStyles(colors), [colors]);
+  const { data: doctors, loading } = useSyncData('doctors');
 
   const handleCall = (doctorName: string) => {
     Alert.alert(
@@ -44,35 +48,43 @@ const Telemedicine: React.FC<TelemedicineProps> = ({ onBack }) => {
 
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Available Doctors</Text>
-        {doctors.map((doc) => (
-          <View key={doc.id} style={styles.docCard}>
-            <View style={styles.docAvatar}>
-              <Text style={styles.avatarText}>{doc.name[4]}</Text>
-              {doc.online && <View style={styles.onlineBadge} />}
+        {loading ? (
+          <ActivityIndicator
+            size="large"
+            color={colors.primary}
+            style={{ marginTop: spacing.xl }}
+          />
+        ) : (
+          doctors?.map((doc) => (
+            <View key={doc.id} style={styles.docCard}>
+              <View style={styles.docAvatar}>
+                <Text style={styles.avatarText}>{doc.name[4]}</Text>
+                {doc.online && <View style={styles.onlineBadge} />}
+              </View>
+              <View style={styles.docInfo}>
+                <Text style={styles.docName}>{doc.name}</Text>
+                <Text style={styles.docSpec}>
+                  {doc.spec} • {doc.exp}
+                </Text>
+              </View>
+              <View style={styles.actionButtons}>
+                <TouchableOpacity
+                  style={[
+                    styles.iconButton,
+                    { backgroundColor: colors.primary + '20', marginRight: 8 },
+                  ]}
+                  onPress={() => handleChat(doc.name)}>
+                  <Ionicons name="chatbubble-ellipses" size={20} color={colors.primary} />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={[styles.iconButton, { backgroundColor: colors.success }]}
+                  onPress={() => handleCall(doc.name)}>
+                  <Ionicons name="videocam" size={20} color="#fff" />
+                </TouchableOpacity>
+              </View>
             </View>
-            <View style={styles.docInfo}>
-              <Text style={styles.docName}>{doc.name}</Text>
-              <Text style={styles.docSpec}>
-                {doc.spec} • {doc.exp}
-              </Text>
-            </View>
-            <View style={styles.actionButtons}>
-              <TouchableOpacity
-                style={[
-                  styles.iconButton,
-                  { backgroundColor: colors.primary + '20', marginRight: 8 },
-                ]}
-                onPress={() => handleChat(doc.name)}>
-                <Ionicons name="chatbubble-ellipses" size={20} color={colors.primary} />
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[styles.iconButton, { backgroundColor: colors.success }]}
-                onPress={() => handleCall(doc.name)}>
-                <Ionicons name="videocam" size={20} color="#fff" />
-              </TouchableOpacity>
-            </View>
-          </View>
-        ))}
+          ))
+        )}
       </View>
     </ScrollView>
   );

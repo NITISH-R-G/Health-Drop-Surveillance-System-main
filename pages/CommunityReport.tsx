@@ -14,6 +14,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import { useTheme, Theme, typography, spacing, radius } from '../lib/ThemeContext';
+import { useSyncData } from '../lib/sync';
 
 interface CommunityReportProps {
   onBack: () => void;
@@ -22,6 +23,9 @@ interface CommunityReportProps {
 const CommunityReport: React.FC<CommunityReportProps> = ({ onBack }) => {
   const { colors } = useTheme();
   const styles = useMemo(() => createStyles(colors), [colors]);
+
+  const { data: issueTypes, loading: issuesLoading } = useSyncData('issueTypes');
+
   const [issueType, setIssueType] = useState('');
   const [description, setDescription] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -113,15 +117,6 @@ const CommunityReport: React.FC<CommunityReportProps> = ({ onBack }) => {
     }, 1500);
   };
 
-  const issueTypes = [
-    { id: 'leak', label: 'Broken Pipe', icon: 'water' },
-    { id: 'stagnant', label: 'Stagnant Water', icon: 'cloud' },
-    { id: 'drain', label: 'Open Drain', icon: 'alert-circle' },
-    { id: 'smell', label: 'Foul Smell', icon: 'skull' },
-    { id: 'dirty', label: 'Contamination', icon: 'color-fill' },
-    { id: 'no_water', label: 'No Supply', icon: 'close-circle' },
-  ];
-
   return (
     <ScrollView style={styles.container}>
       <View style={styles.header}>
@@ -133,23 +128,27 @@ const CommunityReport: React.FC<CommunityReportProps> = ({ onBack }) => {
 
       <View style={styles.section}>
         <Text style={styles.label}>What's the issue?</Text>
-        <View style={styles.grid}>
-          {issueTypes.map((type) => (
-            <TouchableOpacity
-              key={type.id}
-              style={[styles.typeCard, issueType === type.id && styles.typeCardActive]}
-              onPress={() => setIssueType(type.id)}>
-              <Ionicons
-                name={type.icon as any}
-                size={32}
-                color={issueType === type.id ? colors.primary : colors.textSecondary}
-              />
-              <Text style={[styles.typeLabel, issueType === type.id && styles.typeLabelActive]}>
-                {type.label}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </View>
+        {issuesLoading ? (
+          <ActivityIndicator size="small" color={colors.primary} />
+        ) : (
+          <View style={styles.grid}>
+            {issueTypes?.map((type) => (
+              <TouchableOpacity
+                key={type.id}
+                style={[styles.typeCard, issueType === type.id && styles.typeCardActive]}
+                onPress={() => setIssueType(type.id)}>
+                <Ionicons
+                  name={type.icon as any}
+                  size={32}
+                  color={issueType === type.id ? colors.primary : colors.textSecondary}
+                />
+                <Text style={[styles.typeLabel, issueType === type.id && styles.typeLabelActive]}>
+                  {type.label}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+        )}
       </View>
 
       <View style={styles.section}>
