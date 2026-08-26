@@ -7,7 +7,39 @@ const PORT = process.env.PORT || 3000;
 
 // Middleware
 // Allow requests from all domains containing localhost, Expo development URLs, or Vercel/Render frontend origins.
-app.use(cors());
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (!origin) return callback(null, true);
+    try {
+      const url = new URL(origin);
+      const hostname = url.hostname;
+
+      // Allow localhost
+      if (hostname === 'localhost' || hostname === '127.0.0.1') {
+        return callback(null, true);
+      }
+
+      // Allow specific domains exactly or as subdomains
+      if (hostname === 'vercel.app' || hostname.endsWith('.vercel.app')) {
+        return callback(null, true);
+      }
+      if (hostname === 'onrender.com' || hostname.endsWith('.onrender.com')) {
+        return callback(null, true);
+      }
+
+      // Allow Expo development (exp:// protocol)
+      if (url.protocol === 'exp:') {
+        return callback(null, true);
+      }
+    } catch (e) {
+      // Invalid URL
+    }
+
+    const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+    return callback(new Error(msg), false);
+  }
+};
+app.use(cors(corsOptions));
 app.use(express.json());
 
 // Basic In-Memory Cache to prevent rate limiting issues and improve UX
