@@ -1,73 +1,16 @@
-import React, { useState, useMemo } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import React, { useMemo } from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+  ActivityIndicator,
+} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme, Theme, typography, spacing, radius } from '../lib/ThemeContext';
-
-interface DispatchMission {
-  id: string;
-  title: string;
-  location: string;
-  priority: 'high' | 'medium' | 'low';
-  requires: string[];
-  status: 'pending' | 'in-progress' | 'completed';
-}
-
-interface InventoryItem {
-  id: string;
-  name: string;
-  stock: number;
-  unit: string;
-  reorderLevel: number;
-  icon: string;
-}
-
-const defaultInventory: InventoryItem[] = [
-  { id: '1', name: 'ORS Packets', stock: 1250, unit: 'pkts', reorderLevel: 500, icon: 'medical' },
-  {
-    id: '2',
-    name: 'Chlorine Tablets',
-    stock: 450,
-    unit: 'btls',
-    reorderLevel: 1000,
-    icon: 'water',
-  },
-  { id: '3', name: 'IV Fluids (RL)', stock: 85, unit: 'bags', reorderLevel: 200, icon: 'flask' },
-  {
-    id: '4',
-    name: 'Rapid Test Kits',
-    stock: 320,
-    unit: 'kits',
-    reorderLevel: 150,
-    icon: 'eyedrop',
-  },
-];
-
-const defaultMissions: DispatchMission[] = [
-  {
-    id: 'm1',
-    title: 'Containment Line Setup',
-    location: 'Singanallur (Ward 12)',
-    priority: 'high',
-    requires: ['ORS Packets', 'Chlorine Tablets'],
-    status: 'pending',
-  },
-  {
-    id: 'm2',
-    title: 'Water Source Testing',
-    location: 'Ukkadam Tank',
-    priority: 'high',
-    requires: ['Rapid Test Kits'],
-    status: 'in-progress',
-  },
-  {
-    id: 'm3',
-    title: 'Routine Clinic Supply',
-    location: 'City General (RS Puram)',
-    priority: 'medium',
-    requires: ['IV Fluids (RL)'],
-    status: 'pending',
-  },
-];
+import { DispatchMission, InventoryItem } from '../types/models';
+import { useSyncData } from '../lib/sync';
 
 const priorityColors = {
   high: '#FF3B30',
@@ -79,7 +22,12 @@ const FieldWorkerLogistics: React.FC = () => {
   const { colors } = useTheme();
   const styles = useMemo(() => createStyles(colors), [colors]);
 
-  const [missions, setMissions] = useState<DispatchMission[]>(defaultMissions);
+  const {
+    data: missions,
+    setData: setMissions,
+    loading: missionsLoading,
+  } = useSyncData('fieldMissions');
+  const { data: inventory, loading: inventoryLoading } = useSyncData('fieldInventory');
 
   const handleAction = (missionId: string, currentStatus: string) => {
     setMissions((prev) =>
@@ -107,6 +55,14 @@ const FieldWorkerLogistics: React.FC = () => {
     );
   };
 
+  if (missionsLoading || inventoryLoading) {
+    return (
+      <View style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
+        <ActivityIndicator size="large" color={colors.primary} />
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
       {/* Inventory Section */}
@@ -114,7 +70,7 @@ const FieldWorkerLogistics: React.FC = () => {
         <Text style={styles.sectionTitle}>Critical Supplies Inventory</Text>
         <Text style={styles.sectionSubtitle}>Real-time stock across district warehouses</Text>
         <View style={styles.inventoryGrid}>
-          {defaultInventory.map((item) => {
+          {(inventory || []).map((item) => {
             const isLow = item.stock <= item.reorderLevel;
             return (
               <View
@@ -164,7 +120,7 @@ const FieldWorkerLogistics: React.FC = () => {
         </View>
         <Text style={styles.sectionSubtitle}>Missions triggered by real-time hotspots</Text>
 
-        {missions
+        {(missions || [])
           .filter((m) => m.status !== 'completed')
           .map((mission) => (
             <View key={mission.id} style={styles.missionCard}>
