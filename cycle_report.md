@@ -205,3 +205,46 @@
 ## Metrics Improved (Update)
 * **Code quality gains:** Eliminated 3 major hardcoded text elements in `HygieneEducation.tsx`.
 * **Coverage Improvements:** Wrote testing coverage to validate the new dynamic quiz submissions in `HygieneEducation.test.tsx`.
+
+---
+
+## Cycle Update: TestingLabs Component Refactoring & Data Decoupling
+
+## Repository Health Report (Update)
+* **Strengths:**
+  - Robust offline synchronization infrastructure (`lib/sync.ts`) is well-utilized by refactored components.
+  - Good pattern of using `types/models.ts` as the single source of truth for interfaces.
+* **Weaknesses:**
+  - `components/TestingLabs.tsx` previously contained hardcoded mock data (`defaultLabs`) and a locally defined `Lab` interface.
+* **Risks:**
+  - Hardcoded components cannot accurately represent dynamic state or sync changes, limiting the offline-first architecture.
+  - Type drift due to localized interface definitions instead of using the central model registry.
+* **Opportunities:**
+  - Utilizing `useSyncData` to make `TestingLabs` data-driven and syncing-aware.
+
+## Competitor Analysis (Update)
+* **Gaps identified:**
+  - Best-in-class repositories strictly separate domain data from view components to facilitate maintainability.
+* **Opportunities to outperform:**
+  - Achieve a 100% data-driven UI layer supported by offline-first background syncing.
+
+## Priority Improvements (Update)
+1. **Highest impact:** Extract `defaultLabs` data to `lib/mockData.ts` and interface `Lab` to `types/models.ts`.
+2. **Strategic importance:** Refactor `TestingLabs` to use `useSyncData('testingLabs')`.
+
+## Sprint Plan (Update)
+* **Sprint Goal:** Remove hardcoded mock data and localized interfaces from `TestingLabs.tsx`, moving them to their respective central locations and utilizing the sync hook.
+* **Tasks:**
+  - Move `Lab` interface to `types/models.ts`.
+  - Move mock data to `lib/mockData.ts` and update `lib/sync.ts`.
+  - Refactor `TestingLabs.tsx` to dynamically fetch data and display a loading indicator.
+  - Write unit tests to verify data rendering and loading states.
+* **Expected Outcomes:** A dynamic Testing Labs component seamlessly integrated with the app's sync architecture, verified by robust unit tests.
+
+## Technical Improvements (Update)
+* **Architecture:** Decoupled `testingLabs` data from `TestingLabs.tsx`, enforcing the offline-first data model and adhering to DRY principles for types.
+* **Testing:** Added `TestingLabs.test.tsx` coverage to ensure the component leverages the dynamic hook and correctly handles loading and data states.
+
+## Metrics Improved (Update)
+* **Code quality gains:** Eliminated a large hardcoded data block and localized interface definition in a UI component.
+* **Coverage Improvements:** Added test coverage for the `TestingLabs.tsx` view and updated the `sync.test.ts` to reflect the expanded local sync scope.
