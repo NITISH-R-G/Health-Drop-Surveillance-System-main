@@ -3,6 +3,16 @@ import { render } from '@testing-library/react-native';
 import TestingLabs from './components/TestingLabs';
 import { ThemeProvider } from './lib/ThemeContext';
 
+jest.mock('./lib/sync', () => {
+  const { testingLabsData } = require('./lib/mockData');
+  return {
+    useSyncData: jest.fn().mockReturnValue({
+      data: testingLabsData,
+      loading: false,
+    }),
+  };
+});
+
 jest.mock('expo-location', () => ({
   requestForegroundPermissionsAsync: jest.fn().mockResolvedValue({ status: 'granted' }),
   getCurrentPositionAsync: jest.fn().mockResolvedValue({
