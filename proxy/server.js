@@ -7,7 +7,27 @@ const PORT = process.env.PORT || 3000;
 
 // Middleware
 // Allow requests from all domains containing localhost, Expo development URLs, or Vercel/Render frontend origins.
-app.use(cors());
+const corsOptions = {
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+
+    const allowedPatterns = [
+      /^https?:\/\/localhost(:\d+)?$/,
+      /^https?:\/\/.*\.vercel\.app$/,
+      /^https?:\/\/.*\.onrender\.com$/,
+      /^exp:\/\/.*/,
+    ];
+
+    const isAllowed = allowedPatterns.some((pattern) => pattern.test(origin));
+    if (isAllowed) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+};
+app.use(cors(corsOptions));
 app.use(express.json());
 
 // Basic In-Memory Cache to prevent rate limiting issues and improve UX
