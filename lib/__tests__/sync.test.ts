@@ -41,6 +41,21 @@ describe('Sync Service', () => {
     expect(result).toBeNull();
   });
 
+  it('should handle errors when getting data from AsyncStorage', async () => {
+    const mockError = new Error('AsyncStorage error');
+    (AsyncStorage.getItem as jest.Mock).mockRejectedValueOnce(mockError);
+
+    const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+
+    const result = await getLocalData('testKey');
+
+    expect(AsyncStorage.getItem).toHaveBeenCalledWith('@healthdrop_sync_testKey');
+    expect(result).toBeNull();
+    expect(consoleSpy).toHaveBeenCalledWith('Failed to get local data for key testKey:', mockError);
+
+    consoleSpy.mockRestore();
+  });
+
   it('should sync data from mockData', async () => {
     await syncData();
 
