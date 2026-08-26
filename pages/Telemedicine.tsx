@@ -31,7 +31,7 @@ const Telemedicine: React.FC<TelemedicineProps> = ({ onBack }) => {
   return (
     <ScrollView style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={onBack} style={styles.backButton}>
+        <TouchableOpacity onPress={onBack} style={styles.backButton} testID="back-button">
           <Ionicons name="arrow-back" size={24} color={colors.text} />
         </TouchableOpacity>
         <Text style={styles.title}>Telemedicine</Text>
@@ -58,6 +58,7 @@ const Telemedicine: React.FC<TelemedicineProps> = ({ onBack }) => {
             </View>
             <View style={styles.actionButtons}>
               <TouchableOpacity
+                testID="chat-button"
                 style={[
                   styles.iconButton,
                   { backgroundColor: colors.primary + '20', marginRight: 8 },
@@ -66,6 +67,7 @@ const Telemedicine: React.FC<TelemedicineProps> = ({ onBack }) => {
                 <Ionicons name="chatbubble-ellipses" size={20} color={colors.primary} />
               </TouchableOpacity>
               <TouchableOpacity
+                testID="call-button"
                 style={[styles.iconButton, { backgroundColor: colors.success }]}
                 onPress={() => handleCall(doc.name)}>
                 <Ionicons name="videocam" size={20} color="#fff" />
