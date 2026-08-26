@@ -76,8 +76,10 @@ const NationalStats: React.FC<NationalStatsProps> = ({ onNavigate }) => {
       setIsLoadingLive(true);
       try {
         // Fetching for India (IND)
-        const casesData = await fetchCholeraCases('IND', 1);
-        const deathsData = await fetchCholeraDeaths('IND', 1);
+        const casesRes = await fetchCholeraCases('IND', '2023');
+        const casesData = casesRes.value;
+        const deathsRes = await fetchCholeraDeaths('IND', '2023');
+        const deathsData = deathsRes.value;
 
         if (casesData.length > 0) setCholeraCases(Number(casesData[0].Value));
         if (deathsData.length > 0) setCholeraDeaths(Number(deathsData[0].Value));
