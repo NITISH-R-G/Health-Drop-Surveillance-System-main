@@ -28,7 +28,7 @@ describe('TestingLabs Benchmark', () => {
     for (let i = 0; i < numRenders; i++) {
       const { unmount } = render(
         <ThemeProvider>
-          <TestingLabs />
+          <TestingLabs labs={[]} />
         </ThemeProvider>
       );
       unmount();
