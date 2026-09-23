@@ -100,3 +100,9 @@ export interface LeaderboardEntry {
   avatar: string;
   isUser: boolean;
 }
+
+export interface IssueType {
+  id: string;
+  label: string;
+  icon: string;
+}
