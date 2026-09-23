@@ -205,3 +205,46 @@
 ## Metrics Improved (Update)
 * **Code quality gains:** Eliminated 3 major hardcoded text elements in `HygieneEducation.tsx`.
 * **Coverage Improvements:** Wrote testing coverage to validate the new dynamic quiz submissions in `HygieneEducation.test.tsx`.
+
+---
+
+## Cycle Update: Testing Labs Hardcoding Refactoring
+
+## Repository Health Report (Update)
+* **Strengths:**
+  - Standardized UI views allow swift decoupling to `useSyncData`.
+* **Weaknesses:**
+  - `components/TestingLabs.tsx` had hardcoded `Lab` type definitions and dummy values inside the rendering logic.
+* **Risks:**
+  - Duplicate type definitions (`Lab` not being in `types/models.ts`) may lead to unexpected side effects and drift if another component requires the Lab type.
+  - Adding labs dynamically is impossible since they were bundled within the file rather than remote states.
+* **Opportunities:**
+  - Fully decoupled UI components provide flexibility, type safety across boundaries, and prepare for backend integrations.
+
+## Competitor Analysis (Update)
+* **Gaps identified:**
+  - Large-scale applications must not embed domain entities directly inside presentation logic to allow scale.
+* **Opportunities to outperform:**
+  - Separating `Lab` schema and values out prepares the app to consume any remote laboratory directory reliably.
+
+## Priority Improvements (Update)
+1. **Highest impact:** Relocate the `defaultLabs` state array out of React code into `lib/mockData.ts` connecting it to `useSyncData`.
+2. **Strategic importance:** Add `Lab` into `types/models.ts` and test `TestingLabs` to verify data binding.
+
+## Sprint Plan (Update)
+* **Sprint Goal:** Complete the data-driven refactoring for `TestingLabs` component and maintain data-binding test coverage.
+* **Tasks:**
+  - Migrate `Lab` interface to `types/models.ts`.
+  - Extract default data to `lib/mockData.ts`.
+  - Integrate `labsData` into `sync.ts` offline cache structure.
+  - Apply `useSyncData('labsData')` on `TestingLabs`.
+  - Add robust unit testing.
+* **Expected Outcomes:** A dynamically driven TestingLabs view that resolves labs seamlessly via offline hook without any local text constants.
+
+## Technical Improvements (Update)
+* **Architecture:** Decoupled `labs` from component implementation, improving modularity and respecting offline-first pattern.
+* **Maintainability:** Standardized `Lab` type into `models.ts` which serves as single-source of truth.
+
+## Metrics Improved (Update)
+* **Code quality gains:** Eliminated hardcoded lab list data directly from UI file.
+* **Coverage Improvements:** Added full mounting and rendering coverage for `TestingLabs.test.tsx`.
