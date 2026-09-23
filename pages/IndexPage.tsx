@@ -140,7 +140,7 @@ const IndexPageContent: React.FC<IndexPageProps> = ({
         );
       case 'TestingLabs':
         return (
-          <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
+          <View style={[styles.content, { flex: 1 }]}>
             <View style={styles.screenHeader}>
               <TouchableOpacity
                 onPress={() => handleNavigation('Dashboard')}
@@ -153,10 +153,10 @@ const IndexPageContent: React.FC<IndexPageProps> = ({
                 Water testing & pathology facilities near you
               </Text>
             </View>
-            <View style={styles.section}>
+            <View style={[styles.section, { flex: 1, paddingBottom: 0 }]}>
               <TestingLabs />
             </View>
-          </ScrollView>
+          </View>
         );
       case 'Helpline':
         return (
