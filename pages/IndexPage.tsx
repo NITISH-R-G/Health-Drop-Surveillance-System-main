@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useCallback, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, FlatList } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { StatusBar } from 'expo-status-bar';
 import { useTheme, Theme, typography, spacing, radius } from '../lib/ThemeContext';
@@ -248,13 +248,28 @@ const IndexPageContent: React.FC<IndexPageProps> = ({
         );
       case 'Outbreaks':
         return (
-          <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
-            <View style={[styles.section, { marginTop: spacing.md }]}>
-              <Text style={styles.sectionTitle}>Active Outbreaks</Text>
-              {filteredOutbreaks.length > 0 ? (
-                filteredOutbreaks.map((item) => (
+          <View style={{ flex: 1 }}>
+            <FlatList
+              data={filteredOutbreaks}
+              keyExtractor={(item) => String(item.id)}
+              showsVerticalScrollIndicator={false}
+              contentContainerStyle={{ paddingBottom: 100 }}
+              ListHeaderComponent={
+                <View style={[styles.section, { marginTop: spacing.md, marginBottom: 0 }]}>
+                  <Text style={styles.sectionTitle}>Active Outbreaks</Text>
+                </View>
+              }
+              ListEmptyComponent={
+                <View style={[styles.section, { marginTop: spacing.md }]}>
+                  <View style={styles.emptyState}>
+                    <Text style={styles.emptyStateIcon}>✓</Text>
+                    <Text style={styles.emptyStateText}>No active outbreaks in this region</Text>
+                  </View>
+                </View>
+              }
+              renderItem={({ item }) => (
+                <View style={{ paddingHorizontal: spacing.lg }}>
                   <Card
-                    key={item.id}
                     title={item.title}
                     date={item.date}
                     description={item.description}
@@ -264,31 +279,27 @@ const IndexPageContent: React.FC<IndexPageProps> = ({
                     caseCount={item.caseCount}
                     onPress={() => {}}
                   />
-                ))
-              ) : (
-                <View style={styles.emptyState}>
-                  <Text style={styles.emptyStateIcon}>✓</Text>
-                  <Text style={styles.emptyStateText}>No active outbreaks in this region</Text>
                 </View>
               )}
-            </View>
-
-            <View style={styles.section}>
-              <Text style={styles.sectionTitle}>Prevention Campaigns</Text>
-              {preventionCampaigns.map((item) => (
-                <Card
-                  key={item.id}
-                  title={item.title}
-                  date={item.date}
-                  description={item.description}
-                  location={item.location}
-                  type={item.type}
-                  severity={item.severity}
-                  onPress={() => {}}
-                />
-              ))}
-            </View>
-          </ScrollView>
+              ListFooterComponent={
+                <View style={styles.section}>
+                  <Text style={styles.sectionTitle}>Prevention Campaigns</Text>
+                  {preventionCampaigns.map((item) => (
+                    <Card
+                      key={item.id}
+                      title={item.title}
+                      date={item.date}
+                      description={item.description}
+                      location={item.location}
+                      type={item.type}
+                      severity={item.severity}
+                      onPress={() => {}}
+                    />
+                  ))}
+                </View>
+              }
+            />
+          </View>
         );
       case 'WaterQuality':
         return (
