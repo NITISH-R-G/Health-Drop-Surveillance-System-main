@@ -205,3 +205,47 @@
 ## Metrics Improved (Update)
 * **Code quality gains:** Eliminated 3 major hardcoded text elements in `HygieneEducation.tsx`.
 * **Coverage Improvements:** Wrote testing coverage to validate the new dynamic quiz submissions in `HygieneEducation.test.tsx`.
+
+---
+
+## Cycle Update: Decoupling TestingLabs Component Data
+
+## Repository Health Report (Update)
+* **Strengths:**
+  - Standardized UI views support swift migrations to `useSyncData`.
+  - Comprehensive unit test suite with Jest.
+* **Weaknesses:**
+  - `components/TestingLabs.tsx` had hardcoded `defaultLabs` data array directly within the UI component file.
+  - `Lab` interface was defined inline rather than in the centralized `types/models.ts`.
+* **Risks:**
+  - Hardcoded components cannot accurately represent dynamic state, causing product inconsistencies when syncing remote offline-first data.
+  - Data structure divergence due to un-centralized interfaces.
+* **Opportunities:**
+  - Leveraging the existing `useSyncData` pattern for the `TestingLabs` component.
+
+## Competitor Analysis (Update)
+* **Gaps identified:**
+  - Best-in-class repositories never hardcode domain-specific arrays directly inside view components.
+* **Opportunities to outperform:**
+  - Fully dynamic, synced lab directories providing true offline-first capability.
+
+## Priority Improvements (Update)
+1. **Highest impact:** Extract `defaultLabs` to `lib/mockData.ts` and interface `Lab` to `types/models.ts`.
+2. **Strategic importance:** Refactor `TestingLabs` to use `useSyncData('testingLabs')`.
+
+## Sprint Plan (Update)
+* **Sprint Goal:** Remove hardcoded testing labs data from `components/TestingLabs.tsx` and fetch it dynamically.
+* **Tasks:**
+  - Lift `Lab` interface to `types/models.ts`.
+  - Move mock data to `lib/mockData.ts` as `testingLabs`.
+  - Refactor `TestingLabs.tsx` to use `useSyncData`.
+  - Write test to verify data rendering.
+* **Expected Outcomes:** A dynamically driven labs directory fully backed by unit tests and offline sync.
+
+## Technical Improvements (Update)
+* **Architecture:** Decoupled `testingLabs` from `TestingLabs.tsx`, enforcing the offline-first data model. Centralized the `Lab` TypeScript interface.
+* **Testing:** Added `TestingLabs.test.tsx` coverage to ensure the component leverages the dynamic hook and correctly handles loading and empty states.
+
+## Metrics Improved (Update)
+* **Code quality gains:** Eliminated 1 massive block of hardcoded domain data in a UI component. Centralized 1 data model interface.
+* **Coverage Improvements:** Added full unit test suite for `TestingLabs.tsx`.
