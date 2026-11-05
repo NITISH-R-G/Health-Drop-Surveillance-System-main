@@ -23,6 +23,25 @@ describe('Sync Service', () => {
     );
   });
 
+  it('should handle errors when saving data to AsyncStorage', async () => {
+    const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+    const testError = new Error('AsyncStorage error');
+    (AsyncStorage.setItem as jest.Mock).mockRejectedValueOnce(testError);
+
+    const testData = { foo: 'bar' };
+
+    try {
+      await saveLocalData('errorKey', testData);
+
+      expect(consoleErrorSpy).toHaveBeenCalledWith(
+        'Failed to save local data for key errorKey:',
+        testError
+      );
+    } finally {
+      consoleErrorSpy.mockRestore();
+    }
+  });
+
   it('should retrieve data from AsyncStorage', async () => {
     const testData = { foo: 'bar' };
     (AsyncStorage.getItem as jest.Mock).mockResolvedValueOnce(JSON.stringify(testData));
