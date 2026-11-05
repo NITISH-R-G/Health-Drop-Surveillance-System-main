@@ -9,6 +9,7 @@ import {
   EnvironmentalData,
   PredictionInsight,
   HygieneModule,
+  Doctor,
 } from '../types/models';
 
 // Regions
@@ -490,3 +491,9 @@ export const hygieneModules: HygieneModule[] = [
 ];
 
 export const hygieneScore: number = 350;
+
+export const doctors: Doctor[] = [
+  { id: 1, name: 'Dr. Anjali Gupta', spec: 'General Physician', exp: '8 years', online: true },
+  { id: 2, name: 'Dr. Rajesh Kumar', spec: 'Epidemiologist', exp: '12 years', online: false },
+  { id: 3, name: 'Dr. Sarah Khan', spec: 'Pediatrician', exp: '5 years', online: true },
+];
