@@ -100,3 +100,10 @@ export interface LeaderboardEntry {
   avatar: string;
   isUser: boolean;
 }
+
+export interface ProfileStats {
+  reports: number;
+  regions: number;
+  badges: number;
+  role: string;
+}
