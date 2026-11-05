@@ -9,6 +9,7 @@ import {
   EnvironmentalData,
   PredictionInsight,
   HygieneModule,
+  Lab,
 } from '../types/models';
 
 // Regions
@@ -486,6 +487,51 @@ export const hygieneModules: HygieneModule[] = [
       'Ignoring proper waste disposal guidelines',
     ],
     correctAnswerIndex: 0,
+  },
+];
+
+export const testingLabs: Lab[] = [
+  {
+    id: '1',
+    name: 'Apollo Diagnostics',
+    type: 'pathology',
+    address: 'Greams Road, Chennai - 600006',
+    phone: '044-28293333',
+    email: 'diagnostics@apollo.com',
+    timings: '07:00 AM - 08:00 PM',
+    isOpen: true,
+    distance: '3.2 km',
+    accredited: true,
+    services: ['Pathology', 'Biochemistry'],
+    coordinates: { lat: 13.0604, lng: 80.2541 },
+  },
+  {
+    id: '2',
+    name: 'Lister Metropolis Lab',
+    type: 'both',
+    address: 'Nungambakkam, Chennai - 600034',
+    phone: '044-42055555',
+    email: 'info@metropolisindia.com',
+    timings: '24 Hours',
+    isOpen: true,
+    distance: '5.1 km',
+    accredited: true,
+    services: ['Microbiology', 'Water testing', 'Clinical Pathology'],
+    coordinates: { lat: 13.0631, lng: 80.2407 },
+  },
+  {
+    id: '3',
+    name: 'Hitech Diagnostic Centre',
+    type: 'water',
+    address: 'T Nagar, Chennai - 600017',
+    phone: '044-42000000',
+    email: 'contact@hitechlab.com',
+    timings: '08:00 AM - 06:00 PM',
+    isOpen: false,
+    distance: '2.8 km',
+    accredited: true,
+    services: ['Drinking water analysis', 'Chemical testing'],
+    coordinates: { lat: 13.0405, lng: 80.2337 },
   },
 ];
 
