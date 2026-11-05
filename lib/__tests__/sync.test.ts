@@ -44,7 +44,7 @@ describe('Sync Service', () => {
   it('should sync data from mockData', async () => {
     await syncData();
 
-    expect(AsyncStorage.setItem).toHaveBeenCalledTimes(12);
+    expect(AsyncStorage.setItem).toHaveBeenCalledTimes(13);
     expect(AsyncStorage.setItem).toHaveBeenCalledWith(
       '@healthdrop_sync_regions',
       JSON.stringify(mockData.regions)
@@ -52,6 +52,10 @@ describe('Sync Service', () => {
     expect(AsyncStorage.setItem).toHaveBeenCalledWith(
       '@healthdrop_sync_outbreaks',
       JSON.stringify(mockData.outbreaks)
+    );
+    expect(AsyncStorage.setItem).toHaveBeenCalledWith(
+      '@healthdrop_sync_testingLabsData',
+      JSON.stringify(mockData.testingLabsData)
     );
     // ... we can assume the rest are called if these two are.
   });
