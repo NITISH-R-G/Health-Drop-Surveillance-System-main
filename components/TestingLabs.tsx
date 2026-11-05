@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useCallback } from 'react';
 import {
   View,
   Text,
@@ -8,6 +8,7 @@ import {
   Linking,
   Alert,
   ActivityIndicator,
+  FlatList,
 } from 'react-native';
 import * as Location from 'expo-location';
 import { Ionicons } from '@expo/vector-icons';
@@ -208,6 +209,105 @@ const typeConfig = {
   both: { icon: 'medkit', label: 'Full Service', color: '#007AFF' },
 };
 
+const LabItem = React.memo(
+  ({
+    lab,
+    colors,
+    styles,
+    onCall,
+    onDirections,
+  }: {
+    lab: Lab;
+    colors: Theme;
+    styles: any;
+    onCall: (phone: string) => void;
+    onDirections: (name: string, address: string) => void;
+  }) => {
+    const cfg = typeConfig[lab.type];
+    return (
+      <View style={styles.labCard}>
+        <View style={styles.labHeader}>
+          <View style={[styles.labTypeIcon, { backgroundColor: `${cfg.color}15` }]}>
+            <Ionicons name={cfg.icon as any} size={20} color={cfg.color} />
+          </View>
+          <View style={styles.labInfo}>
+            <View style={styles.labNameRow}>
+              <Text style={styles.labName}>{lab.name}</Text>
+              {lab.accredited && (
+                <View style={styles.accreditedBadge}>
+                  <Text style={styles.accreditedText}>✓ Approved</Text>
+                </View>
+              )}
+            </View>
+            <Text style={styles.labAddress}>{lab.address}</Text>
+
+            <View style={styles.contactRow}>
+              <View style={styles.contactItemWrapper}>
+                <Ionicons name="time-outline" size={12} color={colors.textTertiary} />
+                <Text style={styles.contactItemInfo}>{lab.timings || 'Contact to verify'}</Text>
+              </View>
+              <View
+                style={[
+                  styles.statusBadge,
+                  { backgroundColor: lab.isOpen ? `${colors.success}15` : `${colors.error}15` },
+                ]}>
+                <Text
+                  style={[
+                    styles.statusText,
+                    { color: lab.isOpen ? colors.success : colors.error },
+                  ]}>
+                  {lab.isOpen ? 'Open Now' : 'Closed'}
+                </Text>
+              </View>
+            </View>
+
+            {lab.email && (
+              <View style={styles.contactItemWrapper}>
+                <Ionicons name="mail" size={12} color={colors.textTertiary} />
+                <Text style={styles.contactItemInfo}>{lab.email}</Text>
+              </View>
+            )}
+
+            <Text style={styles.labDistance}>
+              <Ionicons name="location" size={12} color={colors.textTertiary} /> {lab.distance} from
+              you
+            </Text>
+          </View>
+        </View>
+
+        {/* Services */}
+        <View style={styles.servicesRow}>
+          {lab.services.map((service) => (
+            <View key={service} style={styles.serviceChip}>
+              <Text style={styles.serviceText}>{service}</Text>
+            </View>
+          ))}
+        </View>
+
+        {/* Actions */}
+        <View style={styles.actionsRow}>
+          <TouchableOpacity
+            style={styles.actionButton}
+            activeOpacity={0.7}
+            onPress={() => onCall(lab.phone)}>
+            <Text style={styles.actionText}>
+              <Ionicons name="call" size={12} color={colors.primary} /> Call
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.actionButton}
+            activeOpacity={0.7}
+            onPress={() => onDirections(lab.name, lab.address)}>
+            <Text style={styles.actionText}>
+              <Ionicons name="map" size={12} color={colors.primary} /> Directions
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    );
+  }
+);
+
 const TestingLabs: React.FC<TestingLabsProps> = ({ labs = defaultLabs }) => {
   const { colors } = useTheme();
   const styles = useMemo(() => createStyles(colors), [colors]);
@@ -220,11 +320,11 @@ const TestingLabs: React.FC<TestingLabsProps> = ({ labs = defaultLabs }) => {
     return [...filteredLabs].sort((a, b) => parseFloat(a.distance) - parseFloat(b.distance));
   }, [labs, filter]);
 
-  const handleCall = (phone: string) => {
+  const handleCall = useCallback((phone: string) => {
     Linking.openURL(`tel:${phone}`);
-  };
+  }, []);
 
-  const handleGetLocation = async () => {
+  const handleGetLocation = useCallback(async () => {
     setIsLocating(true);
     try {
       const { status } = await Location.requestForegroundPermissionsAsync();
@@ -243,23 +343,25 @@ const TestingLabs: React.FC<TestingLabsProps> = ({ labs = defaultLabs }) => {
     } finally {
       setIsLocating(false);
     }
-  };
+  }, []);
 
-  const handleDirections = (name: string, address: string) => {
-    const query = encodeURIComponent(`${name}, ${address}`);
-    if (userLoc) {
-      const { latitude, longitude } = userLoc.coords;
-      Linking.openURL(
-        `https://www.google.com/maps/dir/?api=1&origin=${latitude},${longitude}&destination=${query}`
-      );
-    } else {
-      Linking.openURL(`https://www.google.com/maps/search/?api=1&query=${query}`);
-    }
-  };
+  const handleDirections = useCallback(
+    (name: string, address: string) => {
+      const query = encodeURIComponent(`${name}, ${address}`);
+      if (userLoc) {
+        const { latitude, longitude } = userLoc.coords;
+        Linking.openURL(
+          `https://www.google.com/maps/dir/?api=1&origin=${latitude},${longitude}&destination=${query}`
+        );
+      } else {
+        Linking.openURL(`https://www.google.com/maps/search/?api=1&query=${query}`);
+      }
+    },
+    [userLoc]
+  );
 
-  return (
-    <View style={styles.container}>
-      {/* Filter chips */}
+  const renderHeader = useCallback(
+    () => (
       <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.filterRow}>
         <TouchableOpacity
           style={[
@@ -307,105 +409,47 @@ const TestingLabs: React.FC<TestingLabsProps> = ({ labs = defaultLabs }) => {
           </TouchableOpacity>
         ))}
       </ScrollView>
+    ),
+    [colors, styles, filter, userLoc, isLocating, handleGetLocation]
+  );
 
-      {/* Lab List */}
-      {sortedLabs.map((lab) => {
-        const cfg = typeConfig[lab.type];
-        return (
-          <View key={lab.id} style={styles.labCard}>
-            <View style={styles.labHeader}>
-              <View style={[styles.labTypeIcon, { backgroundColor: `${cfg.color}15` }]}>
-                <Ionicons name={cfg.icon as any} size={20} color={cfg.color} />
-              </View>
-              <View style={styles.labInfo}>
-                <View style={styles.labNameRow}>
-                  <Text style={styles.labName}>{lab.name}</Text>
-                  {lab.accredited && (
-                    <View style={styles.accreditedBadge}>
-                      <Text style={styles.accreditedText}>✓ Approved</Text>
-                    </View>
-                  )}
-                </View>
-                <Text style={styles.labAddress}>{lab.address}</Text>
+  const renderItem = useCallback(
+    ({ item }: { item: Lab }) => (
+      <LabItem
+        lab={item}
+        colors={colors}
+        styles={styles}
+        onCall={handleCall}
+        onDirections={handleDirections}
+      />
+    ),
+    [colors, styles, handleCall, handleDirections]
+  );
 
-                <View style={styles.contactRow}>
-                  <View style={styles.contactItemWrapper}>
-                    <Ionicons name="time-outline" size={12} color={colors.textTertiary} />
-                    <Text style={styles.contactItemInfo}>{lab.timings || 'Contact to verify'}</Text>
-                  </View>
-                  <View
-                    style={[
-                      styles.statusBadge,
-                      { backgroundColor: lab.isOpen ? `${colors.success}15` : `${colors.error}15` },
-                    ]}>
-                    <Text
-                      style={[
-                        styles.statusText,
-                        { color: lab.isOpen ? colors.success : colors.error },
-                      ]}>
-                      {lab.isOpen ? 'Open Now' : 'Closed'}
-                    </Text>
-                  </View>
-                </View>
+  const renderEmpty = useCallback(
+    () => (
+      <View style={styles.emptyState}>
+        <Ionicons
+          name="flask"
+          size={48}
+          color={colors.textSecondary}
+          style={{ marginBottom: 16 }}
+        />
+        <Text style={styles.emptyText}>No labs found for this filter</Text>
+      </View>
+    ),
+    [colors, styles]
+  );
 
-                {lab.email && (
-                  <View style={styles.contactItemWrapper}>
-                    <Ionicons name="mail" size={12} color={colors.textTertiary} />
-                    <Text style={styles.contactItemInfo}>{lab.email}</Text>
-                  </View>
-                )}
-
-                <Text style={styles.labDistance}>
-                  <Ionicons name="location" size={12} color={colors.textTertiary} /> {lab.distance}{' '}
-                  from you
-                </Text>
-              </View>
-            </View>
-
-            {/* Services */}
-            <View style={styles.servicesRow}>
-              {lab.services.map((service) => (
-                <View key={service} style={styles.serviceChip}>
-                  <Text style={styles.serviceText}>{service}</Text>
-                </View>
-              ))}
-            </View>
-
-            {/* Actions */}
-            <View style={styles.actionsRow}>
-              <TouchableOpacity
-                style={styles.actionButton}
-                activeOpacity={0.7}
-                onPress={() => handleCall(lab.phone)}>
-                <Text style={styles.actionText}>
-                  <Ionicons name="call" size={12} color={colors.primary} /> Call
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.actionButton}
-                activeOpacity={0.7}
-                onPress={() => handleDirections(lab.name, lab.address)}>
-                <Text style={styles.actionText}>
-                  <Ionicons name="map" size={12} color={colors.primary} /> Directions
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        );
-      })}
-
-      {sortedLabs.length === 0 && (
-        <View style={styles.emptyState}>
-          <Ionicons
-            name="flask"
-            size={48}
-            color={colors.textSecondary}
-            style={{ marginBottom: 16 }}
-          />
-          <Text style={styles.emptyText}>No labs found for this filter</Text>
-        </View>
-      )}
-    </View>
+  return (
+    <FlatList
+      style={styles.container}
+      data={sortedLabs}
+      keyExtractor={(item) => item.id}
+      renderItem={renderItem}
+      ListHeaderComponent={renderHeader()}
+      ListEmptyComponent={renderEmpty}
+    />
   );
 };
 
