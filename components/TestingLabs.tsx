@@ -8,6 +8,7 @@ import {
   Linking,
   Alert,
   ActivityIndicator,
+  FlatList,
 } from 'react-native';
 import * as Location from 'expo-location';
 import { Ionicons } from '@expo/vector-icons';
@@ -309,102 +310,109 @@ const TestingLabs: React.FC<TestingLabsProps> = ({ labs = defaultLabs }) => {
       </ScrollView>
 
       {/* Lab List */}
-      {sortedLabs.map((lab) => {
-        const cfg = typeConfig[lab.type];
-        return (
-          <View key={lab.id} style={styles.labCard}>
-            <View style={styles.labHeader}>
-              <View style={[styles.labTypeIcon, { backgroundColor: `${cfg.color}15` }]}>
-                <Ionicons name={cfg.icon as any} size={20} color={cfg.color} />
-              </View>
-              <View style={styles.labInfo}>
-                <View style={styles.labNameRow}>
-                  <Text style={styles.labName}>{lab.name}</Text>
-                  {lab.accredited && (
-                    <View style={styles.accreditedBadge}>
-                      <Text style={styles.accreditedText}>✓ Approved</Text>
+      <FlatList
+        data={sortedLabs}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item: lab }) => {
+          const cfg = typeConfig[lab.type];
+          return (
+            <View style={styles.labCard}>
+              <View style={styles.labHeader}>
+                <View style={[styles.labTypeIcon, { backgroundColor: `${cfg.color}15` }]}>
+                  <Ionicons name={cfg.icon as any} size={20} color={cfg.color} />
+                </View>
+                <View style={styles.labInfo}>
+                  <View style={styles.labNameRow}>
+                    <Text style={styles.labName}>{lab.name}</Text>
+                    {lab.accredited && (
+                      <View style={styles.accreditedBadge}>
+                        <Text style={styles.accreditedText}>✓ Approved</Text>
+                      </View>
+                    )}
+                  </View>
+                  <Text style={styles.labAddress}>{lab.address}</Text>
+
+                  <View style={styles.contactRow}>
+                    <View style={styles.contactItemWrapper}>
+                      <Ionicons name="time-outline" size={12} color={colors.textTertiary} />
+                      <Text style={styles.contactItemInfo}>
+                        {lab.timings || 'Contact to verify'}
+                      </Text>
+                    </View>
+                    <View
+                      style={[
+                        styles.statusBadge,
+                        {
+                          backgroundColor: lab.isOpen ? `${colors.success}15` : `${colors.error}15`,
+                        },
+                      ]}>
+                      <Text
+                        style={[
+                          styles.statusText,
+                          { color: lab.isOpen ? colors.success : colors.error },
+                        ]}>
+                        {lab.isOpen ? 'Open Now' : 'Closed'}
+                      </Text>
+                    </View>
+                  </View>
+
+                  {lab.email && (
+                    <View style={styles.contactItemWrapper}>
+                      <Ionicons name="mail" size={12} color={colors.textTertiary} />
+                      <Text style={styles.contactItemInfo}>{lab.email}</Text>
                     </View>
                   )}
+
+                  <Text style={styles.labDistance}>
+                    <Ionicons name="location" size={12} color={colors.textTertiary} />{' '}
+                    {lab.distance} from you
+                  </Text>
                 </View>
-                <Text style={styles.labAddress}>{lab.address}</Text>
+              </View>
 
-                <View style={styles.contactRow}>
-                  <View style={styles.contactItemWrapper}>
-                    <Ionicons name="time-outline" size={12} color={colors.textTertiary} />
-                    <Text style={styles.contactItemInfo}>{lab.timings || 'Contact to verify'}</Text>
+              {/* Services */}
+              <View style={styles.servicesRow}>
+                {lab.services.map((service) => (
+                  <View key={service} style={styles.serviceChip}>
+                    <Text style={styles.serviceText}>{service}</Text>
                   </View>
-                  <View
-                    style={[
-                      styles.statusBadge,
-                      { backgroundColor: lab.isOpen ? `${colors.success}15` : `${colors.error}15` },
-                    ]}>
-                    <Text
-                      style={[
-                        styles.statusText,
-                        { color: lab.isOpen ? colors.success : colors.error },
-                      ]}>
-                      {lab.isOpen ? 'Open Now' : 'Closed'}
-                    </Text>
-                  </View>
-                </View>
+                ))}
+              </View>
 
-                {lab.email && (
-                  <View style={styles.contactItemWrapper}>
-                    <Ionicons name="mail" size={12} color={colors.textTertiary} />
-                    <Text style={styles.contactItemInfo}>{lab.email}</Text>
-                  </View>
-                )}
-
-                <Text style={styles.labDistance}>
-                  <Ionicons name="location" size={12} color={colors.textTertiary} /> {lab.distance}{' '}
-                  from you
-                </Text>
+              {/* Actions */}
+              <View style={styles.actionsRow}>
+                <TouchableOpacity
+                  style={styles.actionButton}
+                  activeOpacity={0.7}
+                  onPress={() => handleCall(lab.phone)}>
+                  <Text style={styles.actionText}>
+                    <Ionicons name="call" size={12} color={colors.primary} /> Call
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.actionButton}
+                  activeOpacity={0.7}
+                  onPress={() => handleDirections(lab.name, lab.address)}>
+                  <Text style={styles.actionText}>
+                    <Ionicons name="map" size={12} color={colors.primary} /> Directions
+                  </Text>
+                </TouchableOpacity>
               </View>
             </View>
-
-            {/* Services */}
-            <View style={styles.servicesRow}>
-              {lab.services.map((service) => (
-                <View key={service} style={styles.serviceChip}>
-                  <Text style={styles.serviceText}>{service}</Text>
-                </View>
-              ))}
-            </View>
-
-            {/* Actions */}
-            <View style={styles.actionsRow}>
-              <TouchableOpacity
-                style={styles.actionButton}
-                activeOpacity={0.7}
-                onPress={() => handleCall(lab.phone)}>
-                <Text style={styles.actionText}>
-                  <Ionicons name="call" size={12} color={colors.primary} /> Call
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.actionButton}
-                activeOpacity={0.7}
-                onPress={() => handleDirections(lab.name, lab.address)}>
-                <Text style={styles.actionText}>
-                  <Ionicons name="map" size={12} color={colors.primary} /> Directions
-                </Text>
-              </TouchableOpacity>
-            </View>
+          );
+        }}
+        ListEmptyComponent={
+          <View style={styles.emptyState}>
+            <Ionicons
+              name="flask"
+              size={48}
+              color={colors.textSecondary}
+              style={{ marginBottom: 16 }}
+            />
+            <Text style={styles.emptyText}>No labs found for this filter</Text>
           </View>
-        );
-      })}
-
-      {sortedLabs.length === 0 && (
-        <View style={styles.emptyState}>
-          <Ionicons
-            name="flask"
-            size={48}
-            color={colors.textSecondary}
-            style={{ marginBottom: 16 }}
-          />
-          <Text style={styles.emptyText}>No labs found for this filter</Text>
-        </View>
-      )}
+        }
+      />
     </View>
   );
 };
