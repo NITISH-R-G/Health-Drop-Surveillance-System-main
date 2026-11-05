@@ -30,9 +30,17 @@ const TrendChart: React.FC<TrendChartProps> = ({
   const [chartType, setChartType] = useState<'bar' | 'line'>('bar');
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
 
-  const maxValue = Math.max(...data.map((d) => d.value));
-  const minValue = Math.min(...data.map((d) => d.value));
-  const range = maxValue - minValue || 1;
+  const { maxValue, minValue, range } = useMemo(() => {
+    if (!data || data.length === 0) return { maxValue: 0, minValue: 0, range: 1 };
+    let min = data[0].value;
+    let max = data[0].value;
+    for (let i = 1; i < data.length; i++) {
+      const val = data[i].value;
+      if (val < min) min = val;
+      if (val > max) max = val;
+    }
+    return { maxValue: max, minValue: min, range: max - min || 1 };
+  }, [data]);
 
   const barWidth = useMemo(() => {
     const screenWidth = Dimensions.get('window').width;
