@@ -35,7 +35,7 @@ const Navbar: React.FC<NavbarProps> = ({ onMenuPress, userName, toggleTheme, onN
   return (
     <View style={[styles.navbar, { paddingTop: Math.max(insets.top, 16) }]}>
       <View style={styles.leftSection}>
-        <TouchableOpacity onPress={onMenuPress} style={styles.menuButton} activeOpacity={0.7}>
+        <TouchableOpacity testID="menu-button" onPress={onMenuPress} style={styles.menuButton} activeOpacity={0.7}>
           <View style={styles.menuIconContainer}>
             <View style={styles.menuLine} />
             <View style={[styles.menuLine, styles.menuLineShort]} />
@@ -56,16 +56,18 @@ const Navbar: React.FC<NavbarProps> = ({ onMenuPress, userName, toggleTheme, onN
 
       <View style={styles.rightSection}>
         <TouchableOpacity
+          testID="notification-button"
           style={styles.themeToggle}
           onPress={() => onNavigate && onNavigate('Warnings')}>
           <Ionicons name="notifications" size={24} color={colors.text} />
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.themeToggle} onPress={toggleTheme}>
+        <TouchableOpacity testID="theme-toggle-button" style={styles.themeToggle} onPress={toggleTheme}>
           <Ionicons name={theme === 'dark' ? 'sunny' : 'moon'} size={24} color={colors.text} />
         </TouchableOpacity>
 
         <TouchableOpacity
+          testID="profile-button"
           style={styles.avatarContainer}
           activeOpacity={0.8}
           onPress={handleProfilePress}>
