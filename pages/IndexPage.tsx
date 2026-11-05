@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useCallback, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { StatusBar } from 'expo-status-bar';
 import { useTheme, Theme, typography, spacing, radius } from '../lib/ThemeContext';
@@ -74,6 +74,7 @@ const IndexPageContent: React.FC<IndexPageProps> = ({
   const { data: predictionInsights } = useSyncData('predictionInsights');
   const { data: preventionCampaigns } = useSyncData('preventionCampaigns');
   const { data: alerts } = useSyncData('alerts');
+  const { data: testingLabs, loading: testingLabsLoading } = useSyncData('testingLabs');
 
   useEffect(() => {
     setTimeout(() => {
@@ -154,7 +155,11 @@ const IndexPageContent: React.FC<IndexPageProps> = ({
               </Text>
             </View>
             <View style={styles.section}>
-              <TestingLabs />
+              {testingLabsLoading ? (
+                <ActivityIndicator size="large" color={colors.primary} />
+              ) : (
+                <TestingLabs labs={testingLabs || []} />
+              )}
             </View>
           </ScrollView>
         );
