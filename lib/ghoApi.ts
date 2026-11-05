@@ -26,6 +26,8 @@ export interface GhoApiResponse {
   value: GhoDataPoint[];
 }
 
+export type GHOResponse = GhoApiResponse;
+
 /**
  * Fetches the latest Cholera cases for a specific country or globally.
  *
@@ -34,15 +36,18 @@ export interface GhoApiResponse {
  * @returns A promise resolving to an array of reported cholera cases data points.
  */
 export const fetchCholeraCases = async (
-  spatialDim?: string,
-  top: number = 20
-): Promise<GhoDataPoint[]> => {
+  countryCode?: string,
+  year?: string
+): Promise<GHOResponse> => {
   try {
-    // CHOLERA_0000000001: Number of reported cases of cholera
-    let url = `${BASE_URL}/CHOLERA_0000000001?$top=${top}&$orderby=TimeDim desc`;
+    let url = `${BASE_URL}?$filter=IndicatorCode eq 'CHOLERA_0000000001'`;
 
-    if (spatialDim) {
-      url += `&$filter=SpatialDim eq '${spatialDim}'`;
+    if (countryCode) {
+      url += ` and SpatialDim eq '${countryCode}'`;
+    }
+
+    if (year) {
+      url += ` and TimeDim eq '${year}'`;
     }
 
     const response = await fetch(url);
@@ -51,11 +56,11 @@ export const fetchCholeraCases = async (
       throw new Error(`GHO API Error: ${response.status}`);
     }
 
-    const data: GhoApiResponse = await response.json();
-    return data.value;
+    const data: GHOResponse = await response.json();
+    return data;
   } catch (error) {
     console.error('Failed to fetch cholera cases:', error);
-    return [];
+    return { '@odata.context': '', value: [] };
   }
 };
 
@@ -63,15 +68,18 @@ export const fetchCholeraCases = async (
  * Fetches the latest Cholera deaths for a specific country or globally.
  */
 export const fetchCholeraDeaths = async (
-  spatialDim?: string,
-  top: number = 20
-): Promise<GhoDataPoint[]> => {
+  countryCode?: string,
+  year?: string
+): Promise<GHOResponse> => {
   try {
-    // CHOLERA_0000000002: Number of reported deaths from cholera
-    let url = `${BASE_URL}/CHOLERA_0000000002?$top=${top}&$orderby=TimeDim desc`;
+    let url = `${BASE_URL}?$filter=IndicatorCode eq 'CHOLERA_0000000002'`;
 
-    if (spatialDim) {
-      url += `&$filter=SpatialDim eq '${spatialDim}'`;
+    if (countryCode) {
+      url += ` and SpatialDim eq '${countryCode}'`;
+    }
+
+    if (year) {
+      url += ` and TimeDim eq '${year}'`;
     }
 
     const response = await fetch(url);
@@ -80,10 +88,10 @@ export const fetchCholeraDeaths = async (
       throw new Error(`GHO API Error: ${response.status}`);
     }
 
-    const data: GhoApiResponse = await response.json();
-    return data.value;
+    const data: GHOResponse = await response.json();
+    return data;
   } catch (error) {
     console.error('Failed to fetch cholera deaths:', error);
-    return [];
+    return { '@odata.context': '', value: [] };
   }
 };
