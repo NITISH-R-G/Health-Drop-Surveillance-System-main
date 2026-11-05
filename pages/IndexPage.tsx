@@ -74,6 +74,7 @@ const IndexPageContent: React.FC<IndexPageProps> = ({
   const { data: predictionInsights } = useSyncData('predictionInsights');
   const { data: preventionCampaigns } = useSyncData('preventionCampaigns');
   const { data: alerts } = useSyncData('alerts');
+  const { data: testingLabs } = useSyncData('testingLabs');
 
   useEffect(() => {
     setTimeout(() => {
@@ -154,7 +155,7 @@ const IndexPageContent: React.FC<IndexPageProps> = ({
               </Text>
             </View>
             <View style={styles.section}>
-              <TestingLabs />
+              <TestingLabs labs={testingLabs} />
             </View>
           </ScrollView>
         );

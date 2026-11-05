@@ -205,3 +205,44 @@
 ## Metrics Improved (Update)
 * **Code quality gains:** Eliminated 3 major hardcoded text elements in `HygieneEducation.tsx`.
 * **Coverage Improvements:** Wrote testing coverage to validate the new dynamic quiz submissions in `HygieneEducation.test.tsx`.
+
+---
+
+## Cycle Update: Testing Labs Hardcoding Refactoring
+
+## Repository Health Report (Update)
+* **Strengths:**
+  - Standardized `useSyncData` hook enables rapid refactoring of existing screens to use offline-first dynamic data.
+* **Weaknesses:**
+  - The `TestingLabs` component hardcoded the fallback data array (`defaultLabs`) within the view itself.
+* **Risks:**
+  - Any updates to the testing lab network would necessitate an app update instead of seamlessly syncing over the air.
+* **Opportunities:**
+  - Standardizing the `TestingLabs` component and moving its models and mock data into the core application schemas.
+
+## Competitor Analysis (Update)
+* **Gaps identified:**
+  - A best-in-class application architecture never stores robust data payloads inline with UI implementations.
+* **Opportunities to outperform:**
+  - Make `TestingLabs` entirely prop-driven and fetched asynchronously through `useSyncData`.
+
+## Priority Improvements (Update)
+1. **Highest impact:** Relocate the `defaultLabs` data array to `lib/mockData.ts` and extract the `Lab` model interface to `types/models.ts`.
+2. **Strategic importance:** Refactor `IndexPage.tsx` to retrieve `testingLabs` via `useSyncData` and propagate it to the `TestingLabs` component through props.
+
+## Sprint Plan (Update)
+* **Sprint Goal:** Make the `TestingLabs` component fully dynamic and model-driven to align with the rest of the application.
+* **Tasks:**
+  - Move `Lab` interface to `types/models.ts`.
+  - Move `defaultLabs` to `lib/mockData.ts`.
+  - Refactor `IndexPage.tsx` and `TestingLabs.tsx` to use `useSyncData('testingLabs')`.
+  - Update tests to account for the new asynchronous data model.
+* **Expected Outcomes:** An offline-first testing labs module connected directly into the `syncData` promise lifecycle.
+
+## Technical Improvements (Update)
+* **Architecture:** Extracted the mock static data payload out of the UI view completely and added it to the `useSyncData` hook resolution flow in `lib/sync.ts`.
+* **Maintainability:** Standardized `Lab` inside `types/models.ts` enforcing a single source of truth for the type definition.
+
+## Metrics Improved (Update)
+* **Code quality gains:** Eliminated 1 large hardcoded data block inside `components/TestingLabs.tsx` view (160+ lines of mock data moved out).
+* **Coverage Improvements:** Re-aligned `sync.test.ts` to expect 13 insertions for `testingLabs` into AsyncStorage.
