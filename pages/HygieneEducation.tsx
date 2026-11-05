@@ -1,5 +1,14 @@
-import React, { useMemo, useState } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, StyleSheet, Alert, Modal } from 'react-native';
+import React, { useMemo, useState, useCallback } from 'react';
+import {
+  FlatList,
+  View,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+  StyleSheet,
+  Alert,
+  Modal,
+} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme, Theme, typography, spacing, radius } from '../lib/ThemeContext';
 import { HygieneModule, LeaderboardEntry } from '../types/models';
@@ -492,5 +501,84 @@ const createStyles = (colors: Theme) =>
     leaderboardScore: { ...typography.subhead, color: colors.primary, fontWeight: '700' },
     textActive: { color: colors.primary },
   });
+
+const ModuleItem = React.memo(
+  ({ mod, onPress }: { mod: HygieneModule; onPress: (mod: HygieneModule) => void }) => {
+    const { colors } = useTheme();
+    const styles = useMemo(() => createStyles(colors), [colors]);
+
+    return (
+      <View style={{ paddingHorizontal: spacing.lg }}>
+        <TouchableOpacity
+          style={[styles.moduleCard, mod.completed && { borderColor: colors.success }]}
+          onPress={() => onPress(mod)}>
+          <View
+            style={[
+              styles.iconBox,
+              { backgroundColor: mod.completed ? colors.success : colors.surfaceVariant },
+            ]}>
+            <Ionicons
+              name={mod.completed ? 'checkmark' : 'play'}
+              size={24}
+              color={mod.completed ? '#fff' : colors.primary}
+            />
+          </View>
+          <View style={styles.moduleInfo}>
+            <Text style={styles.moduleTitle}>{mod.title}</Text>
+            <Text style={styles.moduleMeta}>
+              {mod.duration} • {mod.points} XP
+            </Text>
+          </View>
+          {mod.completed && <Ionicons name="ribbon" size={24} color={colors.warning} />}
+        </TouchableOpacity>
+      </View>
+    );
+  }
+);
+
+const LeaderboardItem = React.memo(
+  ({ item, index }: { item: LeaderboardEntry & { isUser?: boolean }; index: number }) => {
+    const { colors } = useTheme();
+    const styles = useMemo(() => createStyles(colors), [colors]);
+
+    // SonarCloud: Avoid inline styles that duplicate logic
+    const borderStyles = useMemo(() => {
+      const base = {
+        borderLeftWidth: 1,
+        borderRightWidth: 1,
+        borderColor: colors.border,
+        borderBottomWidth: 1,
+        borderBottomColor: colors.borderLight,
+      };
+      if (index === 0) {
+        return {
+          ...base,
+          borderTopLeftRadius: radius.lg,
+          borderTopRightRadius: radius.lg,
+          borderTopWidth: 1,
+        };
+      }
+      return base;
+    }, [index, colors.border, colors.borderLight]);
+
+    return (
+      <View style={{ paddingHorizontal: spacing.lg }}>
+        <View
+          style={[styles.leaderboardRow, item.isUser && styles.leaderboardRowActive, borderStyles]}>
+          <Text style={[styles.rankText, item.isUser && styles.textActive]}>{index + 1}</Text>
+          <View style={styles.avatarCircle}>
+            <Text style={{ fontSize: 20 }}>{item.avatar || '👤'}</Text>
+          </View>
+          <Text style={[styles.leaderboardName, item.isUser && styles.textActive]}>
+            {item.name}
+          </Text>
+          <Text style={[styles.leaderboardScore, item.isUser && styles.textActive]}>
+            {item.score} XP
+          </Text>
+        </View>
+      </View>
+    );
+  }
+);
 
 export default HygieneEducation;
