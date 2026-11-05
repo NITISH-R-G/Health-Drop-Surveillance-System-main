@@ -205,3 +205,43 @@
 ## Metrics Improved (Update)
 * **Code quality gains:** Eliminated 3 major hardcoded text elements in `HygieneEducation.tsx`.
 * **Coverage Improvements:** Wrote testing coverage to validate the new dynamic quiz submissions in `HygieneEducation.test.tsx`.
+
+---
+
+## Cycle Update: IndexPage Routing Refactor
+
+## Repository Health Report (Update)
+* **Strengths:**
+  - Standardized UI views and high modularity for standalone components.
+* **Weaknesses:**
+  - `pages/IndexPage.tsx` acted as a monolithic container and router, housing over 300+ lines of switch statement logic for screen rendering.
+* **Risks:**
+  - High cyclomatic complexity makes the primary entry point difficult to maintain and test, violating SOLID single-responsibility principles.
+* **Opportunities:**
+  - Extracting routing to a standalone component simplifies `IndexPage.tsx` and enables individual, isolated test suites for the navigation logic.
+
+## Competitor Analysis (Update)
+* **Gaps identified:**
+  - Clean architecture mandates separation between layout/navigation wrappers and the actual content routers.
+* **Opportunities to outperform:**
+  - By splitting out the router, we improve Developer Experience (DX) and make the system easier to debug and test.
+
+## Priority Improvements (Update)
+1. **Highest impact:** Extract the `renderScreenContent` function from `IndexPage.tsx` into a new `components/ScreenRouter.tsx` component.
+2. **Strategic importance:** Improve unit test coverage for application routing.
+
+## Sprint Plan (Update)
+* **Sprint Goal:** Modularize main application routing to improve codebase maintainability and testability.
+* **Tasks:**
+  - Create `ScreenRouter.tsx` and pass all necessary state variables and handlers as props.
+  - Implement `components/__tests__/ScreenRouter.test.tsx` utilizing Jest mocks for child screens to test standalone routing logic.
+  - Fix any missing types in the mock theme files.
+* **Expected Outcomes:** A decoupled `IndexPage` that strictly handles layout and context fetching, and a reliable router that is fully covered by automated tests.
+
+## Technical Improvements (Update)
+* **Architecture:** Adhered to the single responsibility principle by decoupling routing switch logic from the parent container layout.
+* **Testing:** Introduced comprehensive test file for `ScreenRouter.tsx` ensuring correct render resolution.
+
+## Metrics Improved (Update)
+* **Code quality gains:** Removed 300+ lines of code from `IndexPage.tsx`.
+* **Coverage Improvements:** Added full unit test coverage for the application routing layer.
