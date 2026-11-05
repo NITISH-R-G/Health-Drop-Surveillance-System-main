@@ -7,7 +7,7 @@ const SYNC_KEY_PREFIX = '@healthdrop_sync_';
 /**
  * Save data locally to AsyncStorage.
  */
-export const saveLocalData = async (key: string, data: any): Promise<void> => {
+export const saveLocalData = async <T>(key: string, data: T): Promise<void> => {
   try {
     const jsonValue = JSON.stringify(data);
     await AsyncStorage.setItem(`${SYNC_KEY_PREFIX}${key}`, jsonValue);
@@ -19,7 +19,7 @@ export const saveLocalData = async (key: string, data: any): Promise<void> => {
 /**
  * Retrieve data from AsyncStorage.
  */
-export const getLocalData = async (key: string): Promise<any | null> => {
+export const getLocalData = async <T>(key: string): Promise<T | null> => {
   try {
     const jsonValue = await AsyncStorage.getItem(`${SYNC_KEY_PREFIX}${key}`);
     return jsonValue != null ? JSON.parse(jsonValue) : null;
@@ -72,7 +72,7 @@ export function useSyncData<K extends keyof typeof mockData>(key: K) {
     const loadData = async () => {
       setLoading(true);
       // Try local storage first
-      const localData = await getLocalData(key);
+      const localData = await getLocalData<typeof initialData>(key);
       if (localData) {
         setData(localData);
       } else {
